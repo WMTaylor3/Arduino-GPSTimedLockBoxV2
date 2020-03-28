@@ -4,6 +4,26 @@
  Author:	William Taylor
 */
 
+#include "UserInput.h"
+//#include "Physical.h"
+//#include "Temporal.h"
+//#include "Display.h"
+
+#include <Time.h>
+#include <TimeLib.h>
+#include <DS1307RTC.h>
+#include <EEPROM.h>
+#include <LiquidCrystal_I2C.h>
+#include <TinyGPS++.h>
+#include <string.h>
+#include <SoftwareSerial.h>
+#include <Wire.h>
+
+UserInput userInput;
+//Physical gps;
+//Temporal realTimeClock;
+//Display display;
+
 void setup() {
     Serial.begin(9600);
     configureUnit();
@@ -14,71 +34,6 @@ void loop() {
 }
 
 void configureUnit() {
-    printSplashScreen();
-    awaitUserInput();
-    clearScreen();
-    promptForNumberOf4DPoints();
-    promptForNumberOf4DPoints();
+    userInput.InitialConfiguration();
 }
 
-void awaitUserInput() {
-    while (!Serial.available()) {}
-    Serial.read();
-}
-
-char* getUserInput(uint8_t maxStringLength = 12) {
-    byte rx_byte = 0;
-    char rx_string[13];
-    uint8_t i = 0;
-    uint8_t maxLengthIncludingTermination = maxStringLength + 1;
-
-    while (true) {
-        if (Serial.available()) {
-            rx_byte = Serial.read();
-            Serial.write(rx_byte);
-            // If they have submitted their string, append NUL and return.
-            if (i < maxLengthIncludingTermination && rx_byte == '\n' || rx_byte == '\r') {
-                rx_string[i] = '\0';
-                Serial.println();
-                return rx_string;
-            }
-            // Continue reading input till one less than the array size, leaving room for the NUL.
-            else if (i < maxStringLength && rx_byte != '\n' && rx_byte != '\r') {
-                rx_string[i] = rx_byte;
-                i++;
-            }
-            else
-            {
-                Serial.println();
-                Serial.print("Entry too long. Maximum input length is ");
-                Serial.print(maxStringLength);
-                Serial.print(" characters: ");
-                i = 0;
-                rx_byte = 0;
-            }
-        }
-    }
-}
-
-void clearScreen() {
-    Serial.write(27);       // ESC command
-    Serial.print("[2J");    // clear screen command
-    Serial.write(27);
-    Serial.print("[H");     // cursor to home command
-}
-
-void printSplashScreen() {
-    Serial.println("+-------------------------+");
-    Serial.println("|                         |");
-    Serial.println("|    Timed GPS Lockbox    |");
-    Serial.println("|      Initial Setup      |");
-    Serial.println("|                         |");
-    Serial.println("+-------------------------+");
-    Serial.println("To continue, press any key...");
-}
-
-void promptForNumberOf4DPoints()
-{
-    Serial.print("How many 4D points do you wish to configure? (1-5): ");
-    getUserInput();
-}

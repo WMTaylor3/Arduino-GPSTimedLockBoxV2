@@ -26,30 +26,33 @@ void awaitUserInput() {
     Serial.read();
 }
 
-char* getUserInput() {
+char* getUserInput(uint8_t maxStringLength = 12) {
     byte rx_byte = 0;
     char rx_string[13];
     uint8_t i = 0;
+    uint8_t maxLengthIncludingTermination = maxStringLength + 1;
 
     while (true) {
         if (Serial.available()) {
             rx_byte = Serial.read();
             Serial.write(rx_byte);
             // If they have submitted their string, append NUL and return.
-            if (i < 13 && rx_byte == '\n' || rx_byte == '\r') {
+            if (i < maxLengthIncludingTermination && rx_byte == '\n' || rx_byte == '\r') {
                 rx_string[i] = '\0';
                 Serial.println();
                 return rx_string;
             }
             // Continue reading input till one less than the array size, leaving room for the NUL.
-            else if (i < 12 && rx_byte != '\n' && rx_byte != '\r') {
+            else if (i < maxStringLength && rx_byte != '\n' && rx_byte != '\r') {
                 rx_string[i] = rx_byte;
                 i++;
             }
             else
             {
                 Serial.println();
-                Serial.print("Entry too long. Enter input with less than 13 characters: ");
+                Serial.print("Entry too long. Maximum input length is ");
+                Serial.print(maxStringLengt);
+                Serial.print(" characters: ");
                 i = 0;
                 rx_byte = 0;
             }
@@ -77,5 +80,5 @@ void printSplashScreen() {
 void promptForNumberOf4DPoints()
 {
     Serial.print("How many 4D points do you wish to configure? (1-5): ");
-    getUserInput();
+    getUserInput(1);
 }

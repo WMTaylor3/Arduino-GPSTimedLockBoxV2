@@ -51,7 +51,7 @@ char* getUserInput(uint8_t maxStringLength = 12) {
             {
                 Serial.println();
                 Serial.print("Entry too long. Maximum input length is ");
-                Serial.print(maxStringLengt);
+                Serial.print(maxStringLength);
                 Serial.print(" characters: ");
                 i = 0;
                 rx_byte = 0;
@@ -80,5 +80,5 @@ void printSplashScreen() {
 void promptForNumberOf4DPoints()
 {
     Serial.print("How many 4D points do you wish to configure? (1-5): ");
-    getUserInput(1);
+    getUserInput();
 }

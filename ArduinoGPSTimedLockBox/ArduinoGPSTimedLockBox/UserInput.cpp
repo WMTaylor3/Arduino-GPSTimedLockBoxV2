@@ -10,13 +10,14 @@ UserInput::UserInput()
 
 void UserInput::AwaitUserInput() {
     while (!Serial.available()) {}
-    Serial.read();
+    while (Serial.available()) { Serial.read(); } // Clear buffer
 }
 
 char* UserInput::GetUserInput(uint8_t maxStringLength = 12) {
+    while (Serial.available()) { Serial.read(); } // Clear buffer
     static byte i = 0;
     char* rx_string = new char[13];
-    char rx_char;
+    char rx_char = 0;;
     uint8_t maxLengthIncludingTermination = maxStringLength + 1;
 
     while (true) {
@@ -64,11 +65,21 @@ void UserInput::PrintSplashScreen() {
     Serial.println(F("To continue, press any key..."));
 }
 
-void UserInput::PromptForNumberOf4DPoints()
+uint8_t UserInput::ConfigureNumberOf4DPoints()
 {
-    Serial.print(F("How many 4D points do you wish to configure? (1-5): "));
-    Serial.print(GetUserInput()[0]);
-    // Free string memory once converted to an int.
+    char charInput = '0';
+    while (charInput < '1' || charInput > '5') {
+        Serial.print("Entry: ");
+        Serial.println(charInput);
+        Serial.print(F("How many 4D points do you wish to configure? (1-5): "));
+        char* input = GetUserInput(1);
+        Serial.println(input);
+        Serial.write(input);
+        charInput = input[0];
+        delete(input);
+        input = NULL;
+    }
+    return charInput - 48; // Convert to integer.
 }
 
 void UserInput::InitialConfiguration()
@@ -77,5 +88,6 @@ void UserInput::InitialConfiguration()
     PrintSplashScreen();
     AwaitUserInput();
     ClearScreen();
-    PromptForNumberOf4DPoints();
+    ConfigureNumberOf4DPoints();
+    Serial.println("End");
 }

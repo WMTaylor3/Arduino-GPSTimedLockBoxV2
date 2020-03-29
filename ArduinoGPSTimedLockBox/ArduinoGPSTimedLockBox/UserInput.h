@@ -16,7 +16,7 @@ private:
 	char* GetUserInput(uint8_t maxStringLength);
 	void ClearScreen();
 	void PrintSplashScreen();
-	void PromptForNumberOf4DPoints();
+	uint8_t ConfigureNumberOf4DPoints();
 public:
 	UserInput();
 	void InitialConfiguration();

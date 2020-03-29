@@ -13,11 +13,13 @@ void UserInput::AwaitUserInput() {
     while (Serial.available()) { Serial.read(); } // Clear buffer
 }
 
-char* UserInput::GetUserInput(uint8_t maxStringLength = 12) {
+// Prompts user for input on serial terminal.
+// Param rx_string: char* to char[] in which to store the string, must be 1 more than max expected string length.
+// Param maxStringLength: uint8_t containing maximum expected string length not including null termination.
+void UserInput::GetUserInput(char* rx_string, uint8_t maxStringLength) {
     while (Serial.available()) { Serial.read(); } // Clear buffer
-    static byte i = 0;
-    char* rx_string = new char[13];
-    char rx_char = 0;;
+    uint8_t i = 0;
+    char rx_char = 0;
     uint8_t maxLengthIncludingTermination = maxStringLength + 1;
 
     while (true) {
@@ -28,7 +30,7 @@ char* UserInput::GetUserInput(uint8_t maxStringLength = 12) {
             if (i < maxLengthIncludingTermination && rx_char == '\r') {
                 rx_string[i] = '\0';
                 Serial.println();
-                return rx_string;
+                break;
             }
             // Continue reading input till one less than the array size, leaving room for the NUL.
             else if (i < maxStringLength && rx_char != '\r') {
@@ -41,7 +43,7 @@ char* UserInput::GetUserInput(uint8_t maxStringLength = 12) {
                 Serial.print(F("Entry too long. Maximum input length is "));
                 Serial.print(maxStringLength);
                 Serial.print(F(" characters: "));
-                i = 0;
+                i = 0; // Reset to allow new input.
                 rx_char = 0;
             }
         }
@@ -68,16 +70,14 @@ void UserInput::PrintSplashScreen() {
 uint8_t UserInput::ConfigureNumberOf4DPoints()
 {
     char charInput = '0';
+    char* rx_string = NULL;
     while (charInput < '1' || charInput > '5') {
-        Serial.print("Entry: ");
-        Serial.println(charInput);
-        Serial.print(F("How many 4D points do you wish to configure? (1-5): "));
-        char* input = GetUserInput(1);
-        Serial.println(input);
-        Serial.write(input);
-        charInput = input[0];
-        delete(input);
-        input = NULL;
+        Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5): "));
+        rx_string = new char[2];
+        GetUserInput(rx_string, 1);
+        charInput = rx_string[0];
+        delete(rx_string);
+        rx_string = NULL;
     }
     return charInput - 48; // Convert to integer.
 }
@@ -89,5 +89,4 @@ void UserInput::InitialConfiguration()
     AwaitUserInput();
     ClearScreen();
     ConfigureNumberOf4DPoints();
-    Serial.println("End");
 }

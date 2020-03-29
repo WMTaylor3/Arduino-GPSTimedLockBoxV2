@@ -13,7 +13,7 @@ class UserInput
 {
 private:
 	void AwaitUserInput();
-	char* GetUserInput(uint8_t maxStringLength);
+	void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	void ClearScreen();
 	void PrintSplashScreen();
 	uint8_t ConfigureNumberOf4DPoints();

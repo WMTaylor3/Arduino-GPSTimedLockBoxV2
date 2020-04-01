@@ -4,7 +4,7 @@
  Author:	William Taylor
 */
 
-#include "UserInput.h"
+#include "Setup.h"
 //#include "Physical.h"
 //#include "Temporal.h"
 //#include "Display.h"
@@ -19,7 +19,7 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
 
-UserInput userInput;
+Setup userInput;
 //Physical gps;
 //Temporal realTimeClock;
 //Display display;

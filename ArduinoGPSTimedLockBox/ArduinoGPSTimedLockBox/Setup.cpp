@@ -2,13 +2,19 @@
 // 
 // 
 
-#include "UserInput.h"
+#include "Setup.h"
 
-UserInput::UserInput()
+/////////////////////////////////////// User Input ///////////////////////////////////////
+
+Setup::Setup()
 {
 }
 
-void UserInput::AwaitUserInput() {
+Setup::~Setup() {
+    delete sysConfig;
+}
+
+void Setup::AwaitUserInput() {
     while (!Serial.available()) {}
     while (Serial.available()) { Serial.read(); } // Clear buffer
 }
@@ -16,7 +22,7 @@ void UserInput::AwaitUserInput() {
 // Prompts user for input on serial terminal.
 // Param rx_string: char* to char[] in which to store the string, must be 1 more than max expected string length.
 // Param maxStringLength: uint8_t containing maximum expected string length not including null termination.
-void UserInput::GetUserInput(char* rx_string, uint8_t maxStringLength) {
+void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
     while (Serial.available()) { Serial.read(); } // Clear buffer
     uint8_t i = 0;
     char rx_char = 0;
@@ -50,14 +56,14 @@ void UserInput::GetUserInput(char* rx_string, uint8_t maxStringLength) {
     }
 }
 
-void UserInput::ClearScreen() {
+void Setup::ClearScreen() {
     Serial.write(27);       // ESC command
     Serial.print("[2J");    // clear screen command
     Serial.write(27);
     Serial.print("[H");     // cursor to home command
 }
 
-void UserInput::PrintSplashScreen() {
+void Setup::PrintSplashScreen() {
     Serial.println(F("+-------------------------+"));
     Serial.println(F("|                         |"));
     Serial.println(F("|    Timed GPS Lockbox    |"));
@@ -67,7 +73,7 @@ void UserInput::PrintSplashScreen() {
     Serial.println(F("To continue, press any key..."));
 }
 
-uint8_t UserInput::ConfigureNumberOf4DPoints()
+uint8_t Setup::ConfigureNumberOfPoints()
 {
     char charInput = '0';
     char* rx_string = NULL;
@@ -82,11 +88,46 @@ uint8_t UserInput::ConfigureNumberOf4DPoints()
     return charInput - 48; // Convert to integer.
 }
 
-void UserInput::InitialConfiguration()
+SystemConfiguration* Setup::InitialConfiguration()
 {
     ClearScreen();
     PrintSplashScreen();
     AwaitUserInput();
     ClearScreen();
-    ConfigureNumberOf4DPoints();
+    uint8_t numberOfPoints = ConfigureNumberOfPoints();
+    sysConfig = new SystemConfiguration(numberOfPoints);
+}
+
+/////////////////////////////////////// System Configuration ///////////////////////////////////////
+
+SystemConfiguration::SystemConfiguration(uint8_t _numberOfPoints)
+{
+    if (_numberOfPoints < 6 && _numberOfPoints > 0) {
+        numberOfPoints = _numberOfPoints;
+    }
+    else {
+        numberOfPoints = 0;
+    }
+    currentPointIndex = 0;
+    for (uint8_t i = 0; i < numberOfPoints; i++) {
+        SinglePointConfigurationCollection[i] = new SinglePointConfiguration();
+    }
+}
+
+SystemConfiguration::~SystemConfiguration() {
+    delete[] SinglePointConfigurationCollection;
+}
+
+SinglePointConfiguration* SystemConfiguration::getPointerToSinglePointConfiguration(uint8_t index)
+{
+    if (index > 0 && index < numberOfPoints) {
+        return SinglePointConfigurationCollection[index]
+    };
+    return nullptr;
+}
+
+/////////////////////////////////////// Single Point Configuration ///////////////////////////////////////
+
+SinglePointConfiguration::SinglePointConfiguration()
+{
 }

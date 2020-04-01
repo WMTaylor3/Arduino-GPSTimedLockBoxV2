@@ -119,16 +119,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Setup.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Physical.h" />
-    <ClInclude Include="UserInput.h" />
     <ClInclude Include="Temporal.h" />
     <ClInclude Include="__vm\.ArduinoGPSTimedLockBox.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Setup.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Physical.cpp" />
-    <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Temporal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

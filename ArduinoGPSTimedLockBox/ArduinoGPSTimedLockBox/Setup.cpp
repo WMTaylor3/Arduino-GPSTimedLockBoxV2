@@ -73,7 +73,7 @@ void Setup::PrintSplashScreen() {
     Serial.println(F("To continue, press any key..."));
 }
 
-uint8_t Setup::GetNumberOfPoints()
+uint8_t Setup::PromptForNumberOfPoints()
 {
     char charInput = '0';
     char* rx_string = NULL;
@@ -91,6 +91,56 @@ bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
     return (numberOfPoints > 0 && numberOfPoints < 6);
 }
 
+double Setup::PromptForUnlockLatitude()
+{
+    return 0.0;
+}
+
+bool Setup::ValidateUnlockLatitude(double unlockLatitude)
+{
+    return false;
+}
+
+double Setup::PromptForUnlockLongitude()
+{
+    return 0.0;
+}
+
+bool Setup::ValidateUnlockLongitude(double unlockLatitude)
+{
+    return false;
+}
+
+time_t Setup::PromptForHintRevealDateTime()
+{
+    return time_t();
+}
+
+bool Setup::ValidateHintRevealDateTime(time_t unlockLatitude)
+{
+    return false;
+}
+
+time_t Setup::PromptForUnlockDateTime()
+{
+    return time_t();
+}
+
+bool Setup::ValidateUnlockDateTime(time_t unlockLatitude)
+{
+    return false;
+}
+
+time_t Setup::PromptForGracePeriodEndTime()
+{
+    return time_t();
+}
+
+bool Setup::ValidateGracePeriodEndTime(time_t unlockLatitude)
+{
+    return false;
+}
+
 SystemConfiguration* Setup::InitialConfiguration()
 {
     ClearScreen();
@@ -101,7 +151,7 @@ SystemConfiguration* Setup::InitialConfiguration()
     // Total number of times/places to be included in the hunt.
     uint8_t numberOfPoints = 0; // Invalid.
     while (!ValidateNumberOfPoints(numberOfPoints)) {
-        numberOfPoints = GetNumberOfPoints();
+        numberOfPoints = PromptForNumberOfPoints();
     }
     sysConfig = new SystemConfiguration(numberOfPoints);
     ClearScreen();
@@ -110,19 +160,33 @@ SystemConfiguration* Setup::InitialConfiguration()
     for (uint8_t i = 0; i < numberOfPoints; i++) {
         double unlockLatitude = 100; // Invalid.
         while (!ValidateUnlockLatitude(unlockLatitude)) {
-            unlockLatitude = GetUnlockLocationLatitude();
+            unlockLatitude = PromptForUnlockLatitude();
         }
 
-        double unlockLongitude = GetUnlockLocationLongitude();
-        time_t hintRevealDateTime = GetHintRevealDateTime();
-        time_t unlockDateTime = GetUnlockDateTime();
-        time_t gracePeriodEndTime = GetGracePeriodEndTime();
+        double unlockLongitude = 200; // Invalid.
+        while (!ValidateUnlockLongitude(unlockLongitude)) {
+            unlockLongitude = PromptForUnlockLongitude();
+        }
+       
+        time_t hintRevealDateTime = 0; // Invalid. 1 January 1970.
+        while (!ValidateHintRevealDateTime(hintRevealDateTime)) {
+            hintRevealDateTime = PromptForHintRevealDateTime();
+        }
 
+        time_t unlockDateTime = 0; // Invalid. 1 January 1970.
+        while (!ValidateUnlockDateTime(unlockDateTime)) {
+            unlockDateTime = PromptForUnlockDateTime();
+        }
 
-        SinglePointConfiguration[i].SetUnlockLocation(unlockLatitude, unlockLongitude);
-        SinglePointConfiguration[i].SetHintRevealDateTime = 
-        SinglePointConfiguration[i].SetUnlockDateTime = 
-        SinglePointConfiguration[i].SetGracePeriodEndTime = 
+        time_t gracePeriodEndTime = 0; // Invalid. 1 January 1970.
+        while (!ValidateGracePeriodEndTime(gracePeriodEndTime)) {
+            gracePeriodEndTime = PromptForGracePeriodEndTime();
+        }
+
+        sysConfig->getPoint(i)->SetUnlockLocation(unlockLatitude, unlockLongitude);
+        sysConfig->getPoint(i)->SetHintRevealDateTime(hintRevealDateTime);
+        sysConfig->getPoint(i)->SetUnlockDateTime(unlockDateTime);
+        sysConfig->getPoint(i)->SetGracePeriodEndTime(gracePeriodEndTime);
     }
 }
 
@@ -157,5 +221,21 @@ SinglePointConfiguration* SystemConfiguration::getPoint(uint8_t index)
 /////////////////////////////////////// Single Point Configuration ///////////////////////////////////////
 
 SinglePointConfiguration::SinglePointConfiguration()
+{
+}
+
+void SinglePointConfiguration::SetUnlockLocation(double lat, double long)
+{
+}
+
+void SinglePointConfiguration::SetHintRevealDateTime(time_t time)
+{
+}
+
+void SinglePointConfiguration::SetUnlockDateTime(time_t time)
+{
+}
+
+void SinglePointConfiguration::SetGracePeriodEndTime(time_t time)
 {
 }

@@ -9,12 +9,18 @@
 	#include "WProgram.h"
 #endif
 
+#include <Time.h>
+
 class SinglePointConfiguration
 {
 private:
 	uint8_t holder;
 public:
 	SinglePointConfiguration();
+	void SetUnlockLocation(double lat, double long);
+	void SetHintRevealDateTime(time_t time);
+	void SetUnlockDateTime(time_t time);
+	void SetGracePeriodEndTime(time_t time);
 };
 
 class SystemConfiguration
@@ -37,11 +43,18 @@ private:
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	void ClearScreen();
 	void PrintSplashScreen();
-	uint8_t GetNumberOfPoints();
+	uint8_t PromptForNumberOfPoints();
 	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
-	double GetUnlockLatitude();
+	double PromptForUnlockLatitude();
 	bool ValidateUnlockLatitude(double unlockLatitude);
-
+	double PromptForUnlockLongitude();
+	bool ValidateUnlockLongitude(double unlockLatitude);
+	time_t PromptForHintRevealDateTime();
+	bool ValidateHintRevealDateTime(time_t unlockLatitude);
+	time_t PromptForUnlockDateTime();
+	bool ValidateUnlockDateTime(time_t unlockLatitude);
+	time_t PromptForGracePeriodEndTime();
+	bool ValidateGracePeriodEndTime(time_t unlockLatitude);
 public:
 	Setup();
 	~Setup();

@@ -76,9 +76,8 @@ void Setup::PrintSplashScreen() {
 uint8_t Setup::PromptForNumberOfPoints()
 {
     char charInput = '0';
-    char* rx_string = NULL;
+    char* rx_string = new char[2];
     Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5): "));
-    rx_string = new char[2];
     GetUserInput(rx_string, 1);
     charInput = rx_string[0];
     delete(rx_string);
@@ -93,7 +92,23 @@ bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
 
 double Setup::PromptForUnlockLatitude()
 {
-    return 0.0;
+    double latInput = -36.696190;
+    char* rx_string = new char[13];
+    Serial.println(F("Enter the latitude value of the final unlock location."));
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must have a + or - prepended to it."));
+    Serial.println(F("    Must be formatted with two digits prior to the decimal point."));
+    Serial.println(F("    Must be formatted with seven digits following the decimal point."));
+    Serial.println(F("    Leading and trailing zeros are permitted, however, it is strongly encouraged to have as high a degree of precision as possible."));
+    Serial.println(F("Examples:"));
+    Serial.println(F("    +12.1234567 <- Acceptable form and precision of positive."));
+    Serial.println(F("    -01.9876543 <- Acceptable form and precision of negative."));
+    Serial.println(F("    +02.1234500 <- Acceptable form of positive but unideal precision."));
+    Serial.println(F("    -11.1234500 <- Acceptable form of negative but unideal precision."));
+    Serial.print(F(": "));
+    GetUserInput(rx_string, 12);
+    Serial.println(rx_string);
+    delete(rx_string);
 }
 
 bool Setup::ValidateUnlockLatitude(double unlockLatitude)

@@ -9,18 +9,12 @@
 	#include "WProgram.h"
 #endif
 
-class Setup
+class SinglePointConfiguration
 {
 private:
-	SystemConfiguration* sysConfig;
-	void AwaitUserInput();
-	void GetUserInput(char* rx_string, uint8_t maxStringLength);
-	void ClearScreen();
-	void PrintSplashScreen();
-	uint8_t ConfigureNumberOfPoints();
+	uint8_t holder;
 public:
-	Setup();
-	SystemConfiguration* InitialConfiguration();
+	SinglePointConfiguration();
 };
 
 class SystemConfiguration
@@ -32,15 +26,26 @@ private:
 public:
 	SystemConfiguration(uint8_t _numberOfPoints);
 	~SystemConfiguration();
-	SinglePointConfiguration* getPointerToSinglePointConfiguration(uint8_t index);
+	SinglePointConfiguration* getPoint(uint8_t index);
 };
 
-class SinglePointConfiguration
+class Setup
 {
 private:
-	uint8_t holder;
+	SystemConfiguration* sysConfig;
+	void AwaitUserInput();
+	void GetUserInput(char* rx_string, uint8_t maxStringLength);
+	void ClearScreen();
+	void PrintSplashScreen();
+	uint8_t GetNumberOfPoints();
+	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
+	double GetUnlockLatitude();
+	bool ValidateUnlockLatitude(double unlockLatitude);
+
 public:
-	SinglePointConfiguration();
+	Setup();
+	~Setup();
+	SystemConfiguration* InitialConfiguration();
 };
 
 #endif

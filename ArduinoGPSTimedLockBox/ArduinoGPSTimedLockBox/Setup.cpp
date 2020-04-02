@@ -73,19 +73,22 @@ void Setup::PrintSplashScreen() {
     Serial.println(F("To continue, press any key..."));
 }
 
-uint8_t Setup::ConfigureNumberOfPoints()
+uint8_t Setup::GetNumberOfPoints()
 {
     char charInput = '0';
     char* rx_string = NULL;
-    while (charInput < '1' || charInput > '5') {
-        Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5): "));
-        rx_string = new char[2];
-        GetUserInput(rx_string, 1);
-        charInput = rx_string[0];
-        delete(rx_string);
-        rx_string = NULL;
-    }
+    Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5): "));
+    rx_string = new char[2];
+    GetUserInput(rx_string, 1);
+    charInput = rx_string[0];
+    delete(rx_string);
+    rx_string = NULL;
     return charInput - 48; // Convert to integer.
+}
+
+bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
+{
+    return (numberOfPoints > 0 && numberOfPoints < 6);
 }
 
 SystemConfiguration* Setup::InitialConfiguration()
@@ -94,8 +97,33 @@ SystemConfiguration* Setup::InitialConfiguration()
     PrintSplashScreen();
     AwaitUserInput();
     ClearScreen();
-    uint8_t numberOfPoints = ConfigureNumberOfPoints();
+    
+    // Total number of times/places to be included in the hunt.
+    uint8_t numberOfPoints = 0; // Invalid.
+    while (!ValidateNumberOfPoints(numberOfPoints)) {
+        numberOfPoints = GetNumberOfPoints();
+    }
     sysConfig = new SystemConfiguration(numberOfPoints);
+    ClearScreen();
+
+    // For each time/place as quantified above.
+    for (uint8_t i = 0; i < numberOfPoints; i++) {
+        double unlockLatitude = 100; // Invalid.
+        while (!ValidateUnlockLatitude(unlockLatitude)) {
+            unlockLatitude = GetUnlockLocationLatitude();
+        }
+
+        double unlockLongitude = GetUnlockLocationLongitude();
+        time_t hintRevealDateTime = GetHintRevealDateTime();
+        time_t unlockDateTime = GetUnlockDateTime();
+        time_t gracePeriodEndTime = GetGracePeriodEndTime();
+
+
+        SinglePointConfiguration[i].SetUnlockLocation(unlockLatitude, unlockLongitude);
+        SinglePointConfiguration[i].SetHintRevealDateTime = 
+        SinglePointConfiguration[i].SetUnlockDateTime = 
+        SinglePointConfiguration[i].SetGracePeriodEndTime = 
+    }
 }
 
 /////////////////////////////////////// System Configuration ///////////////////////////////////////
@@ -118,11 +146,11 @@ SystemConfiguration::~SystemConfiguration() {
     delete[] SinglePointConfigurationCollection;
 }
 
-SinglePointConfiguration* SystemConfiguration::getPointerToSinglePointConfiguration(uint8_t index)
+SinglePointConfiguration* SystemConfiguration::getPoint(uint8_t index)
 {
     if (index > 0 && index < numberOfPoints) {
-        return SinglePointConfigurationCollection[index]
-    };
+        return SinglePointConfigurationCollection[index];
+    }
     return nullptr;
 }
 

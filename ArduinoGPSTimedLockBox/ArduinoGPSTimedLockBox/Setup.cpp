@@ -168,12 +168,77 @@ bool Setup::ValidateUnlockLatitude(double unlockLatitude)
 
 double Setup::PromptForUnlockLongitude()
 {
-    return 0.0;
+    char* rx_string = new char[13];
+    Serial.println(F("Enter the longitude value of the final unlock location."));
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must have a + or - prepended to it."));
+    Serial.println(F("    Must be formatted with three digits prior to the decimal point."));
+    Serial.println(F("    Must be formatted with seven digits following the decimal point."));
+    Serial.println(F("    Leading and trailing zeros are permitted, however, it is strongly encouraged to have as high a degree of precision as possible."));
+    Serial.println(F("Examples:"));
+    Serial.println(F("    +102.1234567 <- Acceptable form and precision of positive."));
+    Serial.println(F("    -010.9876543 <- Acceptable form and precision of negative."));
+    Serial.println(F("    +002.1234500 <- Acceptable form of positive but unideal precision."));
+    Serial.println(F("    -110.1234500 <- Acceptable form of negative but unideal precision."));
+    bool validUserInput = false;
+    do {
+        Serial.print(F(": "));
+        GetUserInput(rx_string, 12);
+    } while (!ValidateUserInputLongitude(rx_string));
+
+    double longInput = atof(rx_string);
+    delete(rx_string);
+    return longInput;
+}
+
+bool Setup::ValidateUserInputLongitude(char* rx_string)
+{
+    // Must be correct length.
+    for (uint8_t i = 0; i < 12; i++) {
+        if (rx_string[i] == '\0') {
+            Serial.println(F("INVALID: Incorrect input length."));
+            return false;
+        }
+    }
+    if (rx_string[12] != '\0') {
+        Serial.println(F("INVALID: Incorrect input length."));
+        return false;
+    }
+
+    // Must start with + or -.
+    if (rx_string[0] != '+' && rx_string[0] != '-') {
+        Serial.println(F("INVALID: First character must be '+' or '-'."));
+        return false;
+    }
+
+    // Next must be a decimal point.
+    if (rx_string[4] != '.') {
+        Serial.println(F("INVALID: Decimal point ommitted or incorrectly placed."));
+        return false;
+    }
+
+    // Next must be three digits between 0 and 9.
+    for (uint8_t i = 1; i < 4; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found prior to decimal point."));
+            return false;
+        }
+    }
+
+    // Next must be seven digits between 0 and 9.
+    for (uint8_t i = 5; i < 11; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found following decimal point."));
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool Setup::ValidateUnlockLongitude(double unlockLatitude)
 {
-    return false;
+    return unlockLatitude <= 180 && unlockLatitude >= -180;
 }
 
 time_t Setup::PromptForHintRevealDateTime()

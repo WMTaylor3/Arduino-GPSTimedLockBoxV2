@@ -49,6 +49,7 @@ private:
 	bool ValidateUserInputLatitude(char* rx_string);
 	bool ValidateUnlockLatitude(double unlockLatitude);
 	double PromptForUnlockLongitude();
+	bool ValidateUserInputLongitude(char* rx_string);
 	bool ValidateUnlockLongitude(double unlockLatitude);
 	time_t PromptForHintRevealDateTime();
 	bool ValidateHintRevealDateTime(time_t unlockLatitude);

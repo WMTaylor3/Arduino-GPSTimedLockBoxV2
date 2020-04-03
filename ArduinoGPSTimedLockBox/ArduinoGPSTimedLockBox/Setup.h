@@ -46,6 +46,7 @@ private:
 	uint8_t PromptForNumberOfPoints();
 	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
 	double PromptForUnlockLatitude();
+	bool ValidateUserInputUnlockLatitude(char* rx_string);
 	bool ValidateUnlockLatitude(double unlockLatitude);
 	double PromptForUnlockLongitude();
 	bool ValidateUnlockLongitude(double unlockLatitude);

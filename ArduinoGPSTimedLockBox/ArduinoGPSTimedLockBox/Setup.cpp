@@ -6,6 +6,8 @@
 
 /////////////////////////////////////// User Input ///////////////////////////////////////
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////TODO: fix issue with backspacing on user input method
 Setup::Setup()
 {
 }
@@ -93,7 +95,7 @@ bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
 double Setup::PromptForUnlockLatitude()
 {
     double latInput = -36.696190;
-    char* rx_string = new char[13];
+    char* rx_string = new char[12];
     Serial.println(F("Enter the latitude value of the final unlock location."));
     Serial.println(F("Formatting:"));
     Serial.println(F("    Must have a + or - prepended to it."));
@@ -105,10 +107,59 @@ double Setup::PromptForUnlockLatitude()
     Serial.println(F("    -01.9876543 <- Acceptable form and precision of negative."));
     Serial.println(F("    +02.1234500 <- Acceptable form of positive but unideal precision."));
     Serial.println(F("    -11.1234500 <- Acceptable form of negative but unideal precision."));
-    Serial.print(F(": "));
-    GetUserInput(rx_string, 12);
+    bool validUserInput = false;
+    do {
+        Serial.print(F(": "));
+        GetUserInput(rx_string, 11);
+    } while (!ValidateUserInputUnlockLatitude(rx_string));
+
     Serial.println(rx_string);
     delete(rx_string);
+}
+
+bool Setup::ValidateUserInputUnlockLatitude(char* rx_string)
+{
+    // Must be correct length.
+    for (uint8_t i = 0; i < 11; i++) {
+        if (rx_string[i] == '\0') {
+            Serial.println(F("INVALID: Incorrect input length."));
+            return false;
+        }
+    }
+    if (rx_string[11] != '\0') {
+        Serial.println(F("INVALID: Incorrect input length."));
+        return false;
+    }
+
+    // Must start with + or -.
+    if (rx_string[0] != '+' && rx_string[0] != '-') {
+        Serial.println(F("INVALID: First character must be '+' or '-'."));
+        return false;
+    }
+
+    // Next must be a decimal point.
+    if (rx_string[3] != '.') {
+        Serial.println(F("INVALID: Decimal point ommitted or incorrectly placed."));
+        return false;
+    }
+
+    // Next must be two digits between 0 and 9.
+    for (uint8_t i = 1; i < 3; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found prior to decimal point."));
+            return false;
+        }
+    }
+
+    // Next must be seven digits between 0 and 9.
+    for (uint8_t i = 4; i < 11; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found following decimal point."));
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool Setup::ValidateUnlockLatitude(double unlockLatitude)
@@ -173,30 +224,30 @@ SystemConfiguration* Setup::InitialConfiguration()
 
     // For each time/place as quantified above.
     for (uint8_t i = 0; i < numberOfPoints; i++) {
-        double unlockLatitude = 100; // Invalid.
-        while (!ValidateUnlockLatitude(unlockLatitude)) {
+        double unlockLatitude = 0;
+        do {
             unlockLatitude = PromptForUnlockLatitude();
-        }
+        } while (!ValidateUnlockLatitude(unlockLatitude));
 
-        double unlockLongitude = 200; // Invalid.
-        while (!ValidateUnlockLongitude(unlockLongitude)) {
+        double unlockLongitude = 0;
+        do {
             unlockLongitude = PromptForUnlockLongitude();
-        }
+        } while (!ValidateUnlockLongitude(unlockLongitude));
        
-        time_t hintRevealDateTime = 0; // Invalid. 1 January 1970.
-        while (!ValidateHintRevealDateTime(hintRevealDateTime)) {
+        time_t hintRevealDateTime = 0;
+        do {
             hintRevealDateTime = PromptForHintRevealDateTime();
-        }
+        } while (!ValidateHintRevealDateTime(hintRevealDateTime));
 
-        time_t unlockDateTime = 0; // Invalid. 1 January 1970.
-        while (!ValidateUnlockDateTime(unlockDateTime)) {
+        time_t unlockDateTime = 0;
+        do {
             unlockDateTime = PromptForUnlockDateTime();
-        }
+        } while (!ValidateUnlockDateTime(unlockDateTime));
 
-        time_t gracePeriodEndTime = 0; // Invalid. 1 January 1970.
-        while (!ValidateGracePeriodEndTime(gracePeriodEndTime)) {
+        time_t gracePeriodEndTime = 0;
+        do {
             gracePeriodEndTime = PromptForGracePeriodEndTime();
-        }
+        } while (!ValidateGracePeriodEndTime(gracePeriodEndTime));
 
         sysConfig->getPoint(i)->SetUnlockLocation(unlockLatitude, unlockLongitude);
         sysConfig->getPoint(i)->SetHintRevealDateTime(hintRevealDateTime);

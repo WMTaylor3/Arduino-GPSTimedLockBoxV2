@@ -111,13 +111,13 @@ double Setup::PromptForUnlockLatitude()
     do {
         Serial.print(F(": "));
         GetUserInput(rx_string, 11);
-    } while (!ValidateUserInputUnlockLatitude(rx_string));
+    } while (!ValidateUserInputLatitude(rx_string));
 
     Serial.println(rx_string);
     delete(rx_string);
 }
 
-bool Setup::ValidateUserInputUnlockLatitude(char* rx_string)
+bool Setup::ValidateUserInputLatitude(char* rx_string)
 {
     // Must be correct length.
     for (uint8_t i = 0; i < 11; i++) {
@@ -164,7 +164,7 @@ bool Setup::ValidateUserInputUnlockLatitude(char* rx_string)
 
 bool Setup::ValidateUnlockLatitude(double unlockLatitude)
 {
-    return false;
+    return unlockLatitude <= 90 && unlockLatitude >= -90;
 }
 
 double Setup::PromptForUnlockLongitude()

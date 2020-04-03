@@ -7,7 +7,6 @@
 /////////////////////////////////////// User Input ///////////////////////////////////////
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////TODO: fix issue with backspacing on user input method
 Setup::Setup()
 {
 }
@@ -94,7 +93,6 @@ bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
 
 double Setup::PromptForUnlockLatitude()
 {
-    double latInput = -36.696190;
     char* rx_string = new char[12];
     Serial.println(F("Enter the latitude value of the final unlock location."));
     Serial.println(F("Formatting:"));
@@ -113,8 +111,9 @@ double Setup::PromptForUnlockLatitude()
         GetUserInput(rx_string, 11);
     } while (!ValidateUserInputLatitude(rx_string));
 
-    Serial.println(rx_string);
+    double latInput = atof(rx_string);
     delete(rx_string);
+    return latInput;
 }
 
 bool Setup::ValidateUserInputLatitude(char* rx_string)
@@ -228,6 +227,7 @@ SystemConfiguration* Setup::InitialConfiguration()
         do {
             unlockLatitude = PromptForUnlockLatitude();
         } while (!ValidateUnlockLatitude(unlockLatitude));
+        ClearScreen();
 
         double unlockLongitude = 0;
         do {

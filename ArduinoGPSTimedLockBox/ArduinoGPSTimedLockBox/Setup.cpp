@@ -76,19 +76,57 @@ void Setup::PrintSplashScreen() {
 
 uint8_t Setup::PromptForNumberOfPoints()
 {
-    char charInput = '0';
     char* rx_string = new char[2];
-    Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5): "));
-    GetUserInput(rx_string, 1);
-    charInput = rx_string[0];
+    Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5)."));
+    bool validUserInput = false;
+    do {
+        Serial.print(F(": "));
+        GetUserInput(rx_string, 1);
+    } while (!ValidateUserInputNumberOfPoints(rx_string));
+
+    uint8_t numPointInput = rx_string[0] - 48; // Convert to integer.
     delete(rx_string);
-    rx_string = NULL;
-    return charInput - 48; // Convert to integer.
+    return numPointInput;
+}
+
+bool Setup::ValidateUserInputNumberOfPoints(char* rx_string)
+{
+    return rx_string[0] > '0' && rx_string[0] < '6';
 }
 
 bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
 {
     return (numberOfPoints > 0 && numberOfPoints < 6);
+}
+
+time_t Setup::PromptForGameStartDateTime()
+{
+    //ISO 8601 format without the timezone offset
+    char* rx_string = new char[20];
+    Serial.println(F("Enter the date/time value of the final unlock location"));
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
+    Serial.println(F("    Time must be in 24 hour format."));
+    Serial.println(F("    The hyphens, colons and 'T' characters are required"));
+    Serial.println(F("    Leading and trailing zeros are permitted and must be used in single digit days, months and times."));
+    Serial.println(F("Examples:"));
+    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds."));
+    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM."));
+    bool validUserInput = false;
+    do {
+        Serial.print(F(": "));
+        GetUserInput(rx_string, 19);
+    } while (!ValidateUserInputLongitude(rx_string));
+}
+
+bool Setup::ValidateUserInputGameStartTime(char* rx_string)
+{
+    return false;
+}
+
+bool Setup::ValidateGameStartDateTime(time_t unlockLatitude)
+{
+    return false;
 }
 
 double Setup::PromptForUnlockLatitude(bool final = false)
@@ -251,32 +289,7 @@ bool Setup::ValidateUnlockLongitude(double unlockLatitude)
     return unlockLatitude <= 180 && unlockLatitude >= -180;
 }
 
-time_t Setup::PromptForHintRevealDateTime(bool final = false)
-{
-    //ISO 8601 format without the timezone offset
-    char* rx_string = new char[20];
-    if (final) {
-        Serial.println(F("Enter the date/time value of the final unlock location"));
-    }
-    else {
-        Serial.println(F("Enter the date/time value of the next hint reveal location"));
-    }
-    Serial.println(F("Formatting:"));
-    Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
-    Serial.println(F("    Time must be in 24 hour format."));
-    Serial.println(F("    The hyphens, colons and 'T' characters are required"));
-    Serial.println(F("    Leading and trailing zeros are permitted and must be used in single digit days, months and times."));
-    Serial.println(F("Examples:"));
-    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds."));
-    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM."));
-}
-
-bool Setup::ValidateHintRevealDateTime(time_t unlockLatitude)
-{
-    return false;
-}
-
-time_t Setup::PromptForUnlockDateTime(bool final = false)
+time_t Setup::PromptForNextPointDateTime(bool final = false)
 {
     return time_t();
 }
@@ -308,9 +321,15 @@ SystemConfiguration* Setup::InitialConfiguration()
     do {
         numberOfPoints = PromptForNumberOfPoints();
     } while (!ValidateNumberOfPoints(numberOfPoints));
-
     sysConfig = new SystemConfiguration(numberOfPoints);
     ClearScreen();
+
+    time_t gameStartDateTime = 0;
+    do {
+        gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
+    } while (!ValidateGameStartDateTime(gameStartDateTime));
+    ClearScreen();
+    sysConfig->SetGameStartDateTime(gameStartDateTime);
 
     // For each time/place as quantified above.
     for (uint8_t i = 0; i < numberOfPoints; i++) {
@@ -326,15 +345,9 @@ SystemConfiguration* Setup::InitialConfiguration()
         } while (!ValidateUnlockLongitude(unlockLongitude));
         ClearScreen();
 
-        time_t hintRevealDateTime = 0;
-        do {
-            hintRevealDateTime = PromptForHintRevealDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateHintRevealDateTime(hintRevealDateTime));
-        ClearScreen();
-
         time_t unlockDateTime = 0;
         do {
-            unlockDateTime = PromptForUnlockDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockDateTime = PromptForNextPointDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateUnlockDateTime(unlockDateTime));
         ClearScreen();
 
@@ -345,7 +358,6 @@ SystemConfiguration* Setup::InitialConfiguration()
         ClearScreen();
 
         sysConfig->getPoint(i)->SetUnlockLocation(unlockLatitude, unlockLongitude);
-        sysConfig->getPoint(i)->SetHintRevealDateTime(hintRevealDateTime);
         sysConfig->getPoint(i)->SetUnlockDateTime(unlockDateTime);
         sysConfig->getPoint(i)->SetGracePeriodEndTime(gracePeriodEndTime);
     }
@@ -377,6 +389,10 @@ SinglePointConfiguration* SystemConfiguration::getPoint(uint8_t index)
         return SinglePointConfigurationCollection[index];
     }
     return nullptr;
+}
+
+void SystemConfiguration::SetGameStartDateTime(time_t dateTime) {
+    gameStartDateTime = dateTime;
 }
 
 /////////////////////////////////////// Single Point Configuration ///////////////////////////////////////

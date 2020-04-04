@@ -59,9 +59,6 @@ void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
 
 bool Setup::ValidateUserInputDateTime(char* rx_string)
 {
-
-    Serial.println(rx_string);
-
     // Must be correct length.
     for (uint8_t i = 0; i < 19; i++) {
         if (rx_string[i] == '\0') {
@@ -204,6 +201,11 @@ time_t Setup::ParseDateTimeInputToTimeT(char* dateTimeString)
     inputTimeInElements.Second = builtSecond;
 
     return makeTime(inputTimeInElements);
+}
+
+uint16_t Setup::ParseMinutesStringToSeconds(char* durationString)
+{
+    return ((durationString[0] - 48) * 600) + ((durationString[1] - 48) * 60)
 }
 
 void Setup::ClearScreen() {
@@ -447,22 +449,92 @@ bool Setup::ValidateLongitude(double longitude)
 
 time_t Setup::PromptForNextPointDateTime(bool final = false)
 {
-    return time_t();
+    //ISO 8601 format without the timezone offset
+    char* rx_string = new char[20];
+    if (final) {
+        Serial.println(F("Enter the date/time value for when you wish the unit to unlock."));
+    }
+    else {
+        Serial.println(F("Enter the date/time value of the next hint reveal."));
+    }
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
+    Serial.println(F("    Time must be in 24 hour format."));
+    Serial.println(F("    The hyphens, colons and 'T' characters are required"));
+    Serial.println(F("    Leading and trailing zeros are permitted and must be used in single digit days, months and times."));
+    Serial.println(F("Examples:"));
+    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds."));
+    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM."));
+    bool validUserInput = false;
+    do {
+        Serial.print(F(": "));
+        GetUserInput(rx_string, 19);
+    } while (!ValidateUserInputDateTime(rx_string));
+
+    time_t nextDateTime = ParseDateTimeInputToTimeT(rx_string);
+    delete(rx_string);
+    return nextDateTime;
 }
 
 bool Setup::ValidateNextPointDateTime(time_t nextPointDateTime)
 {
-    return false;
+    return true; // Not much validation here other than ensuring it is after the previous one but frankly I can't be bothered implementing that.
 }
 
-time_t Setup::PromptForGracePeriodDuration(bool final = false)
+// Returns as number of seconds.
+uint16_t Setup::PromptForGracePeriodDuration()
 {
-    return time_t();
+    //ISO 8601 format without the timezone offset
+    char* rx_string = new char[3];
+    Serial.println(F("Enter the value (in minutes) for how long you wish the grace window to last."));
+    Serial.println(F("This is the length of time after the next hint is revealed/unlock time is reached that the unit will be accessible."));
+    Serial.println(F("It's purpose it to allow for a margin of error in arriving at the location late and still being able to continue."));
+    Serial.println(F("The value must be between 1 and 60 (1 minute to an hour)."));
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must be of format MM."));
+    Serial.println(F("    Leading and trailing zeros are permitted and must be used for cases like '01' and '30'."));
+    Serial.println(F("Examples:"));
+    Serial.println(F("    01 <- 1 Minute."));
+    Serial.println(F("    15 <- 15 Minutes."));
+    bool validUserInput = false;
+    do {
+        Serial.print(F(": "));
+        GetUserInput(rx_string, 2);
+    } while (!ValidateUserInputGracePeriod(rx_string));
+
+    uint16_t graceWindowDuration = ParseMinutesStringToSeconds(rx_string);
+    delete(rx_string);
+    return graceWindowDuration;
 }
 
-bool Setup::ValidateGracePeriodDuration(uint8_t durationInMinutes)
+bool Setup::ValidateUserInputGracePeriod(char* rx_string)
 {
-    return false;
+    // Must be correct length.
+    for (uint8_t i = 0; i < 2; i++) {
+        if (rx_string[i] == '\0') {
+            Serial.println(F("INVALID: Incorrect input length."));
+            return false;
+        }
+    }
+    if (rx_string[3] != '\0') {
+        Serial.println(F("INVALID: Incorrect input length."));
+        return false;
+    }
+
+    // Digits must be three digits between 0 and 9.
+    for (uint8_t i = 0; i < 2; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in grace period value."));
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
+{
+    return durationInSeconds < 3601 && durationInSeconds > 59 
 }
 
 SystemConfiguration* Setup::InitialConfiguration()
@@ -507,10 +579,11 @@ SystemConfiguration* Setup::InitialConfiguration()
         } while (!ValidateNextPointDateTime(unlockDateTime));
         ClearScreen();
 
-        time_t gracePeriodEndTime = 0;
+        uint16_t gracePeriodInSeconds = 0;
         do {
-            gracePeriodEndTime = PromptForGracePeriodDuration(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateGracePeriodDuration(gracePeriodEndTime));
+            gracePeriodInSeconds = PromptForGracePeriodDuration();
+        } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
+        time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
         ClearScreen();
 
         sysConfig->getPoint(i)->SetLocation(unlockLatitude, unlockLongitude);

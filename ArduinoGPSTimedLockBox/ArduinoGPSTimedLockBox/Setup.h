@@ -46,6 +46,7 @@ private:
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	bool ValidateUserInputDateTime(char* rx_string);
 	time_t ParseDateTimeInputToTimeT(char* dateTimeString);
+	uint16_t ParseMinutesStringToSeconds(char* durationString);
 	void ClearScreen();
 	void PrintSplashScreen();
 	uint8_t PromptForNumberOfPoints();
@@ -61,8 +62,9 @@ private:
 	bool ValidateLongitude(double longitude);
 	time_t PromptForNextPointDateTime(bool final);
 	bool ValidateNextPointDateTime(time_t nextPointDateTime);
-	time_t PromptForGracePeriodDuration(bool final);
-	bool ValidateGracePeriodDuration(uint8_t durationInMinutes);
+	uint16_t PromptForGracePeriodDuration();
+	bool ValidateUserInputGracePeriod(char* rx_string);
+	bool ValidateGracePeriodDuration(uint16_t durationInSeconds);
 public:
 	Setup();
 	~Setup();

@@ -10,6 +10,7 @@
 #endif
 
 #include <Time.h>
+#include <DS1307RTC.h>
 
 class SinglePointConfiguration
 {
@@ -17,8 +18,8 @@ private:
 	uint8_t holder;
 public:
 	SinglePointConfiguration();
-	void SetUnlockLocation(double lat, double long);
-	void SetUnlockDateTime(time_t time);
+	void SetLocation(double lat, double long);
+	void SetDateTime(time_t time);
 	void SetGracePeriodEndTime(time_t time);
 };
 
@@ -40,6 +41,7 @@ class Setup
 {
 private:
 	SystemConfiguration* sysConfig;
+	time_t timeAtBoot;
 	void AwaitUserInput();
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	bool ValidateUserInputDateTime(char* rx_string);

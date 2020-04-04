@@ -59,46 +59,151 @@ void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
 
 bool Setup::ValidateUserInputDateTime(char* rx_string)
 {
+
+    Serial.println(rx_string);
+
     // Must be correct length.
-    for (uint8_t i = 0; i < 20; i++) {
+    for (uint8_t i = 0; i < 19; i++) {
         if (rx_string[i] == '\0') {
             Serial.println(F("INVALID: Incorrect input length."));
             return false;
         }
     }
-    if (rx_string[20] != '\0') {
+    if (rx_string[19] != '\0') {
         Serial.println(F("INVALID: Incorrect input length."));
         return false;
     }
 
-    // Validate delimiters (hypens, colons, 'T' etc).
-    //if (rx_string[4] != '.') {
-    //    Serial.println(F("INVALID: Decimal point ommitted or incorrectly placed."));
-    //    return false;
-    //}
+    // Year digits must be three digits between 0 and 9.
+    for (uint8_t i = 0; i < 4; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in year field."));
+            return false;
+        }
+    }
+    
+    // Year must be greater than 1970. This is due to some processing later that will fail otherwise.
+    // Further checking of the validity of the date itself will take place later.
+    uint16_t year = (
+        ((rx_string[0] - 48) * 1000) +
+        ((rx_string[1] - 48) * 100) +
+        ((rx_string[2] - 48) * 10) +
+        (rx_string[3] - 48));
+    if (year < 1970) {
+        return false;
+    }
 
-    //// Next must be three digits between 0 and 9.
-    //for (uint8_t i = 1; i < 4; i++) {
-    //    if (rx_string[i] < '0' || rx_string[i] > '9') {
-    //        Serial.println(F("INVALID: Invalid character found prior to decimal point."));
-    //        return false;
-    //    }
-    //}
+                       
+    // Validate first hypen delimiter.
+    if (rx_string[4] != '-') {
+        Serial.println(F("INVALID: First hyphen ommitted or incorrectly placed. Check date format."));
+        return false;
+    }
 
-    //// Next must be seven digits between 0 and 9.
-    //for (uint8_t i = 5; i < 11; i++) {
-    //    if (rx_string[i] < '0' || rx_string[i] > '9') {
-    //        Serial.println(F("INVALID: Invalid character found following decimal point."));
-    //        return false;
-    //    }
-    //}
+    // Month digits must be three digits between 0 and 9.
+    for (uint8_t i = 5; i < 7; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in month field."));
+            return false;
+        }
+    }
+
+    // Validate second hypen delimiter.
+    if (rx_string[7] != '-') {
+        Serial.println(F("INVALID: Second hyphen ommitted or incorrectly placed. Check date format."));
+        return false;
+    }
+
+    // Day digits must be three digits between 0 and 9.
+    for (uint8_t i = 8; i < 10; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in day field."));
+            return false;
+        }
+    }
+
+    // Validate 'T' delimiter.
+    if (rx_string[10] != 'T') {
+        Serial.println(F("INVALID: 'T' delimiter ommitted or incorrectly placed."));
+        return false;
+    }
+
+    // Hour digits must be three digits between 0 and 9.
+    for (uint8_t i = 11; i < 13; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in hour field. Check time format."));
+            return false;
+        }
+    }
+
+    // Validate first colon delimiter.
+    if (rx_string[13] != ':') {
+        Serial.println(F("INVALID: First colon ommitted or incorrectly placed. Check time format."));
+        return false;
+    }
+
+    // Minutes digits must be three digits between 0 and 9.
+    for (uint8_t i = 14; i < 16; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in minute field. Check time format."));
+            return false;
+        }
+    }
+
+    // Validate second colon delimiter.
+    if (rx_string[16] != ':') {
+        Serial.println(F("INVALID: Second colon ommitted or incorrectly placed. Check time format."));
+        return false;
+    }
+
+    // Seconds digits must be three digits between 0 and 9.
+    for (uint8_t i = 17; i < 19; i++) {
+        if (rx_string[i] < '0' || rx_string[i] > '9') {
+            Serial.println(F("INVALID: Invalid character found in seconds field. Check time format."));
+            return false;
+        }
+    }
 
     return true;
 }
 
 time_t Setup::ParseDateTimeInputToTimeT(char* dateTimeString)
 {
-    return time_t();
+    uint8_t builtYear = (
+        ((dateTimeString[0] - 48) * 1000) +
+        ((dateTimeString[1] - 48) * 100) +
+        ((dateTimeString[2] - 48) * 10) +
+        (dateTimeString[3] - 48)) - 1970; // Offset from 1970. Required by TimeLib.h to store in a byte.
+
+    uint8_t builtMonth = (
+        ((dateTimeString[5] - 48) * 10) +
+        (dateTimeString[6] - 48));
+
+    uint8_t builtDay = (
+        ((dateTimeString[8] - 48) * 10) +
+        (dateTimeString[9] - 48));
+
+    uint8_t builtHour = (
+        ((dateTimeString[11] - 48) * 10) +
+        (dateTimeString[12] - 48));
+
+    uint8_t builtMinute = (
+        ((dateTimeString[14] - 48) * 10) +
+        (dateTimeString[15] - 48));
+
+    uint8_t builtSecond = (
+        ((dateTimeString[17] - 48) * 10) +
+        (dateTimeString[18] - 48));
+
+    tmElements_t inputTimeInElements;
+    inputTimeInElements.Year = builtYear;
+    inputTimeInElements.Month = builtMonth;
+    inputTimeInElements.Day = builtDay;
+    inputTimeInElements.Hour = builtHour;
+    inputTimeInElements.Minute = builtMinute;
+    inputTimeInElements.Second = builtSecond;
+
+    return makeTime(inputTimeInElements);
 }
 
 void Setup::ClearScreen() {
@@ -121,7 +226,7 @@ void Setup::PrintSplashScreen() {
 uint8_t Setup::PromptForNumberOfPoints()
 {
     char* rx_string = new char[2];
-    Serial.print(F("How many 4D points do you wish to configure? (Between 1 and 5)."));
+    Serial.println(F("How many 4D points do you wish to configure? (Between 1 and 5)."));
     bool validUserInput = false;
     do {
         Serial.print(F(": "));
@@ -135,7 +240,11 @@ uint8_t Setup::PromptForNumberOfPoints()
 
 bool Setup::ValidateUserInputNumberOfPoints(char* rx_string)
 {
-    return rx_string[0] > '0' && rx_string[0] < '6';
+    if (rx_string[0] < '1' || rx_string[0] > '5') {
+        Serial.println(F("INVALID: Number must be between 1 and 5 (inclusive)."));
+        return false;
+    }
+    return true;
 }
 
 bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
@@ -147,7 +256,8 @@ time_t Setup::PromptForGameStartDateTime()
 {
     //ISO 8601 format without the timezone offset
     char* rx_string = new char[20];
-    Serial.println(F("Enter the date/time value of the final unlock location"));
+    Serial.println(F("Enter the date/time value for when you wish the game to start."));
+    Serial.println(F("At this date and time the first location hint will be revealed to the user."));
     Serial.println(F("Formatting:"));
     Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
     Serial.println(F("    Time must be in 24 hour format."));
@@ -169,7 +279,10 @@ time_t Setup::PromptForGameStartDateTime()
 
 bool Setup::ValidateGameStartDateTime(time_t startDateTime)
 {
-    return false;
+    DS1307RTC* clock = new DS1307RTC();
+    time_t currentTime = clock->get();
+    delete(clock);
+    return startDateTime > currentTime;
 }
 
 double Setup::PromptForLatitude(bool final = false)
@@ -249,7 +362,7 @@ bool Setup::ValidateUserInputLatitude(char* rx_string)
 
 bool Setup::ValidateLatitude(double latitude)
 {
-    return unlockLatitude <= 90 && unlockLatitude >= -90;
+    return latitude <= 90 && latitude >= -90;
 }
 
 double Setup::PromptForLongitude(bool final = false)
@@ -329,7 +442,7 @@ bool Setup::ValidateUserInputLongitude(char* rx_string)
 
 bool Setup::ValidateLongitude(double longitude)
 {
-    return unlockLatitude <= 180 && unlockLatitude >= -180;
+    return longitude <= 180 && longitude >= -180;
 }
 
 time_t Setup::PromptForNextPointDateTime(bool final = false)
@@ -400,8 +513,8 @@ SystemConfiguration* Setup::InitialConfiguration()
         } while (!ValidateGracePeriodDuration(gracePeriodEndTime));
         ClearScreen();
 
-        sysConfig->getPoint(i)->SetUnlockLocation(unlockLatitude, unlockLongitude);
-        sysConfig->getPoint(i)->SetUnlockDateTime(unlockDateTime);
+        sysConfig->getPoint(i)->SetLocation(unlockLatitude, unlockLongitude);
+        sysConfig->getPoint(i)->SetDateTime(unlockDateTime);
         sysConfig->getPoint(i)->SetGracePeriodEndTime(gracePeriodEndTime);
     }
 }
@@ -444,15 +557,11 @@ SinglePointConfiguration::SinglePointConfiguration()
 {
 }
 
-void SinglePointConfiguration::SetUnlockLocation(double lat, double long)
+void SinglePointConfiguration::SetLocation(double lat, double long)
 {
 }
 
-void SinglePointConfiguration::SetHintRevealDateTime(time_t time)
-{
-}
-
-void SinglePointConfiguration::SetUnlockDateTime(time_t time)
+void SinglePointConfiguration::SetDateTime(time_t time)
 {
 }
 

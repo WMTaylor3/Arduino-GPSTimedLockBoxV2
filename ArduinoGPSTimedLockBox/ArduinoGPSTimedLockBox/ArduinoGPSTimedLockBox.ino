@@ -19,7 +19,7 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
 
-Setup userInput;
+Setup systemConfig;
 //Physical gps;
 //Temporal realTimeClock;
 //Display display;
@@ -34,6 +34,6 @@ void loop() {
 }
 
 void configureUnit() {
-    userInput.InitialConfiguration();
+    systemConfig.InitialConfiguration();
 }
 

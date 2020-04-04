@@ -91,10 +91,15 @@ bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
     return (numberOfPoints > 0 && numberOfPoints < 6);
 }
 
-double Setup::PromptForUnlockLatitude()
+double Setup::PromptForUnlockLatitude(bool final = false)
 {
     char* rx_string = new char[12];
-    Serial.println(F("Enter the latitude value of the final unlock location."));
+    if (final) {
+        Serial.println(F("Enter the latitude value of the final unlock location"));
+    }
+    else {
+        Serial.println(F("Enter the latitude value of the next hint reveal location"));
+    }
     Serial.println(F("Formatting:"));
     Serial.println(F("    Must have a + or - prepended to it."));
     Serial.println(F("    Must be formatted with two digits prior to the decimal point."));
@@ -166,10 +171,15 @@ bool Setup::ValidateUnlockLatitude(double unlockLatitude)
     return unlockLatitude <= 90 && unlockLatitude >= -90;
 }
 
-double Setup::PromptForUnlockLongitude()
+double Setup::PromptForUnlockLongitude(bool final = false)
 {
     char* rx_string = new char[13];
-    Serial.println(F("Enter the longitude value of the final unlock location."));
+    if (final) {
+        Serial.println(F("Enter the longitude value of the final unlock location"));
+    }
+    else {
+        Serial.println(F("Enter the longitude value of the next hint reveal location"));
+    }
     Serial.println(F("Formatting:"));
     Serial.println(F("    Must have a + or - prepended to it."));
     Serial.println(F("    Must be formatted with three digits prior to the decimal point."));
@@ -241,9 +251,24 @@ bool Setup::ValidateUnlockLongitude(double unlockLatitude)
     return unlockLatitude <= 180 && unlockLatitude >= -180;
 }
 
-time_t Setup::PromptForHintRevealDateTime()
+time_t Setup::PromptForHintRevealDateTime(bool final = false)
 {
-    return time_t();
+    //ISO 8601 format without the timezone offset
+    char* rx_string = new char[20];
+    if (final) {
+        Serial.println(F("Enter the date/time value of the final unlock location"));
+    }
+    else {
+        Serial.println(F("Enter the date/time value of the next hint reveal location"));
+    }
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
+    Serial.println(F("    Time must be in 24 hour format."));
+    Serial.println(F("    The hyphens, colons and 'T' characters are required"));
+    Serial.println(F("    Leading and trailing zeros are permitted and must be used in single digit days, months and times."));
+    Serial.println(F("Examples:"));
+    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds."));
+    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM."));
 }
 
 bool Setup::ValidateHintRevealDateTime(time_t unlockLatitude)
@@ -251,7 +276,7 @@ bool Setup::ValidateHintRevealDateTime(time_t unlockLatitude)
     return false;
 }
 
-time_t Setup::PromptForUnlockDateTime()
+time_t Setup::PromptForUnlockDateTime(bool final = false)
 {
     return time_t();
 }
@@ -261,7 +286,7 @@ bool Setup::ValidateUnlockDateTime(time_t unlockLatitude)
     return false;
 }
 
-time_t Setup::PromptForGracePeriodEndTime()
+time_t Setup::PromptForGracePeriodEndTime(bool final = false)
 {
     return time_t();
 }
@@ -279,10 +304,11 @@ SystemConfiguration* Setup::InitialConfiguration()
     ClearScreen();
     
     // Total number of times/places to be included in the hunt.
-    uint8_t numberOfPoints = 0; // Invalid.
-    while (!ValidateNumberOfPoints(numberOfPoints)) {
+    uint8_t numberOfPoints = 0;
+    do {
         numberOfPoints = PromptForNumberOfPoints();
-    }
+    } while (!ValidateNumberOfPoints(numberOfPoints));
+
     sysConfig = new SystemConfiguration(numberOfPoints);
     ClearScreen();
 
@@ -290,29 +316,33 @@ SystemConfiguration* Setup::InitialConfiguration()
     for (uint8_t i = 0; i < numberOfPoints; i++) {
         double unlockLatitude = 0;
         do {
-            unlockLatitude = PromptForUnlockLatitude();
+            unlockLatitude = PromptForUnlockLatitude(i = numberOfPoints-1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateUnlockLatitude(unlockLatitude));
         ClearScreen();
 
         double unlockLongitude = 0;
         do {
-            unlockLongitude = PromptForUnlockLongitude();
+            unlockLongitude = PromptForUnlockLongitude(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateUnlockLongitude(unlockLongitude));
-       
+        ClearScreen();
+
         time_t hintRevealDateTime = 0;
         do {
-            hintRevealDateTime = PromptForHintRevealDateTime();
+            hintRevealDateTime = PromptForHintRevealDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateHintRevealDateTime(hintRevealDateTime));
+        ClearScreen();
 
         time_t unlockDateTime = 0;
         do {
-            unlockDateTime = PromptForUnlockDateTime();
+            unlockDateTime = PromptForUnlockDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateUnlockDateTime(unlockDateTime));
+        ClearScreen();
 
         time_t gracePeriodEndTime = 0;
         do {
-            gracePeriodEndTime = PromptForGracePeriodEndTime();
+            gracePeriodEndTime = PromptForGracePeriodEndTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateGracePeriodEndTime(gracePeriodEndTime));
+        ClearScreen();
 
         sysConfig->getPoint(i)->SetUnlockLocation(unlockLatitude, unlockLongitude);
         sysConfig->getPoint(i)->SetHintRevealDateTime(hintRevealDateTime);

@@ -45,17 +45,17 @@ private:
 	void PrintSplashScreen();
 	uint8_t PromptForNumberOfPoints();
 	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
-	double PromptForUnlockLatitude();
+	double PromptForUnlockLatitude(bool final);
 	bool ValidateUserInputLatitude(char* rx_string);
 	bool ValidateUnlockLatitude(double unlockLatitude);
-	double PromptForUnlockLongitude();
+	double PromptForUnlockLongitude(bool final);
 	bool ValidateUserInputLongitude(char* rx_string);
 	bool ValidateUnlockLongitude(double unlockLatitude);
-	time_t PromptForHintRevealDateTime();
+	time_t PromptForHintRevealDateTime(bool final);
 	bool ValidateHintRevealDateTime(time_t unlockLatitude);
-	time_t PromptForUnlockDateTime();
+	time_t PromptForUnlockDateTime(bool final);
 	bool ValidateUnlockDateTime(time_t unlockLatitude);
-	time_t PromptForGracePeriodEndTime();
+	time_t PromptForGracePeriodEndTime(bool final);
 	bool ValidateGracePeriodEndTime(time_t unlockLatitude);
 public:
 	Setup();

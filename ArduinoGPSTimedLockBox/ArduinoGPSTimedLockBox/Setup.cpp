@@ -57,6 +57,45 @@ void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
     }
 }
 
+bool Setup::ValidateUserInputDateTime(char* rx_string)
+{
+    // Must be correct length.
+    for (uint8_t i = 0; i < 20; i++) {
+        if (rx_string[i] == '\0') {
+            Serial.println(F("INVALID: Incorrect input length."));
+            return false;
+        }
+    }
+    if (rx_string[20] != '\0') {
+        Serial.println(F("INVALID: Incorrect input length."));
+        return false;
+    }
+
+    // Validate delimiters (hypens, colons, 'T' etc).
+    //if (rx_string[4] != '.') {
+    //    Serial.println(F("INVALID: Decimal point ommitted or incorrectly placed."));
+    //    return false;
+    //}
+
+    //// Next must be three digits between 0 and 9.
+    //for (uint8_t i = 1; i < 4; i++) {
+    //    if (rx_string[i] < '0' || rx_string[i] > '9') {
+    //        Serial.println(F("INVALID: Invalid character found prior to decimal point."));
+    //        return false;
+    //    }
+    //}
+
+    //// Next must be seven digits between 0 and 9.
+    //for (uint8_t i = 5; i < 11; i++) {
+    //    if (rx_string[i] < '0' || rx_string[i] > '9') {
+    //        Serial.println(F("INVALID: Invalid character found following decimal point."));
+    //        return false;
+    //    }
+    //}
+
+    return true;
+}
+
 time_t Setup::ParseDateTimeInputToTimeT(char* dateTimeString)
 {
     return time_t();
@@ -121,16 +160,11 @@ time_t Setup::PromptForGameStartDateTime()
     do {
         Serial.print(F(": "));
         GetUserInput(rx_string, 19);
-    } while (!ValidateUserInputGameStartTime(rx_string));
+    } while (!ValidateUserInputDateTime(rx_string));
 
     time_t startDateTime = ParseDateTimeInputToTimeT(rx_string);
     delete(rx_string);
     return startDateTime;
-}
-
-bool Setup::ValidateUserInputGameStartTime(char* rx_string)
-{
-    return false;
 }
 
 bool Setup::ValidateGameStartDateTime(time_t startDateTime)

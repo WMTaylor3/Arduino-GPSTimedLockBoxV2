@@ -42,6 +42,7 @@ private:
 	SystemConfiguration* sysConfig;
 	void AwaitUserInput();
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
+	bool ValidateUserInputDateTime(char* rx_string);
 	time_t ParseDateTimeInputToTimeT(char* dateTimeString);
 	void ClearScreen();
 	void PrintSplashScreen();
@@ -49,7 +50,6 @@ private:
 	bool ValidateUserInputNumberOfPoints(char* rx_string);
 	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
 	time_t PromptForGameStartDateTime();
-	bool ValidateUserInputGameStartTime(char* rx_string);
 	bool ValidateGameStartDateTime(time_t startDateTime);
 	double PromptForLatitude(bool final);
 	bool ValidateUserInputLatitude(char* rx_string);

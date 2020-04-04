@@ -57,6 +57,11 @@ void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
     }
 }
 
+time_t Setup::ParseDateTimeInputToTimeT(char* dateTimeString)
+{
+    return time_t();
+}
+
 void Setup::ClearScreen() {
     Serial.write(27);       // ESC command
     Serial.print("[2J");    // clear screen command
@@ -116,7 +121,11 @@ time_t Setup::PromptForGameStartDateTime()
     do {
         Serial.print(F(": "));
         GetUserInput(rx_string, 19);
-    } while (!ValidateUserInputLongitude(rx_string));
+    } while (!ValidateUserInputGameStartTime(rx_string));
+
+    time_t startDateTime = ParseDateTimeInputToTimeT(rx_string);
+    delete(rx_string);
+    return startDateTime;
 }
 
 bool Setup::ValidateUserInputGameStartTime(char* rx_string)
@@ -124,12 +133,12 @@ bool Setup::ValidateUserInputGameStartTime(char* rx_string)
     return false;
 }
 
-bool Setup::ValidateGameStartDateTime(time_t unlockLatitude)
+bool Setup::ValidateGameStartDateTime(time_t startDateTime)
 {
     return false;
 }
 
-double Setup::PromptForUnlockLatitude(bool final = false)
+double Setup::PromptForLatitude(bool final = false)
 {
     char* rx_string = new char[12];
     if (final) {
@@ -204,12 +213,12 @@ bool Setup::ValidateUserInputLatitude(char* rx_string)
     return true;
 }
 
-bool Setup::ValidateUnlockLatitude(double unlockLatitude)
+bool Setup::ValidateLatitude(double latitude)
 {
     return unlockLatitude <= 90 && unlockLatitude >= -90;
 }
 
-double Setup::PromptForUnlockLongitude(bool final = false)
+double Setup::PromptForLongitude(bool final = false)
 {
     char* rx_string = new char[13];
     if (final) {
@@ -284,7 +293,7 @@ bool Setup::ValidateUserInputLongitude(char* rx_string)
     return true;
 }
 
-bool Setup::ValidateUnlockLongitude(double unlockLatitude)
+bool Setup::ValidateLongitude(double longitude)
 {
     return unlockLatitude <= 180 && unlockLatitude >= -180;
 }
@@ -294,17 +303,17 @@ time_t Setup::PromptForNextPointDateTime(bool final = false)
     return time_t();
 }
 
-bool Setup::ValidateUnlockDateTime(time_t unlockLatitude)
+bool Setup::ValidateNextPointDateTime(time_t nextPointDateTime)
 {
     return false;
 }
 
-time_t Setup::PromptForGracePeriodEndTime(bool final = false)
+time_t Setup::PromptForGracePeriodDuration(bool final = false)
 {
     return time_t();
 }
 
-bool Setup::ValidateGracePeriodEndTime(time_t unlockLatitude)
+bool Setup::ValidateGracePeriodDuration(uint8_t durationInMinutes)
 {
     return false;
 }
@@ -335,26 +344,26 @@ SystemConfiguration* Setup::InitialConfiguration()
     for (uint8_t i = 0; i < numberOfPoints; i++) {
         double unlockLatitude = 0;
         do {
-            unlockLatitude = PromptForUnlockLatitude(i = numberOfPoints-1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateUnlockLatitude(unlockLatitude));
+            unlockLatitude = PromptForLatitude(i = numberOfPoints-1); // Parameter will evaluate to true on the final loop.
+        } while (!ValidateLatitude(unlockLatitude));
         ClearScreen();
 
         double unlockLongitude = 0;
         do {
-            unlockLongitude = PromptForUnlockLongitude(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateUnlockLongitude(unlockLongitude));
+            unlockLongitude = PromptForLongitude(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+        } while (!ValidateLongitude(unlockLongitude));
         ClearScreen();
 
         time_t unlockDateTime = 0;
         do {
             unlockDateTime = PromptForNextPointDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateUnlockDateTime(unlockDateTime));
+        } while (!ValidateNextPointDateTime(unlockDateTime));
         ClearScreen();
 
         time_t gracePeriodEndTime = 0;
         do {
-            gracePeriodEndTime = PromptForGracePeriodEndTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateGracePeriodEndTime(gracePeriodEndTime));
+            gracePeriodEndTime = PromptForGracePeriodDuration(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+        } while (!ValidateGracePeriodDuration(gracePeriodEndTime));
         ClearScreen();
 
         sysConfig->getPoint(i)->SetUnlockLocation(unlockLatitude, unlockLongitude);

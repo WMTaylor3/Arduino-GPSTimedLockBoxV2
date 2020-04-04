@@ -42,6 +42,7 @@ private:
 	SystemConfiguration* sysConfig;
 	void AwaitUserInput();
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
+	time_t ParseDateTimeInputToTimeT(char* dateTimeString);
 	void ClearScreen();
 	void PrintSplashScreen();
 	uint8_t PromptForNumberOfPoints();
@@ -49,17 +50,17 @@ private:
 	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
 	time_t PromptForGameStartDateTime();
 	bool ValidateUserInputGameStartTime(char* rx_string);
-	bool ValidateGameStartDateTime(time_t unlockLatitude);
-	double PromptForUnlockLatitude(bool final);
+	bool ValidateGameStartDateTime(time_t startDateTime);
+	double PromptForLatitude(bool final);
 	bool ValidateUserInputLatitude(char* rx_string);
-	bool ValidateUnlockLatitude(double unlockLatitude);
-	double PromptForUnlockLongitude(bool final);
+	bool ValidateLatitude(double latitude);
+	double PromptForLongitude(bool final);
 	bool ValidateUserInputLongitude(char* rx_string);
-	bool ValidateUnlockLongitude(double unlockLatitude);
+	bool ValidateLongitude(double longitude);
 	time_t PromptForNextPointDateTime(bool final);
-	bool ValidateUnlockDateTime(time_t unlockLatitude);
-	time_t PromptForGracePeriodEndTime(bool final);
-	bool ValidateGracePeriodEndTime(time_t unlockLatitude);
+	bool ValidateNextPointDateTime(time_t nextPointDateTime);
+	time_t PromptForGracePeriodDuration(bool final);
+	bool ValidateGracePeriodDuration(uint8_t durationInMinutes);
 public:
 	Setup();
 	~Setup();

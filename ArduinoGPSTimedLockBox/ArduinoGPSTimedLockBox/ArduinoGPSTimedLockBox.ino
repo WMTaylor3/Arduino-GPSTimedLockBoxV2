@@ -34,6 +34,6 @@ void loop() {
 }
 
 void configureUnit() {
-    systemConfig.InitialConfiguration();
+    systemConfig.Initialize();
 }
 

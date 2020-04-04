@@ -23,25 +23,16 @@ public:
 	void SetGracePeriodEndTime(time_t time);
 };
 
-class SystemConfiguration
+class Setup
 {
 private:
 	uint8_t numberOfPoints;
 	uint8_t currentPointIndex;
-	time_t gameStartDateTime;
-	SinglePointConfiguration* SinglePointConfigurationCollection[];
-public:
-	SystemConfiguration(uint8_t _numberOfPoints);
-	~SystemConfiguration();
-	SinglePointConfiguration* getPoint(uint8_t index);
-	void SetGameStartDateTime(time_t dateTime);
-};
-
-class Setup
-{
-private:
-	SystemConfiguration* sysConfig;
 	time_t timeAtBoot;
+	time_t gameStartDateTime;
+	SinglePointConfiguration* singlePointConfigurationCollection[];
+
+	void StubBasicConfig(uint8_t _numberOfPoints);
 	void AwaitUserInput();
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	bool ValidateUserInputDateTime(char* rx_string);
@@ -68,7 +59,7 @@ private:
 public:
 	Setup();
 	~Setup();
-	SystemConfiguration* InitialConfiguration();
+	void Initialize();
 };
 
 #endif

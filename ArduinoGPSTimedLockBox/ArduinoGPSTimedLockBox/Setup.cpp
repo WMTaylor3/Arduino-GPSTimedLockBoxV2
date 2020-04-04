@@ -4,7 +4,7 @@
 
 #include "Setup.h"
 
-/////////////////////////////////////// User Input ///////////////////////////////////////
+/////////////////////////////////////// Setup Routine User Input ///////////////////////////////////////
 
 
 Setup::Setup()
@@ -12,7 +12,17 @@ Setup::Setup()
 }
 
 Setup::~Setup() {
-    delete sysConfig;
+    delete [] singlePointConfigurationCollection;
+}
+
+void Setup::StubBasicConfig(uint8_t _numberOfPoints)
+{
+    numberOfPoints = _numberOfPoints;
+    currentPointIndex = 0;
+
+    for (uint8_t i = 0; i < numberOfPoints; i++) {
+        singlePointConfigurationCollection[i] = new SinglePointConfiguration();
+    }
 }
 
 void Setup::AwaitUserInput() {
@@ -49,7 +59,8 @@ void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
                 Serial.println();
                 Serial.print(F("Entry too long. Maximum input length is "));
                 Serial.print(maxStringLength);
-                Serial.print(F(" characters: "));
+                Serial.println(F(" characters."));
+                Serial.print(F(": "));
                 i = 0; // Reset to allow new input.
                 rx_char = 0;
             }
@@ -205,7 +216,7 @@ time_t Setup::ParseDateTimeInputToTimeT(char* dateTimeString)
 
 uint16_t Setup::ParseMinutesStringToSeconds(char* durationString)
 {
-    return ((durationString[0] - 48) * 600) + ((durationString[1] - 48) * 60)
+    return ((durationString[0] - 48) * 600) + ((durationString[1] - 48) * 60);
 }
 
 void Setup::ClearScreen() {
@@ -251,7 +262,11 @@ bool Setup::ValidateUserInputNumberOfPoints(char* rx_string)
 
 bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
 {
-    return (numberOfPoints > 0 && numberOfPoints < 6);
+    if (numberOfPoints < 1 || numberOfPoints > 5) {
+        Serial.println("Value entered is logically invalid. Try again.");
+        return false;
+    }
+    return true;
 }
 
 time_t Setup::PromptForGameStartDateTime()
@@ -284,7 +299,11 @@ bool Setup::ValidateGameStartDateTime(time_t startDateTime)
     DS1307RTC* clock = new DS1307RTC();
     time_t currentTime = clock->get();
     delete(clock);
-    return startDateTime > currentTime;
+    if (startDateTime < currentTime) {
+        Serial.println("Value entered is logically invalid. Try again.");
+        return false;
+    }
+    return true;
 }
 
 double Setup::PromptForLatitude(bool final = false)
@@ -364,7 +383,11 @@ bool Setup::ValidateUserInputLatitude(char* rx_string)
 
 bool Setup::ValidateLatitude(double latitude)
 {
-    return latitude <= 90 && latitude >= -90;
+    if (latitude > 90 || latitude < -90) {
+        Serial.println("Value entered is logically invalid. Try again.");
+        return false;
+    }
+    return true;
 }
 
 double Setup::PromptForLongitude(bool final = false)
@@ -444,7 +467,11 @@ bool Setup::ValidateUserInputLongitude(char* rx_string)
 
 bool Setup::ValidateLongitude(double longitude)
 {
-    return longitude <= 180 && longitude >= -180;
+    if (longitude > 180 || longitude < -180) {
+        Serial.println("Value entered is logically invalid. Try again.");
+        return false;
+    }
+    return true;
 }
 
 time_t Setup::PromptForNextPointDateTime(bool final = false)
@@ -516,7 +543,7 @@ bool Setup::ValidateUserInputGracePeriod(char* rx_string)
             return false;
         }
     }
-    if (rx_string[3] != '\0') {
+    if (rx_string[2] != '\0') {
         Serial.println(F("INVALID: Incorrect input length."));
         return false;
     }
@@ -534,10 +561,14 @@ bool Setup::ValidateUserInputGracePeriod(char* rx_string)
 
 bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 {
-    return durationInSeconds < 3601 && durationInSeconds > 59 
+    if (durationInSeconds > 3600 || durationInSeconds < 60) {
+        Serial.println("Value entered is logically invalid. Try again.");
+        return false;
+    }
+    return true;
 }
 
-SystemConfiguration* Setup::InitialConfiguration()
+void Setup::Initialize()
 {
     ClearScreen();
     PrintSplashScreen();
@@ -549,33 +580,34 @@ SystemConfiguration* Setup::InitialConfiguration()
     do {
         numberOfPoints = PromptForNumberOfPoints();
     } while (!ValidateNumberOfPoints(numberOfPoints));
-    sysConfig = new SystemConfiguration(numberOfPoints);
+    StubBasicConfig(numberOfPoints);
     ClearScreen();
 
     time_t gameStartDateTime = 0;
     do {
         gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
     } while (!ValidateGameStartDateTime(gameStartDateTime));
+    gameStartDateTime = gameStartDateTime;
+
     ClearScreen();
-    sysConfig->SetGameStartDateTime(gameStartDateTime);
 
     // For each time/place as quantified above.
     for (uint8_t i = 0; i < numberOfPoints; i++) {
         double unlockLatitude = 0;
         do {
-            unlockLatitude = PromptForLatitude(i = numberOfPoints-1); // Parameter will evaluate to true on the final loop.
+            unlockLatitude = PromptForLatitude(i == numberOfPoints-1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateLatitude(unlockLatitude));
         ClearScreen();
 
         double unlockLongitude = 0;
         do {
-            unlockLongitude = PromptForLongitude(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockLongitude = PromptForLongitude(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateLongitude(unlockLongitude));
         ClearScreen();
 
         time_t unlockDateTime = 0;
         do {
-            unlockDateTime = PromptForNextPointDateTime(i = numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockDateTime = PromptForNextPointDateTime(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateNextPointDateTime(unlockDateTime));
         ClearScreen();
 
@@ -586,42 +618,10 @@ SystemConfiguration* Setup::InitialConfiguration()
         time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
         ClearScreen();
 
-        sysConfig->getPoint(i)->SetLocation(unlockLatitude, unlockLongitude);
-        sysConfig->getPoint(i)->SetDateTime(unlockDateTime);
-        sysConfig->getPoint(i)->SetGracePeriodEndTime(gracePeriodEndTime);
+        singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
+        singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
+        singlePointConfigurationCollection[i]->SetGracePeriodEndTime(gracePeriodEndTime);
     }
-}
-
-/////////////////////////////////////// System Configuration ///////////////////////////////////////
-
-SystemConfiguration::SystemConfiguration(uint8_t _numberOfPoints)
-{
-    if (_numberOfPoints < 6 && _numberOfPoints > 0) {
-        numberOfPoints = _numberOfPoints;
-    }
-    else {
-        numberOfPoints = 0;
-    }
-    currentPointIndex = 0;
-    for (uint8_t i = 0; i < numberOfPoints; i++) {
-        SinglePointConfigurationCollection[i] = new SinglePointConfiguration();
-    }
-}
-
-SystemConfiguration::~SystemConfiguration() {
-    delete[] SinglePointConfigurationCollection;
-}
-
-SinglePointConfiguration* SystemConfiguration::getPoint(uint8_t index)
-{
-    if (index > 0 && index < numberOfPoints) {
-        return SinglePointConfigurationCollection[index];
-    }
-    return nullptr;
-}
-
-void SystemConfiguration::SetGameStartDateTime(time_t dateTime) {
-    gameStartDateTime = dateTime;
 }
 
 /////////////////////////////////////// Single Point Configuration ///////////////////////////////////////

@@ -4,11 +4,13 @@
  Author:	William Taylor
 */
 
+#include "NeoPhysical.h"
 #include "Setup.h"
-//#include "Physical.h"
 //#include "Temporal.h"
 //#include "Display.h"
 
+#include <NeoSWSerial.h>
+#include <NMEAGPS.h>
 #include <Time.h>
 #include <TimeLib.h>
 #include <DS1307RTC.h>
@@ -16,7 +18,6 @@
 #include <LiquidCrystal_I2C.h>
 #include <TinyGPS++.h>
 #include <string.h>
-#include <SoftwareSerial.h>
 #include <Wire.h>
 
 Setup systemConfig;

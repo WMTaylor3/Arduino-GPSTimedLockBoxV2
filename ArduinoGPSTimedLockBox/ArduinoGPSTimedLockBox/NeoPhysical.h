@@ -26,6 +26,8 @@ public:
 	NeoPhysical();
 	void doSomeWork();
 	void run();
+	void SerialEnd();
+	void UpdateGPS();
 	//void Initialize(double, double);
 	//void End();
 	//bool IsLocationValid();

@@ -40,7 +40,7 @@ void NeoPhysical::doSomeWork()
         using namespace NeoGPS; // save a little typing below...
 
         localSeconds = (clock_t)fix.dateTime; // convert structure to a second count
-        localSeconds += 5 * SECONDS_PER_HOUR + 30 * SECONDS_PER_MINUTE; // shift timezone
+        localSeconds += 12 * SECONDS_PER_HOUR + 00 * SECONDS_PER_MINUTE; // shift timezone
         localTime = localSeconds;              // convert back to a structure
     }
 
@@ -79,4 +79,66 @@ void NeoPhysical::run()
         fix = gps.read();
         doSomeWork();
     }
+}
+
+void NeoPhysical::SerialEnd()
+{
+    gpsPort.end();
+}
+
+void NeoPhysical::UpdateGPS() // Test this bad boy.. He looks shifty and I don't like it.
+{
+    do {
+        while (gps.available(gpsPort)) {
+            fix = gps.read();
+        }
+    } while (!fix.valid.location || !fix.valid.date || !fix.valid.time);
+}
+
+
+bool Physical::UpdateGPS()
+{
+    uint8_t data;
+    unsigned long endTime = millis() + 2000;
+    while (millis() <= endTime)
+    {
+        if (gpsSerial->available() > 0)
+        {
+            data = gpsSerial->read();
+            gps->encode(data);
+        }
+    }
+    if (gps->location.age() <= 1000)
+    {
+        return true;
+    }
+    false;
+}
+
+bool Physical::IsLocationValid()
+{
+    if ((gps->location.lat() != 0) && (gps->location.lng() != 0))
+    {
+        return true;
+    }
+    return false;
+}
+
+uint32_t Physical::GetAbsoluteDistance()
+{
+    if (IsLocationValid())
+    {
+        return TinyGPSPlus::distanceBetween(latitude, longitude, gps->location.lat(), gps->location.lng());
+    }
+
+    return 100000;
+}
+
+bool Physical::IsWithinRadius()
+{
+    if (GetAbsoluteDistance() <= 30)
+    {
+        return true;
+    }
+    return false;
 }

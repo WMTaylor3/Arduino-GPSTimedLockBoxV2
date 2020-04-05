@@ -9,15 +9,23 @@
 	#include "WProgram.h"
 #endif
 
+#include <NeoSWSerial.h>
 #include <NMEAGPS.h>
+#include <Streamers.h>
+
+#define RX_PIN 6
+#define TX_PIN 7
 
 class NeoPhysical
 {
 private:
-	//double latitude;
-	//double longitude;
+	NeoSWSerial gpsPort;
+	NMEAGPS gps;
+	gps_fix fix;
 public:
-	//Physical();
+	NeoPhysical();
+	void doSomeWork();
+	void run();
 	//void Initialize(double, double);
 	//void End();
 	//bool IsLocationValid();

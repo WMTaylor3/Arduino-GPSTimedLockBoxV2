@@ -19,22 +19,17 @@
 #include <TinyGPS++.h>
 #include <string.h>
 #include <Wire.h>
+#include <Streamers.h>
 
-Setup systemConfig;
-//Physical gps;
+//Setup systemConfig;
+NeoPhysical gps;
 //Temporal realTimeClock;
 //Display display;
 
 void setup() {
     Serial.begin(9600);
-    configureUnit();
 }
 
 void loop() {
-  
+    gps.run();
 }
-
-void configureUnit() {
-    systemConfig.Initialize();
-}
-

@@ -273,7 +273,8 @@ time_t Setup::PromptForGameStartDateTime()
 {
     //ISO 8601 format without the timezone offset
     char* rx_string = new char[20];
-    Serial.println(F("Enter the date/time value for when you wish the game to start."));
+    Serial.println(F("UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME"));
+    Serial.println(F("Enter the UTC date/time value for when you wish the game to start."));
     Serial.println(F("At this date and time the first location hint will be revealed to the user."));
     Serial.println(F("Formatting:"));
     Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
@@ -281,8 +282,8 @@ time_t Setup::PromptForGameStartDateTime()
     Serial.println(F("    The hyphens, colons and 'T' characters are required"));
     Serial.println(F("    Leading and trailing zeros are permitted and must be used in single digit days, months and times."));
     Serial.println(F("Examples:"));
-    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds."));
-    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM."));
+    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds UTC."));
+    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM UTC."));
     bool validUserInput = false;
     do {
         Serial.print(F(": "));
@@ -478,11 +479,12 @@ time_t Setup::PromptForNextPointDateTime(bool final = false)
 {
     //ISO 8601 format without the timezone offset
     char* rx_string = new char[20];
+    Serial.println(F("UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME UTC TIME"));
     if (final) {
-        Serial.println(F("Enter the date/time value for when you wish the unit to unlock."));
+        Serial.println(F("Enter the UTC date/time value for when you wish the unit to unlock."));
     }
     else {
-        Serial.println(F("Enter the date/time value of the next hint reveal."));
+        Serial.println(F("Enter the UTC date/time value of the next hint reveal."));
     }
     Serial.println(F("Formatting:"));
     Serial.println(F("    Must be of format YYYY-MM-DDTHH:MM:SS."));
@@ -490,8 +492,8 @@ time_t Setup::PromptForNextPointDateTime(bool final = false)
     Serial.println(F("    The hyphens, colons and 'T' characters are required"));
     Serial.println(F("    Leading and trailing zeros are permitted and must be used in single digit days, months and times."));
     Serial.println(F("Examples:"));
-    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds."));
-    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM."));
+    Serial.println(F("    2020-04-03T23:53:26 <- 3rd March 2020 at 11:53PM and 26 seconds UTC."));
+    Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM UTC."));
     bool validUserInput = false;
     do {
         Serial.print(F(": "));

@@ -31,5 +31,5 @@ void setup() {
 }
 
 void loop() {
-    gps.run();
+    gps.GetDateTimeInUtc();
 }

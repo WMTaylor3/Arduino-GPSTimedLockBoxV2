@@ -12,6 +12,7 @@
 #include <NeoSWSerial.h>
 #include <NMEAGPS.h>
 #include <Streamers.h>
+#include <Time.h>
 
 #define RX_PIN 6
 #define TX_PIN 7
@@ -22,12 +23,14 @@ private:
 	NeoSWSerial gpsPort;
 	NMEAGPS gps;
 	gps_fix fix;
+	void UpdateGPS();
 public:
 	NeoPhysical();
 	void doSomeWork();
 	void run();
 	void SerialEnd();
-	void UpdateGPS();
+	time_t GetDateTimeInUtc();
+	float GetAbsoluteDistanceFromPoint(NeoGPS::Location_t targetLocation);
 	//void Initialize(double, double);
 	//void End();
 	//bool IsLocationValid();

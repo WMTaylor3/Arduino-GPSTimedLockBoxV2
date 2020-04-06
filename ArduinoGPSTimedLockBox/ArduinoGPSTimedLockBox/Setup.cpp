@@ -219,6 +219,29 @@ uint16_t Setup::ParseMinutesStringToSeconds(char* durationString)
     return ((durationString[0] - 48) * 600) + ((durationString[1] - 48) * 60);
 }
 
+int32_t Setup::ParseLatLongStringToInt32(char* locationString, latlong latOrLong)
+{
+    uint8_t decimalPosition = 0;
+    uint8_t stringLength = 0;
+    if (latOrLong == latitude) {
+        decimalPosition = 3;
+        stringLength = 12;
+    }
+    else if(latOrLong == longitude) {
+        decimalPosition = 4;
+        stringLength = 13;
+    }
+    else {
+        return 0;
+    }
+
+    for (uint8_t i = decimalPosition; i < stringLength - 1; i++) { // Minus 1 so we don't try override the original '\0' with something from out of the array bounds.
+        locationString[i] = locationString[i + 1];
+    }
+
+    return atoi(locationString);
+}
+
 void Setup::ClearScreen() {
     Serial.write(27);       // ESC command
     Serial.print("[2J");    // clear screen command
@@ -307,7 +330,7 @@ bool Setup::ValidateGameStartDateTime(time_t startDateTime)
     return true;
 }
 
-double Setup::PromptForLatitude(bool final = false)
+int32_t Setup::PromptForLatitude(bool final = false)
 {
     char* rx_string = new char[12];
     if (final) {
@@ -332,9 +355,9 @@ double Setup::PromptForLatitude(bool final = false)
         GetUserInput(rx_string, 11);
     } while (!ValidateUserInputLatitude(rx_string));
 
-    double latInput = atof(rx_string);
+    int32_t latInt = ParseLatLongStringToInt32(rx_string, latitude);
     delete(rx_string);
-    return latInput;
+    return latInt;
 }
 
 bool Setup::ValidateUserInputLatitude(char* rx_string)
@@ -382,16 +405,16 @@ bool Setup::ValidateUserInputLatitude(char* rx_string)
     return true;
 }
 
-bool Setup::ValidateLatitude(double latitude)
+bool Setup::ValidateLatitude(int32_t latitude)
 {
-    if (latitude > 90 || latitude < -90) {
+    if (latitude > 900000000 || latitude < -900000000) {
         Serial.println("Value entered is logically invalid. Try again.");
         return false;
     }
     return true;
 }
 
-double Setup::PromptForLongitude(bool final = false)
+int32_t Setup::PromptForLongitude(bool final = false)
 {
     char* rx_string = new char[13];
     if (final) {
@@ -416,9 +439,10 @@ double Setup::PromptForLongitude(bool final = false)
         GetUserInput(rx_string, 12);
     } while (!ValidateUserInputLongitude(rx_string));
 
-    double longInput = atof(rx_string);
+    int32_t longInt = ParseLatLongStringToInt32(rx_string, longitude);
+
     delete(rx_string);
-    return longInput;
+    return longInt;
 }
 
 bool Setup::ValidateUserInputLongitude(char* rx_string)
@@ -466,9 +490,9 @@ bool Setup::ValidateUserInputLongitude(char* rx_string)
     return true;
 }
 
-bool Setup::ValidateLongitude(double longitude)
+bool Setup::ValidateLongitude(int32_t longitude)
 {
-    if (longitude > 180 || longitude < -180) {
+    if (longitude > 1800000000 || longitude < -1800000000) {
         Serial.println("Value entered is logically invalid. Try again.");
         return false;
     }
@@ -510,7 +534,7 @@ bool Setup::ValidateNextPointDateTime(time_t nextPointDateTime)
     return true; // Not much validation here other than ensuring it is after the previous one but frankly I can't be bothered implementing that.
 }
 
-// Returns as number of seconds.
+// Returns as absolute number of seconds.
 uint16_t Setup::PromptForGracePeriodDuration()
 {
     //ISO 8601 format without the timezone offset
@@ -632,7 +656,7 @@ SinglePointConfiguration::SinglePointConfiguration()
 {
 }
 
-void SinglePointConfiguration::SetLocation(double lat, double long)
+void SinglePointConfiguration::SetLocation(int32_t lat, int32_t lon)
 {
 }
 

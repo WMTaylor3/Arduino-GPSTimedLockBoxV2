@@ -12,13 +12,15 @@
 #include <Time.h>
 #include <DS1307RTC.h>
 
+enum latlong { latitude, longitude };
+
 class SinglePointConfiguration
 {
 private:
 	uint8_t holder;
 public:
 	SinglePointConfiguration();
-	void SetLocation(double lat, double long);
+	void SetLocation(int32_t lat, int32_t lon);
 	void SetDateTime(time_t time);
 	void SetGracePeriodEndTime(time_t time);
 };
@@ -38,6 +40,8 @@ private:
 	bool ValidateUserInputDateTime(char* rx_string);
 	time_t ParseDateTimeInputToTimeT(char* dateTimeString);
 	uint16_t ParseMinutesStringToSeconds(char* durationString);
+	int32_t ParseLatLongStringToInt32(char* locationString, latlong latOrLong);
+
 	void ClearScreen();
 	void PrintSplashScreen();
 	uint8_t PromptForNumberOfPoints();
@@ -45,12 +49,12 @@ private:
 	bool ValidateNumberOfPoints(uint8_t numberOfPoints);
 	time_t PromptForGameStartDateTime();
 	bool ValidateGameStartDateTime(time_t startDateTime);
-	double PromptForLatitude(bool final);
+	int32_t PromptForLatitude(bool final);
 	bool ValidateUserInputLatitude(char* rx_string);
-	bool ValidateLatitude(double latitude);
-	double PromptForLongitude(bool final);
+	bool ValidateLatitude(int32_t latitude);
+	int32_t PromptForLongitude(bool final);
 	bool ValidateUserInputLongitude(char* rx_string);
-	bool ValidateLongitude(double longitude);
+	bool ValidateLongitude(int32_t longitude);
 	time_t PromptForNextPointDateTime(bool final);
 	bool ValidateNextPointDateTime(time_t nextPointDateTime);
 	uint16_t PromptForGracePeriodDuration();

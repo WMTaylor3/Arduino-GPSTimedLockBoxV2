@@ -694,15 +694,15 @@ void SinglePointConfiguration::SetGracePeriodEndTime(time_t _time)
 
 NeoGPS::Location_t& SinglePointConfiguration::getLocation()
 {
-    // TODO: insert return statement here
+    return location;
 }
 
 time_t SinglePointConfiguration::getDateTime()
 {
-    return time_t();
+    return dateTime
 }
 
 time_t SinglePointConfiguration::getGracePeriodEndDateTime()
 {
-    return time_t();
+    return gracePeriodEndTime;
 }

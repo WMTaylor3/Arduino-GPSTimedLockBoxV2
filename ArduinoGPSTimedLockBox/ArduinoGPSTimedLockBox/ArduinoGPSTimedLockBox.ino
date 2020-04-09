@@ -32,5 +32,7 @@ void setup() {
 }
 
 void loop() {
-    gps.GetDateTimeInUtc();
+    latLongLocation loc1 = systemConfig.getCurrentPointLocation();
+    Serial.println(loc1.latitude);
+    Serial.println(gps.GetAbsoluteDistanceFromPoint(loc1));
 }

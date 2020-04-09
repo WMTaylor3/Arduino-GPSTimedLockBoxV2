@@ -11,13 +11,12 @@
 
 #include <Time.h>
 #include <DS1307RTC.h>
-
-enum latlong { latitude, longitude };
+#include "CommonDataTypes.h"
 
 class SinglePointConfiguration
 {
 private:
-	NeoGPS::Location_t location;
+	latLongLocation location;
 	time_t dateTime;
 	time_t gracePeriodEndTime;
 public:
@@ -27,7 +26,7 @@ public:
 	void SetDateTime(time_t _time);
 	void SetGracePeriodEndTime(time_t _time);
 
-	NeoGPS::Location_t& getLocation();
+	latLongLocation getLocation();
 	time_t getDateTime();
 	time_t getGracePeriodEndDateTime();
 };
@@ -47,7 +46,7 @@ private:
 	bool ValidateUserInputDateTime(char* rx_string);
 	time_t ParseDateTimeInputToTimeT(char* dateTimeString);
 	uint16_t ParseMinutesStringToSeconds(char* durationString);
-	int32_t ParseLatLongStringToInt32(char* locationString, latlong latOrLong);
+	int32_t ParseLatLongStringToInt32(char* locationString, latOrLong latOrLong);
 
 	void ClearScreen();
 	void PrintSplashScreen();
@@ -72,7 +71,7 @@ public:
 	Setup();
 	~Setup();
 	void Initialize();
-	NeoGPS::Location_t& getCurrentPointLocation();
+	latLongLocation getCurrentPointLocation();
 	time_t getCurrentPointTime();
 	time_t getCurrentPointGracePeriodEndTime();
 	void progressToNextPoint();

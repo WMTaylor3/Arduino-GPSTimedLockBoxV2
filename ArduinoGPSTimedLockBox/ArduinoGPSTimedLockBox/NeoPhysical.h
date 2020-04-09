@@ -13,6 +13,7 @@
 #include <NMEAGPS.h>
 #include <Streamers.h>
 #include <Time.h>
+#include "CommonDataTypes.h"
 
 #define RX_PIN 6
 #define TX_PIN 7
@@ -28,8 +29,8 @@ public:
 	NeoPhysical();
 	void SerialEnd();
 	time_t GetDateTimeInUtc();
-	float GetAbsoluteDistanceFromPoint(NeoGPS::Location_t& targetLocation);
-	bool IsWithinRadius(NeoGPS::Location_t& targetLocation);
+	float GetAbsoluteDistanceFromPoint(latLongLocation targetLocation);
+	bool IsWithinRadius(latLongLocation targetLocation);
 };
 
 #endif

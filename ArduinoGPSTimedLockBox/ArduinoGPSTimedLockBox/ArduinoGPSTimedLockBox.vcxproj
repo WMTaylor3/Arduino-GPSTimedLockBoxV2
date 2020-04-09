@@ -119,6 +119,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommonDataTypes.h" />
     <ClInclude Include="NeoPhysical.h" />
     <ClInclude Include="Setup.h" />
     <ClInclude Include="Display.h" />

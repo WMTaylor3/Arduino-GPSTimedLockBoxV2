@@ -219,7 +219,7 @@ uint16_t Setup::ParseMinutesStringToSeconds(char* durationString)
     return ((durationString[0] - 48) * 600) + ((durationString[1] - 48) * 60);
 }
 
-int32_t Setup::ParseLatLongStringToInt32(char* locationString, latlong latOrLong)
+int32_t Setup::ParseLatLongStringToInt32(char* locationString, latOrLong latOrLong)
 {
     uint8_t decimalPosition = 0;
     uint8_t stringLength = 0;
@@ -238,8 +238,12 @@ int32_t Setup::ParseLatLongStringToInt32(char* locationString, latlong latOrLong
     for (uint8_t i = decimalPosition; i < stringLength - 1; i++) { // Minus 1 so we don't try override the original '\0' with something from out of the array bounds.
         locationString[i] = locationString[i + 1];
     }
+    Serial.print("S");
+    Serial.println(locationString);
+    Serial.print("I");
+    Serial.println(atol("0900000000"));
 
-    return atoi(locationString);
+    return atol(locationString);
 }
 
 void Setup::ClearScreen() {
@@ -596,61 +600,65 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 
 void Setup::Initialize()
 {
-    ClearScreen();
-    PrintSplashScreen();
-    AwaitUserInput();
-    ClearScreen();
+    //ClearScreen();
+    //PrintSplashScreen();
+    //AwaitUserInput();
+    //ClearScreen();
     
-    // Total number of times/places to be included in the hunt.
-    uint8_t numberOfPoints = 0;
-    do {
-        numberOfPoints = PromptForNumberOfPoints();
-    } while (!ValidateNumberOfPoints(numberOfPoints));
-    CreateBasicConfig(numberOfPoints);
-    ClearScreen();
+    //// Total number of times/places to be included in the hunt.
+    //uint8_t numberOfPoints = 0;
+    //do {
+    //    numberOfPoints = PromptForNumberOfPoints();
+    //} while (!ValidateNumberOfPoints(numberOfPoints));
+    //CreateBasicConfig(numberOfPoints);
+    //ClearScreen();
 
-    time_t gameStartDateTime = 0;
-    do {
-        gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
-    } while (!ValidateGameStartDateTime(gameStartDateTime));
-    gameStartDateTime = gameStartDateTime;
+    CreateBasicConfig(1);
 
-    ClearScreen();
+    //time_t gameStartDateTime = 0;
+    //do {
+    //    gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
+    //} while (!ValidateGameStartDateTime(gameStartDateTime));
+    //gameStartDateTime = gameStartDateTime;
 
-    // For each time/place as quantified above.
-    for (uint8_t i = 0; i < numberOfPoints; i++) {
-        double unlockLatitude = 0;
-        do {
-            unlockLatitude = PromptForLatitude(i == numberOfPoints-1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateLatitude(unlockLatitude));
-        ClearScreen();
+    //ClearScreen();
+
+    //// For each time/place as quantified above.
+    //for (uint8_t i = 0; i < numberOfPoints; i++) {
+    //    double unlockLatitude = 0;
+    //    do {
+    //        unlockLatitude = PromptForLatitude(i == numberOfPoints-1); // Parameter will evaluate to true on the final loop.
+    //    } while (!ValidateLatitude(unlockLatitude));
+    //    ClearScreen();
 
         double unlockLongitude = 0;
         do {
-            unlockLongitude = PromptForLongitude(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockLongitude = PromptForLongitude(0 == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateLongitude(unlockLongitude));
         ClearScreen();
 
-        time_t unlockDateTime = 0;
-        do {
-            unlockDateTime = PromptForNextPointDateTime(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateNextPointDateTime(unlockDateTime));
-        ClearScreen();
+    //    time_t unlockDateTime = 0;
+    //    do {
+    //        unlockDateTime = PromptForNextPointDateTime(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+    //    } while (!ValidateNextPointDateTime(unlockDateTime));
+    //    ClearScreen();
 
-        uint16_t gracePeriodInSeconds = 0;
-        do {
-            gracePeriodInSeconds = PromptForGracePeriodDuration();
-        } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
-        time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
-        ClearScreen();
+    //    uint16_t gracePeriodInSeconds = 0;
+    //    do {
+    //        gracePeriodInSeconds = PromptForGracePeriodDuration();
+    //    } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
+    //    time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
+    //    ClearScreen();
 
-        singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
-        singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
-        singlePointConfigurationCollection[i]->SetGracePeriodEndTime(gracePeriodEndTime);
-    }
+    //    singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
+    //    singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
+    //    singlePointConfigurationCollection[i]->SetGracePeriodEndTime(gracePeriodEndTime);
+
+    singlePointConfigurationCollection[0]->SetLocation(-412864060, 1747762340);
+    //}
 }
 
-NeoGPS::Location_t& Setup::getCurrentPointLocation()
+latLongLocation Setup::getCurrentPointLocation()
 {
     return singlePointConfigurationCollection[currentPointIndex]->getLocation();
 }
@@ -678,8 +686,8 @@ SinglePointConfiguration::SinglePointConfiguration()
 
 void SinglePointConfiguration::SetLocation(int32_t _lat, int32_t _lon)
 {
-    location._lat = _lat;
-    location._lon = _lon;
+    location.latitude = _lat;
+    location.longitude = _lon;
 }
 
 void SinglePointConfiguration::SetDateTime(time_t _time)
@@ -692,14 +700,14 @@ void SinglePointConfiguration::SetGracePeriodEndTime(time_t _time)
     dateTime = _time;
 }
 
-NeoGPS::Location_t& SinglePointConfiguration::getLocation()
+latLongLocation SinglePointConfiguration::getLocation()
 {
     return location;
 }
 
 time_t SinglePointConfiguration::getDateTime()
 {
-    return dateTime
+    return dateTime;
 }
 
 time_t SinglePointConfiguration::getGracePeriodEndDateTime()

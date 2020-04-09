@@ -21,13 +21,14 @@
 #include <Wire.h>
 #include <Streamers.h>
 
-//Setup systemConfig;
+Setup systemConfig;
 NeoPhysical gps;
 //Temporal realTimeClock;
 //Display display;
 
 void setup() {
     Serial.begin(9600);
+    systemConfig.Initialize();
 }
 
 void loop() {

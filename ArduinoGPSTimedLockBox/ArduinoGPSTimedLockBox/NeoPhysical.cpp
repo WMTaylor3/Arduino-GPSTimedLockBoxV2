@@ -91,7 +91,7 @@ void NeoPhysical::UpdateGPS()
     int period = 3000;
     uint32_t time_now = 0;
 
-    while (!fix.valid.location || !fix.valid.date || !fix.valid.time) {
+    while (!fix.valid.location || !fix.valid.date || !fix.valid.dateTime) {
         if (millis() - time_now > period) {
             time_now = millis();
             Serial.println(F("GPS INVALID:"));
@@ -101,7 +101,7 @@ void NeoPhysical::UpdateGPS()
             if (!fix.valid.date) {
                 Serial.println(F("    Date"));
             }
-            if (!fix.valid.time) {
+            if (!fix.valid.dateTime) {
                 Serial.println(F("    Time"));
             }
         }
@@ -115,13 +115,13 @@ time_t NeoPhysical::GetDateTimeInUtc()
 {
     while (true) {
         UpdateGPS();
-        if (fix.valid.date && fix.valid.time) {
+        if (fix.valid.date && fix.valid.dateTime) {
             return fix.dateTime + SECS_YR_2000; // dateTime object seems to want to resturn the time since 2000. I prefer 1970 as my epoch.
         }
     }
 }
 
-float NeoPhysical::GetAbsoluteDistanceFromPoint(NeoGPS::Location_t targetLocation)
+float NeoPhysical::GetAbsoluteDistanceFromPoint(NeoGPS::Location_t& targetLocation)
 {
     while (true) {
         UpdateGPS();
@@ -130,22 +130,9 @@ float NeoPhysical::GetAbsoluteDistanceFromPoint(NeoGPS::Location_t targetLocatio
         }
     }
 }
-//
-//uint32_t Physical::GetAbsoluteDistance()
-//{
-//    if (IsLocationValid())
-//    {
-//        return TinyGPSPlus::distanceBetween(latitude, longitude, gps->location.lat(), gps->location.lng());
-//    }
-//
-//    return 100000;
-//}
-//
-//bool Physical::IsWithinRadius()
-//{
-//    if (GetAbsoluteDistance() <= 30)
-//    {
-//        return true;
-//    }
-//    return false;
-//}
+
+
+bool NeoPhysical::IsWithinRadius(NeoGPS::Location_t& targetLocation)
+{
+    return (GetAbsoluteDistanceFromPoint(targetLocation) <= 30);
+}

@@ -17,12 +17,19 @@ enum latlong { latitude, longitude };
 class SinglePointConfiguration
 {
 private:
-	uint8_t holder;
+	NeoGPS::Location_t location;
+	time_t dateTime;
+	time_t gracePeriodEndTime;
 public:
 	SinglePointConfiguration();
-	void SetLocation(int32_t lat, int32_t lon);
-	void SetDateTime(time_t time);
-	void SetGracePeriodEndTime(time_t time);
+
+	void SetLocation(int32_t _lat, int32_t _lon);
+	void SetDateTime(time_t _time);
+	void SetGracePeriodEndTime(time_t _time);
+
+	NeoGPS::Location_t& getLocation();
+	time_t getDateTime();
+	time_t getGracePeriodEndDateTime();
 };
 
 class Setup
@@ -34,7 +41,7 @@ private:
 	time_t gameStartDateTime;
 	SinglePointConfiguration* singlePointConfigurationCollection[];
 
-	void StubBasicConfig(uint8_t _numberOfPoints);
+	void CreateBasicConfig(uint8_t _numberOfPoints);
 	void AwaitUserInput();
 	void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	bool ValidateUserInputDateTime(char* rx_string);
@@ -60,10 +67,15 @@ private:
 	uint16_t PromptForGracePeriodDuration();
 	bool ValidateUserInputGracePeriod(char* rx_string);
 	bool ValidateGracePeriodDuration(uint16_t durationInSeconds);
+
 public:
 	Setup();
 	~Setup();
 	void Initialize();
+	NeoGPS::Location_t& getCurrentPointLocation();
+	time_t getCurrentPointTime();
+	time_t getCurrentPointGracePeriodEndTime();
+	void progressToNextPoint();
 };
 
 #endif

@@ -15,7 +15,7 @@ Setup::~Setup() {
     delete [] singlePointConfigurationCollection;
 }
 
-void Setup::StubBasicConfig(uint8_t _numberOfPoints)
+void Setup::CreateBasicConfig(uint8_t _numberOfPoints)
 {
     numberOfPoints = _numberOfPoints;
     currentPointIndex = 0;
@@ -606,7 +606,7 @@ void Setup::Initialize()
     do {
         numberOfPoints = PromptForNumberOfPoints();
     } while (!ValidateNumberOfPoints(numberOfPoints));
-    StubBasicConfig(numberOfPoints);
+    CreateBasicConfig(numberOfPoints);
     ClearScreen();
 
     time_t gameStartDateTime = 0;
@@ -650,20 +650,59 @@ void Setup::Initialize()
     }
 }
 
+NeoGPS::Location_t& Setup::getCurrentPointLocation()
+{
+    return singlePointConfigurationCollection[currentPointIndex]->getLocation();
+}
+
+time_t Setup::getCurrentPointTime()
+{
+    return singlePointConfigurationCollection[currentPointIndex]->getDateTime();
+}
+
+time_t Setup::getCurrentPointGracePeriodEndTime()
+{
+    return singlePointConfigurationCollection[currentPointIndex]->getGracePeriodEndDateTime();
+}
+
+void Setup::progressToNextPoint()
+{
+    // TODO: Implement.
+}
+
 /////////////////////////////////////// Single Point Configuration ///////////////////////////////////////
 
 SinglePointConfiguration::SinglePointConfiguration()
 {
 }
 
-void SinglePointConfiguration::SetLocation(int32_t lat, int32_t lon)
+void SinglePointConfiguration::SetLocation(int32_t _lat, int32_t _lon)
 {
+    location._lat = _lat;
+    location._lon = _lon;
 }
 
-void SinglePointConfiguration::SetDateTime(time_t time)
+void SinglePointConfiguration::SetDateTime(time_t _time)
 {
+    dateTime = _time;
 }
 
-void SinglePointConfiguration::SetGracePeriodEndTime(time_t time)
+void SinglePointConfiguration::SetGracePeriodEndTime(time_t _time)
 {
+    dateTime = _time;
+}
+
+NeoGPS::Location_t& SinglePointConfiguration::getLocation()
+{
+    // TODO: insert return statement here
+}
+
+time_t SinglePointConfiguration::getDateTime()
+{
+    return time_t();
+}
+
+time_t SinglePointConfiguration::getGracePeriodEndDateTime()
+{
+    return time_t();
 }

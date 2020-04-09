@@ -26,17 +26,10 @@ private:
 	void UpdateGPS();
 public:
 	NeoPhysical();
-	void doSomeWork();
-	void run();
 	void SerialEnd();
 	time_t GetDateTimeInUtc();
-	float GetAbsoluteDistanceFromPoint(NeoGPS::Location_t targetLocation);
-	//void Initialize(double, double);
-	//void End();
-	//bool IsLocationValid();
-	//uint32_t GetAbsoluteDistance();
-	//bool IsWithinRadius();
-	//bool UpdateGPS();
+	float GetAbsoluteDistanceFromPoint(NeoGPS::Location_t& targetLocation);
+	bool IsWithinRadius(NeoGPS::Location_t& targetLocation);
 };
 
 #endif

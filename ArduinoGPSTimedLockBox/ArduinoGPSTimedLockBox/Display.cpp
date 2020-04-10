@@ -5,8 +5,8 @@
 */
 
 #include "Display.h"
-#define screenI2C 0x38
-//#define screenI2C 0x27
+//#define screenI2C 0x38
+#define screenI2C 0x27
 
 Display::Display()
 {

@@ -9,6 +9,8 @@
 	#include "WProgram.h"
 #endif
 
+#include "CommonDataTypes.h"
+
 #define key 12
 #define buttonOne 9
 #define buttonTwo 10

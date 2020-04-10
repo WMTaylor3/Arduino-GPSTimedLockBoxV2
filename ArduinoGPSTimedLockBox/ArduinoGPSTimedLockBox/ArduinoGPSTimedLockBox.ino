@@ -25,15 +25,58 @@
 Setup systemConfig;
 NeoPhysical gps;
 //Temporal realTimeClock;
-//Display display;
+Display display;
+UserInput input;
 
 void setup() {
     Serial.begin(9600);
-    systemConfig.Initialize();
+
+    display.Initialize();
+    display.LcdOn();
+
+    switch (input.getStartUpMode())
+    {
+    case(normal):
+        RunDefault();
+        break;
+    case(overrideUnlock):
+        RunOverride();
+        break;
+    case(extraTime):
+        RunExtraTime();
+        break;
+    case(calibrateClock):
+        RunCalibrateRTC();
+        break;
+    case(configureUnit):
+        RunConfigureUnit();
+        break;
+    default:
+        RunDefault();
+        break;
+    }
+}
+
+void RunDefault() {
+
+}
+
+void RunOverride() {
+
+}
+
+void RunExtraTime() {
+
+}
+
+void RunCalibrateRTC() {
+
+}
+
+void RunConfigureUnit() {
+
 }
 
 void loop() {
-    latLongLocation loc1 = systemConfig.getCurrentPointLocation();
-    Serial.println(loc1.latitude);
-    Serial.println(gps.GetAbsoluteDistanceFromPoint(loc1));
+    // Empty. The unit runs once per power cycle.
 }

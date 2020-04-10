@@ -62,7 +62,60 @@ buttonState UserInput::getCurrentButtons()
 	}
 }
 
-bool UserInput::validateCode(char* expectedPin, uint8_t pinLength)
+bool UserInput::validateCodeForStartupMode(startupMode modeToAuthenticate, Display& display)
 {
-	return false;
+	char expectedCode[10];
+	uint8_t codeLength = 0;
+	bool isValid = false;
+
+	switch (modeToAuthenticate)
+	{
+	case(calibrateClock):
+		strlcpy(expectedCode, codeCalibrate, 10);
+		codeLength = 7;
+		break;
+	case(extraTime):
+		strlcpy(expectedCode, codeExtraTime, 10);
+		codeLength = 7;
+		break;
+	case(configureUnit):
+		strlcpy(expectedCode, codeConfigure, 10);
+		codeLength = 7;
+		break;
+	case(overrideUnlock):
+		strlcpy(expectedCode, codeOverride, 10);
+		codeLength = 10;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	display.WriteEnterPasscode();
+	delay(1000);
+	uint8_t i = 0;
+	while (i < 10)
+	{
+		if ((digitalRead(buttonOne) == HIGH) && (digitalRead(buttonTwo) == LOW) && (digitalRead(buttonThree) == LOW))
+		{
+			enteredCode += 'A';
+			display.CharTyped(i);
+			i++;
+			delay(250);
+		}
+		if ((digitalRead(buttonOne) == LOW) && (digitalRead(buttonTwo) == HIGH) && (digitalRead(buttonThree) == LOW))
+		{
+			enteredCode += 'B';
+			display.CharTyped(i);
+			i++;
+			delay(250);
+		}
+		if ((digitalRead(buttonOne) == LOW) && (digitalRead(buttonTwo) == LOW) && (digitalRead(buttonThree) == HIGH))
+		{
+			enteredCode += 'C';
+			display.CharTyped(i);
+			i++;
+			delay(250);
+		}
+	}
 }

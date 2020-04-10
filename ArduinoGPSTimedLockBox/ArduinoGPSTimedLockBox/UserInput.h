@@ -10,18 +10,24 @@
 #endif
 
 #include "CommonDataTypes.h"
+#include "Display.h"
 
 #define key 12
 #define buttonOne 9
 #define buttonTwo 10
 #define buttonThree 11
 
+#define codeOverride "1323122133"
+#define codeExtraTime "1233213"
+#define codeCalibrate "1121321"
+#define codeConfigure "1221213"
+
 class UserInput
 {
 public:
 	startupMode getStartUpMode();
 	buttonState getCurrentButtons();
-	bool validateCode(char* expectedPin, uint8_t pinLength);
+	bool validateCodeForStartupMode(startupMode modeToAuthenticate, Display& display);
 };
 
 #endif

@@ -62,8 +62,7 @@ void RunDefault() {
 }
 
 void RunOverride() {
-    String enteredCode = "";
-    uint8_t count = 0
+
 }
 
 void RunExtraTime() {

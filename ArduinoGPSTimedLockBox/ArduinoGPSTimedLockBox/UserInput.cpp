@@ -61,3 +61,8 @@ buttonState UserInput::getCurrentButtons()
 		return all;
 	}
 }
+
+bool UserInput::validateCode(char* expectedPin, uint8_t pinLength)
+{
+	return false;
+}

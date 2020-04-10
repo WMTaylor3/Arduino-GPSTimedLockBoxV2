@@ -21,6 +21,7 @@ class UserInput
 public:
 	startupMode getStartUpMode();
 	buttonState getCurrentButtons();
+	bool validateCode(char* expectedPin, uint8_t pinLength);
 };
 
 #endif

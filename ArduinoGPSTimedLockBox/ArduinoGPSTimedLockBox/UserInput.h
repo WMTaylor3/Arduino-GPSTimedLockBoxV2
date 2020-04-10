@@ -20,6 +20,7 @@ class UserInput
 {
 public:
 	startupMode getStartUpMode();
+	buttonState getCurrentButtons();
 };
 
 #endif

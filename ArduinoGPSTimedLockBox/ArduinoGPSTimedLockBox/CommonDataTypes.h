@@ -3,6 +3,8 @@
 
 enum latOrLong { latitude, longitude };
 
+enum buttonState { none, left, right, center, leftAndCenter, leftAndRight, centerAndRight, all };
+
 enum startupMode { normal, overrideUnlock, extraTime, calibrateClock, configureUnit };
 
 struct latLongLocation

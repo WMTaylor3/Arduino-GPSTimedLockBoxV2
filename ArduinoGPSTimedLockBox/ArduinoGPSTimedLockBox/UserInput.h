@@ -24,10 +24,12 @@
 
 class UserInput
 {
+private:
+	Display display;
+	buttonState getCurrentButtons();
 public:
 	startupMode getStartUpMode();
-	buttonState getCurrentButtons();
-	bool validateCodeForStartupMode(startupMode modeToAuthenticate, Display& display);
+	bool validateCodeForStartupMode(startupMode modeToAuthenticate);
 };
 
 #endif

@@ -8,35 +8,36 @@
 //#define screenI2C 0x38
 #define screenI2C 0x27
 
+LiquidCrystal_I2C* Display::lcd = new LiquidCrystal_I2C(screenI2C, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+
 Display::Display()
 {
-	lcd = new LiquidCrystal_I2C(screenI2C, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 }
 
 void Display::Initialize()
 {
-	lcd->begin(16, 2);
+	Display::lcd->begin(16, 2);
 }
 
 void Display::LcdOn()
 {
-	lcd->on();
+	Display::lcd->on();
 }
 
 void Display::LcdOff()
 {
-	lcd->off();
+	Display::lcd->off();
 }
 
 void Display::Write(String lineOne, String lineTwo = "")
 {
 	Clear();
-	lcd->setCursor(0, 0);
-	lcd->print(lineOne);
+	Display::lcd->setCursor(0, 0);
+	Display::lcd->print(lineOne);
 	if (lineTwo != "")
 	{
-		lcd->setCursor(0, 1);
-		lcd->print(lineTwo);
+		Display::lcd->setCursor(0, 1);
+		Display::lcd->print(lineTwo);
 	}
 }
 
@@ -146,8 +147,8 @@ void Display::WriteEnterPasscode()
 
 void Display::CharTyped(uint8_t dotCount)
 {
-	lcd->setCursor(dotCount, 1);
-	lcd->print("*");
+	Display::lcd->setCursor(dotCount, 1);
+	Display::lcd->print("*");
 }
 
 void Display::WriteInsertBothKeys()
@@ -198,8 +199,8 @@ void Display::WriteGoodbye()
 
 void Display::Clear()
 {
-	lcd->setCursor(0, 0);
-	lcd->print("                ");
-	lcd->setCursor(0, 1);
-	lcd->print("                ");
+	Display::lcd->setCursor(0, 0);
+	Display::lcd->print("                ");
+	Display::lcd->setCursor(0, 1);
+	Display::lcd->print("                ");
 }

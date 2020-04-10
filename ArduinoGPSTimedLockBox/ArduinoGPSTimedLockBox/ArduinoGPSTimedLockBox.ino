@@ -33,11 +33,12 @@ void setup() {
 
     display.Initialize();
     display.LcdOn();
+    display.WriteAccessDenied();
 
     switch (input.getStartUpMode())
     {
     case(normal):
-        RunDefault();
+        RunNormal();
         break;
     case(overrideUnlock):
         RunOverride();
@@ -52,29 +53,29 @@ void setup() {
         RunConfigureUnit();
         break;
     default:
-        RunDefault();
+        RunNormal();
         break;
     }
 }
 
-void RunDefault() {
+void RunNormal() {
 
 }
 
 void RunOverride() {
-
+    input.validateCodeForStartupMode(overrideUnlock);
 }
 
 void RunExtraTime() {
-
+    input.validateCodeForStartupMode(extraTime);
 }
 
 void RunCalibrateRTC() {
-
+    input.validateCodeForStartupMode(calibrateClock);
 }
 
 void RunConfigureUnit() {
-
+    input.validateCodeForStartupMode(configureUnit);
 }
 
 void loop() {

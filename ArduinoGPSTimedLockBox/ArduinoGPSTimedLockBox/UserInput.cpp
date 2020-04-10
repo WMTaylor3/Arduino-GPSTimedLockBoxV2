@@ -62,11 +62,11 @@ buttonState UserInput::getCurrentButtons()
 	}
 }
 
-bool UserInput::validateCodeForStartupMode(startupMode modeToAuthenticate, Display& display)
+bool UserInput::validateCodeForStartupMode(startupMode modeToAuthenticate)
 {
 	char expectedCode[10];
 	uint8_t codeLength = 0;
-	bool isValid = false;
+	bool isValid = true;
 
 	switch (modeToAuthenticate)
 	{
@@ -94,28 +94,19 @@ bool UserInput::validateCodeForStartupMode(startupMode modeToAuthenticate, Displ
 	display.WriteEnterPasscode();
 	delay(1000);
 	uint8_t i = 0;
-	while (i < 10)
+	while (i < codeLength)
 	{
-		if ((digitalRead(buttonOne) == HIGH) && (digitalRead(buttonTwo) == LOW) && (digitalRead(buttonThree) == LOW))
+		int8_t inputValue = (int)getCurrentButtons(); // Method returns enum which can be cast to an int for its value, in this case 1, 2 or 3 (L, C, R) are valid.
+		if (inputValue > 0 && inputValue < 4)
 		{
-			enteredCode += 'A';
+			if (inputValue != expectedCode[i])
+			{
+				isValid = false;
+			}
 			display.CharTyped(i);
 			i++;
-			delay(250);
-		}
-		if ((digitalRead(buttonOne) == LOW) && (digitalRead(buttonTwo) == HIGH) && (digitalRead(buttonThree) == LOW))
-		{
-			enteredCode += 'B';
-			display.CharTyped(i);
-			i++;
-			delay(250);
-		}
-		if ((digitalRead(buttonOne) == LOW) && (digitalRead(buttonTwo) == LOW) && (digitalRead(buttonThree) == HIGH))
-		{
-			enteredCode += 'C';
-			display.CharTyped(i);
-			i++;
-			delay(250);
+			delay(300);
 		}
 	}
+	return isValid;
 }

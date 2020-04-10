@@ -19,33 +19,32 @@
 class Display
 {
 private:
-	LiquidCrystal_I2C* lcd;
-	String screenData[2];
-	void Write(String, String = "");
+	static LiquidCrystal_I2C* lcd;
+	static void Write(String, String = "");
 public:
 	Display();
-	void Initialize();
-	void LcdOn();
-	void LcdOff();
-	void WriteSearchBeginsIn(uint32_t, uint32_t, uint32_t);
-	void WriteNextStageBeginsIn(uint32_t, uint32_t, uint32_t);
-	void WriteObtainingGPSLocationFix();
-	void WriteDistanceRemaining(uint32_t);
-	void WriteTimeToUnlock(uint32_t, uint32_t, uint32_t);
-	void WriteLocationReached();
-	void WriteUnlockTimeRemaining(uint32_t, uint32_t, uint32_t);
-	void WriteSerialMode();
-	void WriteEnterValue();
-	void WriteCalibratingRTC();
-	void WriteEnterPasscode();
-	void CharTyped(uint8_t);
-	void WriteInsertBothKeys();
-	void WriteTimeIncreasedBy(uint32_t days, uint32_t hours, uint32_t minutes);
-	void WriteAccessGranted();
-	void WriteAccessDenied();
-	void WriteTooLate();
-	void WriteGoodbye();
-	void Clear();
+	static void Initialize();
+	static void LcdOn();
+	static void LcdOff();
+	static void WriteSearchBeginsIn(uint32_t, uint32_t, uint32_t);
+	static void WriteNextStageBeginsIn(uint32_t, uint32_t, uint32_t);
+	static void WriteObtainingGPSLocationFix();
+	static void WriteDistanceRemaining(uint32_t);
+	static void WriteTimeToUnlock(uint32_t, uint32_t, uint32_t);
+	static void WriteLocationReached();
+	static void WriteUnlockTimeRemaining(uint32_t, uint32_t, uint32_t);
+	static void WriteSerialMode();
+	static void WriteEnterValue();
+	static void WriteCalibratingRTC();
+	static void WriteEnterPasscode();
+	static void CharTyped(uint8_t);
+	static void WriteInsertBothKeys();
+	static void WriteTimeIncreasedBy(uint32_t days, uint32_t hours, uint32_t minutes);
+	static void WriteAccessGranted();
+	static void WriteAccessDenied();
+	static void WriteTooLate();
+	static void WriteGoodbye();
+	static void Clear();
 };
 
 #endif

@@ -40,9 +40,25 @@ void Display::Write(String lineOne, String lineTwo = "")
 	}
 }
 
-void Display::WriteLocationRevealedIn(uint32_t days, uint32_t hours, uint32_t minutes)
+void Display::WriteSearchBeginsIn(uint32_t days, uint32_t hours, uint32_t minutes)
 {
-	Write("Location will be", "revealed in...");
+	Write("Search will", "begin in...");
+	delay(3000);
+	if (days + hours + minutes <= 0)
+	{
+		Write("Less than", "a minute");
+	}
+	String dayString = String(days);
+	String hourString = String(hours);
+	String minuteString = String(minutes);
+	Write(dayString + " Days " + hourString + " Hours", minuteString + " Minutes");
+	delay(3000);
+	Clear();
+}
+
+void Display::WriteNextStageBeginsIn(uint32_t days, uint32_t hours, uint32_t minutes)
+{
+	Write("Next stage will", "begin in...");
 	delay(3000);
 	if (days + hours + minutes <= 0)
 	{
@@ -108,6 +124,21 @@ void Display::WriteUnlockTimeRemaining(uint32_t days, uint32_t hours, uint32_t m
 	Clear();
 }
 
+void Display::WriteSerialMode()
+{
+	Write("Serial mode");
+}
+
+void Display::WriteEnterValue()
+{
+	Write("Enter value: ");
+}
+
+void Display::WriteCalibratingRTC()
+{
+	Write("Calibrating RTC", "from GPS fix...");
+}
+
 void Display::WriteEnterPasscode()
 {
 	Write("Passcode:");
@@ -125,9 +156,25 @@ void Display::WriteInsertBothKeys()
 	delay(3000);
 }
 
+void Display::WriteTimeIncreasedBy(uint32_t days, uint32_t hours, uint32_t minutes)
+{
+	Write("Remaining time", "increased by...");
+	delay(3000);
+	if (days + hours + minutes <= 0)
+	{
+		Write("Less than", "a minute");
+	}
+	String dayString = String(days);
+	String hourString = String(hours);
+	String minuteString = String(minutes);
+	Write(dayString + " Days " + hourString + " Hours", minuteString + " Minutes");
+	delay(3000);
+	Clear();
+}
+
 void Display::WriteAccessGranted()
 {
-	Write("Access Granted", "Welcome William");
+	Write("Access Granted", "Welcome");
 	delay(3000);
 }
 

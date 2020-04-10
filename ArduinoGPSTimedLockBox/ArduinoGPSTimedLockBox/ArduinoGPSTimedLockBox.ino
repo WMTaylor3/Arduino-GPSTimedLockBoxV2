@@ -7,8 +7,8 @@
 #include "UserInput.h"
 #include "NeoPhysical.h"
 #include "Setup.h"
+#include "Display.h"
 //#include "Temporal.h"
-//#include "Display.h"
 
 #include <NeoSWSerial.h>
 #include <NMEAGPS.h>

@@ -3,7 +3,7 @@
 
 enum latOrLong { latitude, longitude };
 
-enum startupMode { overrideUnlock, extraTime, calibrateClock, configureUnit };
+enum startupMode { normal, overrideUnlock, extraTime, calibrateClock, configureUnit };
 
 struct latLongLocation
 {

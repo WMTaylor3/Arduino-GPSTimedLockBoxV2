@@ -3,6 +3,8 @@
 
 enum latOrLong { latitude, longitude };
 
+enum startupMode { overrideUnlock, extraTime, calibrateClock, configureUnit };
+
 struct latLongLocation
 {
 	int32_t latitude;

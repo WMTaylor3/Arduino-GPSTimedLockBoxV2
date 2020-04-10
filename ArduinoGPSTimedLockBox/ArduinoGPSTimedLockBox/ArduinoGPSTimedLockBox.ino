@@ -4,6 +4,7 @@
  Author:	William Taylor
 */
 
+#include "UserInput.h"
 #include "NeoPhysical.h"
 #include "Setup.h"
 //#include "Temporal.h"

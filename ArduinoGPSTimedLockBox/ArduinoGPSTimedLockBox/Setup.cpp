@@ -238,10 +238,6 @@ int32_t Setup::ParseLatLongStringToInt32(char* locationString, latOrLong latOrLo
     for (uint8_t i = decimalPosition; i < stringLength - 1; i++) { // Minus 1 so we don't try override the original '\0' with something from out of the array bounds.
         locationString[i] = locationString[i + 1];
     }
-    Serial.print("S");
-    Serial.println(locationString);
-    Serial.print("I");
-    Serial.println(atol("0900000000"));
 
     return atol(locationString);
 }
@@ -600,62 +596,58 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 
 void Setup::Initialize()
 {
-    //ClearScreen();
-    //PrintSplashScreen();
-    //AwaitUserInput();
-    //ClearScreen();
+    ClearScreen();
+    PrintSplashScreen();
+    AwaitUserInput();
+    ClearScreen();
     
-    //// Total number of times/places to be included in the hunt.
-    //uint8_t numberOfPoints = 0;
-    //do {
-    //    numberOfPoints = PromptForNumberOfPoints();
-    //} while (!ValidateNumberOfPoints(numberOfPoints));
-    //CreateBasicConfig(numberOfPoints);
-    //ClearScreen();
+    // Total number of times/places to be included in the hunt.
+    uint8_t numberOfPoints = 0;
+    do {
+        numberOfPoints = PromptForNumberOfPoints();
+    } while (!ValidateNumberOfPoints(numberOfPoints));
+    CreateBasicConfig(numberOfPoints);
+    ClearScreen();
 
-    CreateBasicConfig(1);
+    time_t gameStartDateTime = 0;
+    do {
+        gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
+    } while (!ValidateGameStartDateTime(gameStartDateTime));
+    gameStartDateTime = gameStartDateTime;
 
-    //time_t gameStartDateTime = 0;
-    //do {
-    //    gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
-    //} while (!ValidateGameStartDateTime(gameStartDateTime));
-    //gameStartDateTime = gameStartDateTime;
+    ClearScreen();
 
-    //ClearScreen();
-
-    //// For each time/place as quantified above.
-    //for (uint8_t i = 0; i < numberOfPoints; i++) {
-    //    double unlockLatitude = 0;
-    //    do {
-    //        unlockLatitude = PromptForLatitude(i == numberOfPoints-1); // Parameter will evaluate to true on the final loop.
-    //    } while (!ValidateLatitude(unlockLatitude));
-    //    ClearScreen();
+    // For each time/place as quantified above.
+    for (uint8_t i = 0; i < numberOfPoints; i++) {
+        double unlockLatitude = 0;
+        do {
+            unlockLatitude = PromptForLatitude(i == numberOfPoints-1); // Parameter will evaluate to true on the final loop.
+        } while (!ValidateLatitude(unlockLatitude));
+        ClearScreen();
 
         double unlockLongitude = 0;
         do {
-            unlockLongitude = PromptForLongitude(0 == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockLongitude = PromptForLongitude(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateLongitude(unlockLongitude));
         ClearScreen();
 
-    //    time_t unlockDateTime = 0;
-    //    do {
-    //        unlockDateTime = PromptForNextPointDateTime(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
-    //    } while (!ValidateNextPointDateTime(unlockDateTime));
-    //    ClearScreen();
+        time_t unlockDateTime = 0;
+        do {
+            unlockDateTime = PromptForNextPointDateTime(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+        } while (!ValidateNextPointDateTime(unlockDateTime));
+        ClearScreen();
 
-    //    uint16_t gracePeriodInSeconds = 0;
-    //    do {
-    //        gracePeriodInSeconds = PromptForGracePeriodDuration();
-    //    } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
-    //    time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
-    //    ClearScreen();
+        uint16_t gracePeriodInSeconds = 0;
+        do {
+            gracePeriodInSeconds = PromptForGracePeriodDuration();
+        } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
+        time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
+        ClearScreen();
 
-    //    singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
-    //    singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
-    //    singlePointConfigurationCollection[i]->SetGracePeriodEndTime(gracePeriodEndTime);
-
-    singlePointConfigurationCollection[0]->SetLocation(-412864060, 1747762340);
-    //}
+        singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
+        singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
+        singlePointConfigurationCollection[i]->SetGracePeriodEndTime(gracePeriodEndTime);
+    }
 }
 
 latLongLocation Setup::getCurrentPointLocation()

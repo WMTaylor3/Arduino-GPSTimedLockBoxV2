@@ -124,6 +124,7 @@
     <ClInclude Include="Setup.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Temporal.h" />
+    <ClInclude Include="UserInput.h" />
     <ClInclude Include="__vm\.ArduinoGPSTimedLockBox.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +132,7 @@
     <ClCompile Include="Setup.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Temporal.cpp" />
+    <ClCompile Include="UserInput.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

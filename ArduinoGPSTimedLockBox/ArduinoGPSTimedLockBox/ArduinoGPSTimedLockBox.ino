@@ -63,7 +63,16 @@ void RunNormal() {
 }
 
 void RunOverride() {
-    input.validateCodeForStartupMode(overrideUnlock);
+    if (input.validateCodeForStartupMode(overrideUnlock)) {
+        display.WriteAccessGranted();
+        Unlock();
+        delay(3000);
+    }
+    else {
+        display.WriteAccessDenied();
+        delay(3000);
+        Die();
+    }
 }
 
 void RunExtraTime() {
@@ -76,6 +85,22 @@ void RunCalibrateRTC() {
 
 void RunConfigureUnit() {
     input.validateCodeForStartupMode(configureUnit);
+}
+
+void Lock() {
+    // TODO: Implement
+}
+
+void Unlock() {
+    // TODO: Implement.
+}
+
+void Die()
+{
+    display.WriteGoodbye();
+    display.Clear();
+    display.LcdOff();
+    while (true) {}
 }
 
 void loop() {

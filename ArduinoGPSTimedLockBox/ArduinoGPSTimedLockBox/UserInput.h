@@ -25,11 +25,11 @@
 class UserInput
 {
 private:
-	Display display;
-	buttonState getCurrentButtons();
+	static Display display;
+	static buttonState getCurrentButtons();
 public:
-	startupMode getStartUpMode();
-	bool validateCodeForStartupMode(startupMode modeToAuthenticate);
+	static startupMode getStartUpMode();
+	static bool validateCodeForStartupMode(startupMode modeToAuthenticate);
 };
 
 #endif

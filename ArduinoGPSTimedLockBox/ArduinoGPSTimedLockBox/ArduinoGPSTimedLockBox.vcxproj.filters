@@ -33,13 +33,13 @@
     <ClInclude Include="Setup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NeoPhysical.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CommonDataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UserInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Physical.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +53,10 @@
     <ClCompile Include="Setup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NeoPhysical.cpp">
+    <ClCompile Include="UserInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserInput.cpp">
+    <ClCompile Include="Physical.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,7 @@
 // NeoPhysical.h
 
-#ifndef _NEOPHYSICAL_h
-#define _NEOPHYSICAL_h
+#ifndef _PHYSICAL_h
+#define _PHYSICAL_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -18,7 +18,7 @@
 #define RX_PIN 6
 #define TX_PIN 7
 
-class NeoPhysical
+class Physical
 {
 private:
 	NeoSWSerial gpsPort;
@@ -26,7 +26,7 @@ private:
 	gps_fix fix;
 	void UpdateGPS();
 public:
-	NeoPhysical();
+	Physical();
 	void SerialEnd();
 	time_t GetDateTimeInUtc();
 	float GetAbsoluteDistanceFromPoint(latLongLocation targetLocation);

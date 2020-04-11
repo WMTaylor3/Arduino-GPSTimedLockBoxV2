@@ -2,19 +2,19 @@
 // 
 // 
 
-#include "NeoPhysical.h"
+#include "Physical.h"
 
-NeoPhysical::NeoPhysical() : gpsPort(RX_PIN, TX_PIN)
+Physical::Physical() : gpsPort(RX_PIN, TX_PIN)
 {
     gpsPort.begin(9600);
 }
 
-void NeoPhysical::SerialEnd()
+void Physical::SerialEnd()
 {
     gpsPort.end();
 }
 
-void NeoPhysical::UpdateGPS()
+void Physical::UpdateGPS()
 {
     int period = 3000;
     uint32_t time_now = 0;
@@ -39,7 +39,7 @@ void NeoPhysical::UpdateGPS()
     }
 }
 
-time_t NeoPhysical::GetDateTimeInUtc()
+time_t Physical::GetDateTimeInUtc()
 {
     while (true) {
         UpdateGPS();
@@ -49,7 +49,7 @@ time_t NeoPhysical::GetDateTimeInUtc()
     }
 }
 
-float NeoPhysical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
+float Physical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
 {
     while (true) {
         UpdateGPS();
@@ -61,7 +61,7 @@ float NeoPhysical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
 }
 
 
-bool NeoPhysical::IsWithinRadius(latLongLocation targetLocation)
+bool Physical::IsWithinRadius(latLongLocation targetLocation)
 {
     return (GetAbsoluteDistanceFromPoint(targetLocation) <= 30);
 }

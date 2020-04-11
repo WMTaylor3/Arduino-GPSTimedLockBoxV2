@@ -5,7 +5,7 @@
 */
 
 #include "UserInput.h"
-#include "NeoPhysical.h"
+#include "Physical.h"
 #include "Setup.h"
 #include "Display.h"
 //#include "Temporal.h"
@@ -23,7 +23,7 @@
 #include <Streamers.h>
 
 Setup systemConfig;
-NeoPhysical gps;
+Physical gps;
 //Temporal realTimeClock;
 Display display;
 UserInput input;

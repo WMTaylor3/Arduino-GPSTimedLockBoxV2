@@ -4,16 +4,16 @@
  Author:	William Taylor
 */
 
+#include "Display.h"
 #include "UserInput.h"
 #include "Physical.h"
 #include "Setup.h"
-#include "Display.h"
+#include "SinglePointConfiguration.h"
 //#include "Temporal.h"
 
 #include <NeoSWSerial.h>
 #include <NMEAGPS.h>
 #include <Time.h>
-#include <TimeLib.h>
 #include <DS1307RTC.h>
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>

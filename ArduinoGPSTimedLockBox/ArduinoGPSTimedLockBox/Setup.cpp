@@ -4,9 +4,6 @@
 
 #include "Setup.h"
 
-/////////////////////////////////////// Setup Routine User Input ///////////////////////////////////////
-
-
 Setup::Setup()
 {
 }
@@ -30,9 +27,6 @@ void Setup::AwaitUserInput() {
     while (Serial.available()) { Serial.read(); } // Clear buffer
 }
 
-// Prompts user for input on serial terminal.
-// Param rx_string: char* to char[] in which to store the string, must be 1 more than max expected string length.
-// Param maxStringLength: uint8_t containing maximum expected string length not including null termination.
 void Setup::GetUserInput(char* rx_string, uint8_t maxStringLength) {
     while (Serial.available()) { Serial.read(); } // Clear buffer
     uint8_t i = 0;
@@ -238,6 +232,8 @@ int32_t Setup::ParseLatLongStringToInt32(char* locationString, latOrLong latOrLo
     for (uint8_t i = decimalPosition; i < stringLength - 1; i++) { // Minus 1 so we don't try override the original '\0' with something from out of the array bounds.
         locationString[i] = locationString[i + 1];
     }
+
+    // TODO Handle Negatives.
 
     return atol(locationString);
 }
@@ -668,41 +664,4 @@ time_t Setup::getCurrentPointGracePeriodEndTime()
 void Setup::progressToNextPoint()
 {
     // TODO: Implement.
-}
-
-/////////////////////////////////////// Single Point Configuration ///////////////////////////////////////
-
-SinglePointConfiguration::SinglePointConfiguration()
-{
-}
-
-void SinglePointConfiguration::SetLocation(int32_t _lat, int32_t _lon)
-{
-    location.latitude = _lat;
-    location.longitude = _lon;
-}
-
-void SinglePointConfiguration::SetDateTime(time_t _time)
-{
-    dateTime = _time;
-}
-
-void SinglePointConfiguration::SetGracePeriodEndTime(time_t _time)
-{
-    dateTime = _time;
-}
-
-latLongLocation SinglePointConfiguration::getLocation()
-{
-    return location;
-}
-
-time_t SinglePointConfiguration::getDateTime()
-{
-    return dateTime;
-}
-
-time_t SinglePointConfiguration::getGracePeriodEndDateTime()
-{
-    return gracePeriodEndTime;
 }

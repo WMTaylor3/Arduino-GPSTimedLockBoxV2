@@ -123,6 +123,7 @@
     <ClInclude Include="Physical.h" />
     <ClInclude Include="Setup.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="SinglePointConfiguration.h" />
     <ClInclude Include="Temporal.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="__vm\.ArduinoGPSTimedLockBox.vsarduino.h" />
@@ -131,6 +132,7 @@
     <ClCompile Include="Physical.cpp" />
     <ClCompile Include="Setup.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="SinglePointConfiguration.cpp" />
     <ClCompile Include="Temporal.cpp" />
     <ClCompile Include="UserInput.cpp" />
   </ItemGroup>

@@ -9,27 +9,10 @@
 	#include "WProgram.h"
 #endif
 
-#include <Time.h>
 #include <DS1307RTC.h>
 #include "CommonDataTypes.h"
-
-class SinglePointConfiguration
-{
-private:
-	latLongLocation location;
-	time_t dateTime;
-	time_t gracePeriodEndTime;
-public:
-	SinglePointConfiguration();
-
-	void SetLocation(int32_t _lat, int32_t _lon);
-	void SetDateTime(time_t _time);
-	void SetGracePeriodEndTime(time_t _time);
-
-	latLongLocation getLocation();
-	time_t getDateTime();
-	time_t getGracePeriodEndDateTime();
-};
+#include "SinglePointConfiguration.h"
+#include <Time.h>
 
 class Setup
 {

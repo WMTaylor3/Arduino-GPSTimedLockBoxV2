@@ -4,7 +4,9 @@
 
 #include "Physical.h"
 
-Physical::Physical() : gpsPort(RX_PIN, TX_PIN)
+NeoSWSerial Physical::gpsPort(RX_PIN, TX_PIN);
+
+Physical::Physical()
 {
     gpsPort.begin(9600);
 }

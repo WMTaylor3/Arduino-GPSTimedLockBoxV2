@@ -21,16 +21,16 @@
 class Physical
 {
 private:
-	NeoSWSerial gpsPort;
-	NMEAGPS gps;
-	gps_fix fix;
-	void UpdateGPS();
+	static NeoSWSerial gpsPort;
+	static NMEAGPS gps;
+	static gps_fix fix;
+	static void UpdateGPS();
 public:
 	Physical();
-	void SerialEnd();
-	time_t GetDateTimeInUtc();
-	float GetAbsoluteDistanceFromPoint(latLongLocation targetLocation);
-	bool IsWithinRadius(latLongLocation targetLocation);
+	static void SerialEnd();
+	static time_t GetDateTimeInUtc();
+	static float GetAbsoluteDistanceFromPoint(latLongLocation targetLocation);
+	static bool IsWithinRadius(latLongLocation targetLocation);
 };
 
 #endif

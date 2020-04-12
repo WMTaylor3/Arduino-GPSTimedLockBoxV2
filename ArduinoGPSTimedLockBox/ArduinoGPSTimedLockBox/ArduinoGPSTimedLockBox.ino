@@ -9,7 +9,7 @@
 #include "Physical.h"
 #include "Setup.h"
 #include "SinglePointConfiguration.h"
-//#include "Temporal.h"
+#include "Temporal.h"
 
 #include <NeoSWSerial.h>
 #include <NMEAGPS.h>
@@ -24,7 +24,7 @@
 
 Setup systemConfig;
 Physical gps;
-//Temporal realTimeClock;
+Temporal realTimeClock;
 Display display;
 UserInput input;
 
@@ -32,7 +32,6 @@ void setup() {
     Serial.begin(9600);
 
     display.Initialize();
-    display.LcdOn();
     display.WriteAccessDenied();
 
     switch (input.getStartUpMode())
@@ -66,13 +65,12 @@ void RunOverride() {
     if (input.validateCodeForStartupMode(overrideUnlock)) {
         display.WriteAccessGranted();
         Unlock();
-        delay(3000);
     }
     else {
         display.WriteAccessDenied();
-        delay(3000);
-        Die();
     }
+    delay(2000);
+    Die();
 }
 
 void RunExtraTime() {
@@ -80,7 +78,20 @@ void RunExtraTime() {
 }
 
 void RunCalibrateRTC() {
-    input.validateCodeForStartupMode(calibrateClock);
+    if (input.validateCodeForStartupMode(calibrateClock) || true) {
+        display.WriteCalibratingRTC();
+        time_t currentTime = realTimeClock.GetCurrentDateTime();
+        time_t newTime = gps.GetDateTimeInUtc();
+        //realTimeClock.SetCurrentTime(newTime);
+        //delay(1000);
+        //uint32_t delta = abs(currentTime) - abs(newTime);
+        //display.WriteRTCOffBy(delta);
+    }
+    else {
+        display.WriteAccessDenied();
+    }
+    delay(2000);
+    Die();
 }
 
 void RunConfigureUnit() {

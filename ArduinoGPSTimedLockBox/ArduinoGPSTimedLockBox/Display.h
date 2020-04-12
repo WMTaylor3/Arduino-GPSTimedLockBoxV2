@@ -36,6 +36,7 @@ public:
 	static void WriteSerialMode();
 	static void WriteEnterValue();
 	static void WriteCalibratingRTC();
+	static void WriteRTCOffBy(uint32_t delta);
 	static void WriteEnterPasscode();
 	static void CharTyped(uint8_t);
 	static void WriteInsertBothKeys();

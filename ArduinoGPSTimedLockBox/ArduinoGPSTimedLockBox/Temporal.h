@@ -30,23 +30,23 @@ class Temporal
 {
 private:
 	static DS1307RTC *rtc;
-	static uint32_t unlockDateTime;
-	static uint32_t preUnlockDateTime;
-	static uint32_t Temporal::ConvertToSeconds(DateTime);
-	static DateTime Temporal::ConvertToDateTime(uint32_t);
-	static void StoreDateTimeToEEPROM();
-	static void ReadDateTimeFromEEPROM();
+	//static uint32_t unlockDateTime;
+	//static uint32_t preUnlockDateTime;
+	//static uint32_t Temporal::ConvertToSeconds(DateTime);
+	//static DateTime Temporal::ConvertToDateTime(uint32_t);
+	//static void StoreDateTimeToEEPROM();
+	//static void ReadDateTimeFromEEPROM();
 public:
 	Temporal();
 	static time_t GetCurrentDateTime();
 	static bool SetCurrentTime(time_t newTime);
-	static void SetUnlockDateTime(DateTime, DateTime);
-	static DateTime GetRemainingTimeToUnlock();
-	static DateTime GetRemainingTimeToPreUnlock();
-	static DateTime GetRemainingWindow();
-	static bool UnlockReached();
-	static bool PreUnlockReached();
-	static bool WindowExpired();
+	//static void SetUnlockDateTime(DateTime, DateTime);
+	//static DateTime GetRemainingTimeToUnlock();
+	//static DateTime GetRemainingTimeToPreUnlock();
+	//static DateTime GetRemainingWindow();
+	//static bool UnlockReached();
+	//static bool PreUnlockReached();
+	//static bool WindowExpired();
 };
 
 #endif

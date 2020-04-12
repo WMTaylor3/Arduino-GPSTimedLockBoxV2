@@ -140,6 +140,13 @@ void Display::WriteCalibratingRTC()
 	Write("Calibrating RTC", "from GPS fix...");
 }
 
+void Display::WriteRTCOffBy(uint32_t delta)
+{
+	Write("Real Time Clock", "was off by...");
+	delay(3000);
+	Write(String(delta), "Seconds");
+}
+
 void Display::WriteEnterPasscode()
 {
 	Write("Passcode:");

@@ -43,29 +43,30 @@ void setup()
     Serial.begin(9600);
 
     display.Initialize();
-    display.WriteAccessDenied();
 
-    switch (input.GetStartUpMode())
-    {
-    case(normal):
-        RunNormal();
-        break;
-    case(overrideUnlock):
-        RunOverride();
-        break;
-    case(extraTime):
-        RunExtraTime();
-        break;
-    case(calibrateClock):
-        RunCalibrateRTC();
-        break;
-    case(configureUnit):
-        RunConfigureUnit();
-        break;
-    default:
-        RunNormal();
-        break;
-    }
+    systemConfig.Initialize();
+
+    //switch (input.GetStartUpMode())
+    //{
+    //case(normal):
+    //    RunNormal();
+    //    break;
+    //case(overrideUnlock):
+    //    RunOverride();
+    //    break;
+    //case(extraTime):
+    //    RunExtraTime();
+    //    break;
+    //case(calibrateClock):
+    //    RunCalibrateRTC();
+    //    break;
+    //case(configureUnit):
+    //    RunConfigureUnit();
+    //    break;
+    //default:
+    //    RunNormal();
+    //    break;
+    //}
 }
 
 void RunNormal()

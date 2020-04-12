@@ -11,6 +11,7 @@
 
 #include <Time.h>
 #include <DS1307RTC.h>
+#include <EEPROM.h>
 #include "CommonDataTypes.h"
 #include "SinglePointConfiguration.h"
 
@@ -19,12 +20,10 @@ class Setup
 private:
 	static uint8_t numberOfPoints;
 	static uint8_t currentPointIndex;
-	static time_t timeAtBoot;
 	static time_t gameStartDateTime;
 	static SinglePointConfiguration* singlePointConfigurationCollection[];
 	static bool timeExtended;
 
-	static void CreateBasicConfig(uint8_t _numberOfPoints);
 	static void AwaitUserInput();
 	static void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	static bool ValidateUserInputDateTime(char* rx_string);
@@ -51,6 +50,11 @@ private:
 	static bool ValidateUserInputGracePeriod(char* rx_string);
 	static bool ValidateGracePeriodDuration(uint16_t durationInSeconds);
 
+	static void StoreUnsignedInt32AsBytesInEEPROM(uint32_t data, uint8_t startIndex);
+	static void StoreSignedInt32AsBytesInEEPROM(int32_t data, uint8_t startIndex);
+	static uint32_t ReadUnsignedInt32AsBytesFromEEPROM(uint8_t startIndex);
+	static int32_t ReadSignedInt32AsBytesFromEEPROM(uint8_t startIndex);
+
 public:
 	Setup();
 	// ~Setup(); // Removed as is now empty due to class being static. Add back if we make class non-static.
@@ -62,6 +66,8 @@ public:
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();
 	static void ExtendTime(uint32_t duration, bool isInWindow);
+	static void LoadConfigFromEEPROM();
+	static void SaveConfigToEEPROM();
 };
 
 #endif

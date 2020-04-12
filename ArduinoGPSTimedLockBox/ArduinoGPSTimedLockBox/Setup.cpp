@@ -4,24 +4,23 @@
 
 #include "Setup.h"
 
+uint8_t Setup::numberOfPoints;
+uint8_t Setup::currentPointIndex;
+time_t Setup::gameStartDateTime;
+SinglePointConfiguration* Setup::singlePointConfigurationCollection[5];
+bool Setup::timeExtended;
+
 Setup::Setup()
 {
-}
-
-//Setup::~Setup() {
-//    delete [] singlePointConfigurationCollection; //Removed as we are now static, add this back if we make this class non-static.
-//}
-
-void Setup::CreateBasicConfig(uint8_t _numberOfPoints)
-{
-    numberOfPoints = _numberOfPoints;
-    currentPointIndex = 0;
-
     for (uint8_t i = 0; i < numberOfPoints; i++)
     {
         singlePointConfigurationCollection[i] = new SinglePointConfiguration();
     }
 }
+
+//Setup::~Setup() {
+//    delete [] singlePointConfigurationCollection; //Removed as we are now static, add this back if we make this class non-static.
+//}
 
 void Setup::AwaitUserInput()
 {
@@ -673,13 +672,15 @@ void Setup::Initialize()
     ClearScreen();
 
     timeExtended = false;
+    currentPointIndex = 0;
     
     // Total number of times/places to be included in the hunt.
-    uint8_t numberOfPoints = 0;
+    uint8_t pointCount = 0;
     do {
-        numberOfPoints = PromptForNumberOfPoints();
-    } while (!ValidateNumberOfPoints(numberOfPoints));
-    CreateBasicConfig(numberOfPoints);
+        pointCount = PromptForNumberOfPoints();
+    } while (!ValidateNumberOfPoints(pointCount));
+    numberOfPoints = pointCount;
+
     ClearScreen();
 
     time_t gameStartDateTime = 0;
@@ -691,23 +692,23 @@ void Setup::Initialize()
     ClearScreen();
 
     // For each time/place as quantified above.
-    for (uint8_t i = 0; i < numberOfPoints; i++)
+    for (uint8_t i = 0; i < pointCount; i++)
     {
         double unlockLatitude = 0;
         do {
-            unlockLatitude = PromptForLatitude(i == numberOfPoints-1); // Parameter will evaluate to true on the final loop.
+            unlockLatitude = PromptForLatitude(i == pointCount -1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateLatitude(unlockLatitude));
         ClearScreen();
 
         double unlockLongitude = 0;
         do {
-            unlockLongitude = PromptForLongitude(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockLongitude = PromptForLongitude(i == pointCount - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateLongitude(unlockLongitude));
         ClearScreen();
 
         time_t unlockDateTime = 0;
         do {
-            unlockDateTime = PromptForNextPointDateTime(i == numberOfPoints - 1); // Parameter will evaluate to true on the final loop.
+            unlockDateTime = PromptForNextPointDateTime(i == pointCount - 1); // Parameter will evaluate to true on the final loop.
         } while (!ValidateNextPointDateTime(unlockDateTime));
         ClearScreen();
 
@@ -722,6 +723,8 @@ void Setup::Initialize()
         singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
         singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gracePeriodEndTime);
     }
+
+    SaveConfigToEEPROM();
 }
 
 time_t Setup::GetGameStartDateTime()
@@ -747,6 +750,7 @@ time_t Setup::GetCurrentPointGracePeriodEndTime()
 void Setup::ProgressToNextPoint()
 {
     currentPointIndex++;
+    EEPROM.update(1, currentPointIndex);
 }
 
 bool Setup::IsFinalPoint()
@@ -766,4 +770,112 @@ void Setup::ExtendTime(uint32_t duration, bool isInWindow)
         singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime() + duration);
     }
     timeExtended = true;
+    EEPROM.update(2, true);
+}
+
+
+// EEPROM
+
+void Setup::LoadConfigFromEEPROM()
+{
+    numberOfPoints = EEPROM.read(0);
+    currentPointIndex = EEPROM.read(1);
+    timeExtended = EEPROM.read(2);
+    gameStartDateTime = ReadUnsignedInt32AsBytesFromEEPROM(3);
+
+    uint8_t storageAddress = 7;
+    for (uint8_t i = 0; i < numberOfPoints; i++)
+    {
+        int32_t lat = ReadSignedInt32AsBytesFromEEPROM(storageAddress);
+        storageAddress += 4;
+        int32_t lng = ReadSignedInt32AsBytesFromEEPROM(storageAddress);
+        storageAddress += 4;
+        time_t dt = ReadUnsignedInt32AsBytesFromEEPROM(storageAddress);
+        storageAddress += 4;
+        time_t gp = ReadUnsignedInt32AsBytesFromEEPROM(storageAddress);
+        storageAddress += 4;
+
+        singlePointConfigurationCollection[i]->SetLocation(lat, lng);
+        singlePointConfigurationCollection[i]->SetDateTime(dt);
+        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gp);
+    }
+}
+
+void Setup::SaveConfigToEEPROM()
+{
+    EEPROM.update(0, numberOfPoints);
+    EEPROM.update(1, currentPointIndex);
+    EEPROM.update(2, timeExtended);
+    StoreUnsignedInt32AsBytesInEEPROM(gameStartDateTime, 3);
+
+    uint8_t storageAddress = 7;
+    for (uint8_t i = 0; i < numberOfPoints; i++)
+    {
+        StoreSignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetLocation().latitude, storageAddress);
+        storageAddress += 4;
+        StoreSignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetLocation().longitude, storageAddress);
+        storageAddress += 4;
+        StoreUnsignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetDateTime(), storageAddress);
+        storageAddress += 4;
+        StoreUnsignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime(), storageAddress);
+        storageAddress += 4;
+    }
+}
+
+void Setup::StoreUnsignedInt32AsBytesInEEPROM(uint32_t data, uint8_t startIndex)
+{
+    union convertUnsignedInt32_t {
+        uint32_t uint32;
+        byte byteArray[4];
+    } unsignedInt32Union;
+
+    unsignedInt32Union.uint32 = data;
+    EEPROM.update(startIndex + 0, unsignedInt32Union.byteArray[0]);
+    EEPROM.update(startIndex + 1, unsignedInt32Union.byteArray[1]);
+    EEPROM.update(startIndex + 2, unsignedInt32Union.byteArray[2]);
+    EEPROM.update(startIndex + 3, unsignedInt32Union.byteArray[3]);
+}
+
+void Setup::StoreSignedInt32AsBytesInEEPROM(int32_t data, uint8_t startIndex)
+{
+    union convertSignedInt32_t {
+        int32_t int32;
+        byte byteArray[4];
+    } signedInt32Union;
+
+    signedInt32Union.int32 = data;
+    EEPROM.update(startIndex + 0, signedInt32Union.byteArray[0]);
+    EEPROM.update(startIndex + 1, signedInt32Union.byteArray[1]);
+    EEPROM.update(startIndex + 2, signedInt32Union.byteArray[2]);
+    EEPROM.update(startIndex + 3, signedInt32Union.byteArray[3]);
+}
+
+uint32_t Setup::ReadUnsignedInt32AsBytesFromEEPROM(uint8_t startIndex)
+{
+    union convertUnsignedInt32_t {
+        uint32_t uint32;
+        byte byteArray[4];
+    } unsignedInt32Union;
+
+    unsignedInt32Union.byteArray[0] = EEPROM.read(startIndex + 0);
+    unsignedInt32Union.byteArray[1] = EEPROM.read(startIndex + 1);
+    unsignedInt32Union.byteArray[2] = EEPROM.read(startIndex + 2);
+    unsignedInt32Union.byteArray[3] = EEPROM.read(startIndex + 3);
+
+    return unsignedInt32Union.uint32;
+}
+
+int32_t Setup::ReadSignedInt32AsBytesFromEEPROM(uint8_t startIndex)
+{
+    union convertSignedInt32_t {
+        int32_t int32;
+        byte byteArray[4];
+    } signedInt32Union;
+
+    signedInt32Union.byteArray[0] = EEPROM.read(startIndex + 0);
+    signedInt32Union.byteArray[1] = EEPROM.read(startIndex + 1);
+    signedInt32Union.byteArray[2] = EEPROM.read(startIndex + 2);
+    signedInt32Union.byteArray[3] = EEPROM.read(startIndex + 3);
+
+    return signedInt32Union.int32;
 }

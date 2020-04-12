@@ -5,8 +5,11 @@
 */
 
 #include "Display.h"
-//#define screenI2C 0x38
+
+//Slider
 #define screenI2C 0x27
+// Hook
+//#define screenI2C 0x38
 
 LiquidCrystal_I2C* Display::lcd = new LiquidCrystal_I2C(screenI2C, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 

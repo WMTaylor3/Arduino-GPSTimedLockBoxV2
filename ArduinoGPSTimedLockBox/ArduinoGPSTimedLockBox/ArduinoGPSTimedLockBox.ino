@@ -21,12 +21,22 @@
 #include <string.h>
 #include <Wire.h>
 #include <Streamers.h>
+#include <Servo.h>
+
+// Slider
+#define servoDegreesLock 10
+#define servoDegreesUnlock 70
+
+// Hook
+//#define servoDegreesLock 80
+//#define servoDegreesUnlock 165
 
 Setup systemConfig;
 Physical globalPositioningModule;
 Temporal realTimeClock;
 Display display;
 UserInput input;
+Servo servo;
 
 void setup() {
     Serial.begin(9600);
@@ -57,14 +67,15 @@ void setup() {
     }
 }
 
-void RunNormal() {
+void RunNormal()
+{
 
 }
 
 void RunOverride() {
     if (input.validateCodeForStartupMode(overrideUnlock)) {
         display.WriteAccessGranted();
-        Unlock();
+        Lock(false);
     }
     else {
         display.WriteAccessDenied();
@@ -73,11 +84,13 @@ void RunOverride() {
     Die();
 }
 
-void RunExtraTime() {
+void RunExtraTime()
+{
     input.validateCodeForStartupMode(extraTime);
 }
 
-void RunCalibrateRTC() {
+void RunCalibrateRTC()
+{
     if (input.validateCodeForStartupMode(calibrateClock)) {
         display.WriteCalibratingRTC();
         Serial.println(F("Calibrating RTC from GPS"));
@@ -103,16 +116,38 @@ void RunCalibrateRTC() {
     Die();
 }
 
-void RunConfigureUnit() {
+void RunConfigureUnit()
+{
     input.validateCodeForStartupMode(configureUnit);
 }
 
-void Lock() {
-    // TODO: Implement
+void Lock(bool lock)
+{
+    Serial.end();
+    globalPositioningModule.SerialEnd();
+
+    Servo servo;
+
+    servo.attach(8);
+    delay(200);
+    if (lock)
+    {
+        servo.write(servoDegreesLock);
+    }
+    else
+    {
+        servo.write(servoDegreesUnlock);
+    }
+    delay(1000);
+    servo.detach();
+
+    Die();
 }
 
-void Unlock() {
-    // TODO: Implement.
+void TooLate()
+{
+    display.WriteTooLate();
+    while (true) {}
 }
 
 void Die()
@@ -123,6 +158,7 @@ void Die()
     while (true) {}
 }
 
-void loop() {
+void loop()
+{
     // Empty. The unit runs once per power cycle.
 }

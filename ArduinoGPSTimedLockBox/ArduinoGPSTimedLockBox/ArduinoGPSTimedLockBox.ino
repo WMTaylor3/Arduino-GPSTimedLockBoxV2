@@ -38,7 +38,8 @@ Display display;
 UserInput input;
 Servo servo;
 
-void setup() {
+void setup()
+{
     Serial.begin(9600);
 
     display.Initialize();
@@ -73,11 +74,13 @@ void RunNormal()
 }
 
 void RunOverride() {
-    if (input.ValidateCodeForStartupMode(overrideUnlock)) {
+    if (input.ValidateCodeForStartupMode(overrideUnlock))
+    {
         display.WriteAccessGranted();
         Lock(false);
     }
-    else {
+    else
+    {
         display.WriteAccessDenied();
     }
     delay(2000);
@@ -91,7 +94,8 @@ void RunExtraTime()
 
 void RunCalibrateRTC()
 {
-    if (input.ValidateCodeForStartupMode(calibrateClock)) {
+    if (input.ValidateCodeForStartupMode(calibrateClock))
+    {
         display.WriteCalibratingRTC();
         Serial.println(F("Calibrating RTC from GPS"));
         time_t currentTime = realTimeClock.GetCurrentDateTime();
@@ -109,7 +113,8 @@ void RunCalibrateRTC()
         Serial.println(realTimeClock.GetCurrentDateTime());
         display.WriteRTCOffBy(delta);
     }
-    else {
+    else
+    {
         display.WriteAccessDenied();
     }
     delay(2000);

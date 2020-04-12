@@ -23,21 +23,27 @@ void Physical::UpdateGPS()
     int period = 3000;
     uint32_t time_now = 0;
 
-    while (!fix.valid.location || !fix.valid.date || !fix.valid.time) {
-        if (millis() - time_now > period) {
+    while (!fix.valid.location || !fix.valid.date || !fix.valid.time)
+    {
+        if (millis() - time_now > period)
+        {
             time_now = millis();
             Serial.println(F("GPS INVALID:"));
-            if (!fix.valid.location) {
+            if (!fix.valid.location)
+            {
                 Serial.println(F("    Location"));
             }
-            if (!fix.valid.date) {
+            if (!fix.valid.date)
+            {
                 Serial.println(F("    Date"));
             }
-            if (!fix.valid.time) {
+            if (!fix.valid.time)
+            {
                 Serial.println(F("    Time"));
             }
         }
-        while (gps.available(gpsPort)) {
+        while (gps.available(gpsPort))
+        {
             fix = gps.read();
         }
     }
@@ -45,9 +51,11 @@ void Physical::UpdateGPS()
 
 time_t Physical::GetDateTimeInUtc()
 {
-    while (true) {
+    while (true)
+    {
         UpdateGPS();
-        if (fix.valid.date && fix.valid.time) {
+        if (fix.valid.date && fix.valid.time)
+        {
             Serial.println(F("GPS VALID"));
             return fix.dateTime + SECS_YR_2000; // dateTime object seems to want to resturn the time since 2000. I prefer 1970 as my epoch.
         }
@@ -56,12 +64,14 @@ time_t Physical::GetDateTimeInUtc()
 
 float Physical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
 {
-    while (true) {
+    while (true)
+    {
         UpdateGPS();
-        if (fix.valid.location) {
+        if (fix.valid.location)
+        {
             Serial.println(F("GPS VALID"));
             NeoGPS::Location_t target(targetLocation.latitude, targetLocation.longitude);
-             return fix.location.DistanceKm(target) * 1000; // Convert from kilometers to meters.
+            return fix.location.DistanceKm(target) * 1000; // Convert from kilometers to meters.
         }
     }
 }

@@ -27,7 +27,8 @@ TimeSpanDuration Temporal::ConvertToTimeSpanDuration(uint32_t duration)
 time_t Temporal::GetCurrentDateTime()
 {
 	time_t currentTime = rtc->get();
-	if (currentTime == 0) {
+	if (currentTime == 0)
+	{
 		Serial.println("Error reading from RTC. Possibly set to 0.");
 	}
 	return currentTime;
@@ -41,23 +42,28 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 
 TimeSpanDuration Temporal::GetTimeUntilGameStart()
 {
-	if (systemConfig.GetGameStartDateTime() > GetCurrentDateTime()) {
+	if (systemConfig.GetGameStartDateTime() > GetCurrentDateTime())
+	{
 		return ConvertToTimeSpanDuration(systemConfig.GetGameStartDateTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;
 	return empty;
 }
 
-TimeSpanDuration Temporal::GetTimeUntilNextPoint() {
-	if (systemConfig.GetCurrentPointActionTime() > GetCurrentDateTime()) {
+TimeSpanDuration Temporal::GetTimeUntilNextPoint()
+{
+	if (systemConfig.GetCurrentPointActionTime() > GetCurrentDateTime())
+	{
 		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointActionTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;
 	return empty;
 }
 
-TimeSpanDuration Temporal::GetTimeUntilWindowClose() {
-	if (systemConfig.GetCurrentPointGracePeriodEndTime() > GetCurrentDateTime()) {
+TimeSpanDuration Temporal::GetTimeUntilWindowClose()
+{
+	if (systemConfig.GetCurrentPointGracePeriodEndTime() > GetCurrentDateTime())
+	{
 		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointGracePeriodEndTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;

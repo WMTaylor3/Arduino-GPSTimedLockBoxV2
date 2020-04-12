@@ -7,6 +7,7 @@
 	* Store at end of setup routine in main ino file.
 	* Store after add time method.
 	* Read at beginning of normal boot method.
-* Implement "Add Time" functionality.
-	* Updates settings object and calls save-to-EEPROM method.
-	* Flips "once only" boolean in configuration.
+* Look into only 6 digit precision (how much will we lose? Can the library handle 7 digits anyway?).
+* Our grace period windows are showing up as empty on EEPROM read. Validate these are reading and saving correctly.
+* Action dates seem to be getting mutilated when stored in EEPROM. Check conversion and check storage locations aren't overlapping.
+* Validate add time method.

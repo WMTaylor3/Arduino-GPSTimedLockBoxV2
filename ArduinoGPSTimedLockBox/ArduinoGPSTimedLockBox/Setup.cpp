@@ -12,7 +12,7 @@ bool Setup::timeExtended;
 
 Setup::Setup()
 {
-    for (uint8_t i = 0; i < numberOfPoints; i++)
+    for (uint8_t i = 0; i < 5; i++)
     {
         singlePointConfigurationCollection[i] = new SinglePointConfiguration();
     }
@@ -326,6 +326,8 @@ bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
     if (numberOfPoints < 1 || numberOfPoints > 5)
     {
         Serial.println("Value entered is logically invalid. Try again.");
+        Serial.println("Value must be between 1 and 5.");
+        Serial.println();
         return false;
     }
     return true;
@@ -365,6 +367,8 @@ bool Setup::ValidateGameStartDateTime(time_t startDateTime)
     if (startDateTime < currentTime)
     {
         Serial.println("Value entered is logically invalid. Try again.");
+        Serial.println("Value must be later than the current date/time.");
+        Serial.println();
         return false;
     }
     return true;
@@ -460,6 +464,8 @@ bool Setup::ValidateLatitude(int32_t latitude)
     if (latitude > 900000000 || latitude < -900000000)
     {
         Serial.println("Value entered is logically invalid. Try again.");
+        Serial.println("Value must be between -90 and +90.");
+        Serial.println();
         return false;
     }
     return true;
@@ -556,6 +562,8 @@ bool Setup::ValidateLongitude(int32_t longitude)
     if (longitude > 1800000000 || longitude < -1800000000)
     {
         Serial.println("Value entered is logically invalid. Try again.");
+        Serial.println("Value must be between -180 and +180.");
+        Serial.println();
         return false;
     }
     return true;
@@ -659,6 +667,8 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
     if (durationInSeconds > 3600 || durationInSeconds < 60)
     {
         Serial.println("Value entered is logically invalid. Try again.");
+        Serial.println("Value must be between 1 and 60 minutes.");
+        Serial.println();
         return false;
     }
     return true;
@@ -778,6 +788,8 @@ void Setup::ExtendTime(uint32_t duration, bool isInWindow)
 
 void Setup::LoadConfigFromEEPROM()
 {
+    Serial.println("Pulling configuration from EEPROM.");
+
     numberOfPoints = EEPROM.read(0);
     currentPointIndex = EEPROM.read(1);
     timeExtended = EEPROM.read(2);
@@ -803,6 +815,8 @@ void Setup::LoadConfigFromEEPROM()
 
 void Setup::SaveConfigToEEPROM()
 {
+    Serial.println("Saving configuration to EEPROM.");
+
     EEPROM.update(0, numberOfPoints);
     EEPROM.update(1, currentPointIndex);
     EEPROM.update(2, timeExtended);

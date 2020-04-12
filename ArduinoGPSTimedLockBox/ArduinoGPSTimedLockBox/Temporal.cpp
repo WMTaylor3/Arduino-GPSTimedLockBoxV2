@@ -49,63 +49,38 @@ TimeSpanDuration Temporal::GetTimeUntilGameStart()
 }
 
 TimeSpanDuration Temporal::GetTimeUntilNextPoint() {
-	// TODO Implement.
+	if (systemConfig.getCurrentPointActionTime() > GetCurrentDateTime()) {
+		return ConvertToTimeSpanDuration(systemConfig.getCurrentPointActionTime() - GetCurrentDateTime());
+	}
+	TimeSpanDuration empty;
+	return empty;
 }
 
-//DateTime Temporal::GetRemainingTimeToUnlock()
-//{
-//	if (unlockDateTime <= rtc->get())
-//	{
-//		DateTime zero;
-//		return zero;
-//	}
-//	uint32_t remainingInTimeT = unlockDateTime - rtc->get();
-//	return ConvertToDateTime(remainingInTimeT);
-//}
+TimeSpanDuration Temporal::GetTimeUntilWindowClose() {
+	if (systemConfig.getCurrentPointGracePeriodEndTime() > GetCurrentDateTime()) {
+		return ConvertToTimeSpanDuration(systemConfig.getCurrentPointGracePeriodEndTime() - GetCurrentDateTime());
+	}
+	TimeSpanDuration empty;
+	return empty;
+}
 
-//DateTime Temporal::GetRemainingTimeToPreUnlock()
-//{
-//	if (preUnlockDateTime <= rtc->get())
-//	{
-//		DateTime zero;
-//		return zero;
-//	}
-//	uint32_t remainingInTimeT = preUnlockDateTime - rtc->get();
-//	return ConvertToDateTime(remainingInTimeT);
-//}
-//
-//DateTime Temporal::GetRemainingWindow()
-//{
-//	if ((unlockDateTime + 1800) <= rtc->get())
-//	{
-//		DateTime zero;
-//		return zero;
-//	}
-//	uint32_t window = (unlockDateTime + 1800) - rtc->get();
-//	return ConvertToDateTime(window);
-//}
-//
-//bool Temporal::UnlockReached()
-//{
-//	return(unlockDateTime <= rtc->get());
-//}
-//
-//bool Temporal::PreUnlockReached()
-//{
-//	return(preUnlockDateTime <= rtc->get());
-//}
-//
-//bool Temporal::WindowExpired()
-//{
-//	return((unlockDateTime + 1800) <= rtc->get());
-//}
-//
-//uint32_t Temporal::ConvertToSeconds(DateTime _time)
-//{
-//	return((_time.Days * 86400) + (_time.Hours * 3600) + (_time.Minutes * 60));
-//}
-//
-//
+bool Temporal::UnlockReached()
+{
+	return(systemConfig.getCurrentPointActionTime() >= rtc->get());
+}
+
+
+bool Temporal::GameStartReached()
+{
+	return(systemConfig.getGameStartDateTime() >= rtc->get());
+}
+
+bool Temporal::WindowExpired()
+{
+	return(systemConfig.getCurrentPointGracePeriodEndTime() >= rtc->get());
+}
+
+
 //// EEPROM related methods.
 //void Temporal::StoreDateTimeToEEPROM()
 //{

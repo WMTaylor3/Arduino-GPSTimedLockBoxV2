@@ -663,7 +663,7 @@ latLongLocation Setup::getCurrentPointLocation()
     return singlePointConfigurationCollection[currentPointIndex]->getLocation();
 }
 
-time_t Setup::getCurrentPointTime()
+time_t Setup::getCurrentPointActionTime()
 {
     return singlePointConfigurationCollection[currentPointIndex]->getDateTime();
 }

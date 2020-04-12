@@ -8,9 +8,9 @@ Setup::Setup()
 {
 }
 
-Setup::~Setup() {
-    // delete [] singlePointConfigurationCollection; //Removed as we are now static, add this back if we make this class non-static.
-}
+//Setup::~Setup() {
+//    delete [] singlePointConfigurationCollection; //Removed as we are now static, add this back if we make this class non-static.
+//}
 
 void Setup::CreateBasicConfig(uint8_t _numberOfPoints)
 {

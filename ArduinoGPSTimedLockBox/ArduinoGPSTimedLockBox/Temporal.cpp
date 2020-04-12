@@ -17,9 +17,10 @@ uint16_t bufferDays;
 uint16_t bufferHours;
 uint16_t bufferMinutes;
 
+DS1307RTC* Temporal::rtc = new DS1307RTC();
+
 Temporal::Temporal()
 {
-	rtc = new DS1307RTC();
 }
 
 void Temporal::Initialize()

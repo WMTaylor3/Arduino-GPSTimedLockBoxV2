@@ -15,7 +15,6 @@
 
 #include <DS1307RTC.h>
 #include <Time.h>
-#include <TimeLib.h>
 
 struct DateTime
 {
@@ -30,24 +29,24 @@ struct DateTime
 class Temporal
 {
 private:
-	DS1307RTC *rtc;
-	uint32_t unlockDateTime;
-	uint32_t preUnlockDateTime;
-	uint32_t Temporal::ConvertToSeconds(DateTime);
-	DateTime Temporal::ConvertToDateTime(uint32_t);
-	void StoreDateTimeToEEPROM();
-	void ReadDateTimeFromEEPROM();
+	static DS1307RTC *rtc;
+	static uint32_t unlockDateTime;
+	static uint32_t preUnlockDateTime;
+	static uint32_t Temporal::ConvertToSeconds(DateTime);
+	static DateTime Temporal::ConvertToDateTime(uint32_t);
+	static void StoreDateTimeToEEPROM();
+	static void ReadDateTimeFromEEPROM();
 public:
 	Temporal();
-	void ResetCurrentTime();
-	void SetUnlockDateTime(DateTime, DateTime);
-	void Initialize();
-	DateTime GetRemainingTimeToUnlock();
-	DateTime GetRemainingTimeToPreUnlock();
-	DateTime GetRemainingWindow();
-	bool UnlockReached();
-	bool PreUnlockReached();
-	bool WindowExpired();
+	static void ResetCurrentTime();
+	static void SetUnlockDateTime(DateTime, DateTime);
+	static void Initialize();
+	static DateTime GetRemainingTimeToUnlock();
+	static DateTime GetRemainingTimeToPreUnlock();
+	static DateTime GetRemainingWindow();
+	static bool UnlockReached();
+	static bool PreUnlockReached();
+	static bool WindowExpired();
 };
 
 #endif

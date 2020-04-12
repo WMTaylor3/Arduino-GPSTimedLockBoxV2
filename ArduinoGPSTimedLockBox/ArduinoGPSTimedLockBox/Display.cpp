@@ -16,28 +16,28 @@ Display::Display()
 
 void Display::Initialize()
 {
-	Display::lcd->begin(16, 2);
+	lcd->begin(16, 2);
 }
 
 void Display::LcdOn()
 {
-	Display::lcd->on();
+	lcd->on();
 }
 
 void Display::LcdOff()
 {
-	Display::lcd->off();
+	lcd->off();
 }
 
 void Display::Write(String lineOne, String lineTwo = "")
 {
 	Clear();
-	Display::lcd->setCursor(0, 0);
-	Display::lcd->print(lineOne);
+	lcd->setCursor(0, 0);
+	lcd->print(lineOne);
 	if (lineTwo != "")
 	{
-		Display::lcd->setCursor(0, 1);
-		Display::lcd->print(lineTwo);
+		lcd->setCursor(0, 1);
+		lcd->print(lineTwo);
 	}
 }
 
@@ -147,8 +147,8 @@ void Display::WriteEnterPasscode()
 
 void Display::CharTyped(uint8_t dotCount)
 {
-	Display::lcd->setCursor(dotCount, 1);
-	Display::lcd->print("*");
+	lcd->setCursor(dotCount, 1);
+	lcd->print("*");
 }
 
 void Display::WriteInsertBothKeys()
@@ -199,8 +199,8 @@ void Display::WriteGoodbye()
 
 void Display::Clear()
 {
-	Display::lcd->setCursor(0, 0);
-	Display::lcd->print("                ");
-	Display::lcd->setCursor(0, 1);
-	Display::lcd->print("                ");
+	lcd->setCursor(0, 0);
+	lcd->print("                ");
+	lcd->setCursor(0, 1);
+	lcd->print("                ");
 }

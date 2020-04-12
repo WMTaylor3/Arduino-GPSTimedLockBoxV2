@@ -23,14 +23,19 @@ Temporal::Temporal()
 {
 }
 
-void Temporal::Initialize()
+time_t Temporal::GetCurrentDateTime()
 {
-	ReadDateTimeFromEEPROM();
+	time_t currentTime = rtc->get();
+	if (currentTime == 0) {
+		Serial.println("Error reading from RTC. Possibly set to 0.");
+	}
+	return currentTime;
 }
 
-void Temporal::ResetCurrentTime()
+bool Temporal::SetCurrentTime(time_t currentTime)
 {
-	rtc->set(0);
+	rtc->set(currentTime);
+	return (rtc->get() == currentTime);
 }
 
 void Temporal::SetUnlockDateTime(DateTime _targetTime, DateTime _bufferTime)

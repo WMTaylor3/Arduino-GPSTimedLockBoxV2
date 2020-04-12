@@ -38,9 +38,9 @@ private:
 	static void ReadDateTimeFromEEPROM();
 public:
 	Temporal();
-	static void ResetCurrentTime();
+	static time_t GetCurrentDateTime();
+	static bool SetCurrentTime(time_t newTime);
 	static void SetUnlockDateTime(DateTime, DateTime);
-	static void Initialize();
 	static DateTime GetRemainingTimeToUnlock();
 	static DateTime GetRemainingTimeToPreUnlock();
 	static DateTime GetRemainingWindow();

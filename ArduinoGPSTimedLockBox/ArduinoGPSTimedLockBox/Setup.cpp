@@ -671,6 +671,8 @@ void Setup::Initialize()
     PrintSplashScreen();
     AwaitUserInput();
     ClearScreen();
+
+    timeExtended = false;
     
     // Total number of times/places to be included in the hunt.
     uint8_t numberOfPoints = 0;
@@ -718,7 +720,7 @@ void Setup::Initialize()
 
         singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
         singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
-        singlePointConfigurationCollection[i]->SetGracePeriodEndTime(gracePeriodEndTime);
+        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gracePeriodEndTime);
     }
 }
 
@@ -750,4 +752,15 @@ void Setup::ProgressToNextPoint()
 bool Setup::IsFinalPoint()
 {
     return currentPointIndex == (numberOfPoints - 1);
+}
+
+void Setup::ExtendTime(uint32_t duration)
+{
+    if (timeExtended) { return; }
+    for (uint8_t i = currentPointIndex; i < numberOfPoints - 1; i++)
+    {
+        singlePointConfigurationCollection[i]->SetDateTime(singlePointConfigurationCollection[i]->GetDateTime() + duration);
+        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime() + duration);
+    }
+    timeExtended = true;
 }

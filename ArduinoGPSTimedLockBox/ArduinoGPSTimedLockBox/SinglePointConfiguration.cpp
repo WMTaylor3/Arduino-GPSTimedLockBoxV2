@@ -19,7 +19,7 @@ void SinglePointConfiguration::SetDateTime(time_t _time)
     dateTime = _time;
 }
 
-void SinglePointConfiguration::SetGracePeriodEndTime(time_t _time)
+void SinglePointConfiguration::SetGracePeriodEndDateTime(time_t _time)
 {
     dateTime = _time;
 }

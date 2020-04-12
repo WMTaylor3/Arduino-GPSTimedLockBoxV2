@@ -22,6 +22,7 @@ private:
 	static time_t timeAtBoot;
 	static time_t gameStartDateTime;
 	static SinglePointConfiguration* singlePointConfigurationCollection[];
+	static bool timeExtended;
 
 	static void CreateBasicConfig(uint8_t _numberOfPoints);
 	static void AwaitUserInput();
@@ -60,6 +61,7 @@ public:
 	static time_t GetCurrentPointGracePeriodEndTime();
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();
+	static void ExtendTime(uint32_t duration);
 };
 
 #endif

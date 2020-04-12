@@ -23,7 +23,7 @@ public:
 
 	void SetLocation(int32_t _lat, int32_t _lon);
 	void SetDateTime(time_t _time);
-	void SetGracePeriodEndTime(time_t _time);
+	void SetGracePeriodEndDateTime(time_t _time);
 
 	latLongLocation GetLocation();
 	time_t GetDateTime();

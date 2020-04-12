@@ -23,7 +23,7 @@
 #include <Streamers.h>
 
 Setup systemConfig;
-Physical gps;
+Physical globalPositioningModule;
 Temporal realTimeClock;
 Display display;
 UserInput input;
@@ -78,14 +78,23 @@ void RunExtraTime() {
 }
 
 void RunCalibrateRTC() {
-    if (input.validateCodeForStartupMode(calibrateClock) || true) {
+    if (input.validateCodeForStartupMode(calibrateClock)) {
         display.WriteCalibratingRTC();
+        Serial.println(F("Calibrating RTC from GPS"));
         time_t currentTime = realTimeClock.GetCurrentDateTime();
-        time_t newTime = gps.GetDateTimeInUtc();
-        //realTimeClock.SetCurrentTime(newTime);
-        //delay(1000);
-        //uint32_t delta = abs(currentTime) - abs(newTime);
-        //display.WriteRTCOffBy(delta);
+        Serial.print(F("Current RTC time: "));
+        Serial.println(currentTime);
+        time_t newTime = globalPositioningModule.GetDateTimeInUtc();
+        Serial.print(F("Current GPS time: "));
+        Serial.println(newTime);
+        realTimeClock.SetCurrentTime(newTime);
+        delay(2000);
+        uint32_t delta = abs(newTime - currentTime);
+        Serial.print(F("Absolute time delta: "));
+        Serial.println(delta);
+        Serial.print(F("New RTC time: "));
+        Serial.println(realTimeClock.GetCurrentDateTime());
+        display.WriteRTCOffBy(delta);
     }
     else {
         display.WriteAccessDenied();

@@ -48,6 +48,7 @@ time_t Physical::GetDateTimeInUtc()
     while (true) {
         UpdateGPS();
         if (fix.valid.date && fix.valid.time) {
+            Serial.println(F("GPS VALID"));
             return fix.dateTime + SECS_YR_2000; // dateTime object seems to want to resturn the time since 2000. I prefer 1970 as my epoch.
         }
     }
@@ -58,6 +59,7 @@ float Physical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
     while (true) {
         UpdateGPS();
         if (fix.valid.location) {
+            Serial.println(F("GPS VALID"));
             NeoGPS::Location_t target(targetLocation.latitude, targetLocation.longitude);
              return fix.location.DistanceKm(target) * 1000; // Convert from kilometers to meters.
         }

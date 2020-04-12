@@ -653,32 +653,32 @@ void Setup::Initialize()
     }
 }
 
-time_t Setup::getGameStartDateTime()
+time_t Setup::GetGameStartDateTime()
 {
     return gameStartDateTime;
 }
 
-latLongLocation Setup::getCurrentPointLocation()
+latLongLocation Setup::GetCurrentPointLocation()
 {
-    return singlePointConfigurationCollection[currentPointIndex]->getLocation();
+    return singlePointConfigurationCollection[currentPointIndex]->GetLocation();
 }
 
-time_t Setup::getCurrentPointActionTime()
+time_t Setup::GetCurrentPointActionTime()
 {
-    return singlePointConfigurationCollection[currentPointIndex]->getDateTime();
+    return singlePointConfigurationCollection[currentPointIndex]->GetDateTime();
 }
 
-time_t Setup::getCurrentPointGracePeriodEndTime()
+time_t Setup::GetCurrentPointGracePeriodEndTime()
 {
-    return singlePointConfigurationCollection[currentPointIndex]->getGracePeriodEndDateTime();
+    return singlePointConfigurationCollection[currentPointIndex]->GetGracePeriodEndDateTime();
 }
 
-void Setup::progressToNextPoint()
+void Setup::ProgressToNextPoint()
 {
     currentPointIndex++;
 }
 
-bool Setup::isFinalPoint()
+bool Setup::IsFinalPoint()
 {
     return currentPointIndex == (numberOfPoints - 1);
 }

@@ -44,9 +44,9 @@ public:
 	static TimeSpanDuration GetTimeUntilGameStart();
 	static TimeSpanDuration GetTimeUntilNextPoint();
 	static TimeSpanDuration GetTimeUntilWindowClose();
-	static bool UnlockReached();
-	static bool GameStartReached();
-	static bool WindowExpired();
+	static bool IsUnlockReached();
+	static bool IsGameStartReached();
+	static bool IsWindowExpired();
 };
 
 #endif

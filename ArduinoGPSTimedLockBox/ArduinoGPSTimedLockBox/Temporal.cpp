@@ -41,43 +41,43 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 
 TimeSpanDuration Temporal::GetTimeUntilGameStart()
 {
-	if (systemConfig.getGameStartDateTime() > GetCurrentDateTime()) {
-		return ConvertToTimeSpanDuration(systemConfig.getGameStartDateTime() - GetCurrentDateTime());
+	if (systemConfig.GetGameStartDateTime() > GetCurrentDateTime()) {
+		return ConvertToTimeSpanDuration(systemConfig.GetGameStartDateTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;
 	return empty;
 }
 
 TimeSpanDuration Temporal::GetTimeUntilNextPoint() {
-	if (systemConfig.getCurrentPointActionTime() > GetCurrentDateTime()) {
-		return ConvertToTimeSpanDuration(systemConfig.getCurrentPointActionTime() - GetCurrentDateTime());
+	if (systemConfig.GetCurrentPointActionTime() > GetCurrentDateTime()) {
+		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointActionTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;
 	return empty;
 }
 
 TimeSpanDuration Temporal::GetTimeUntilWindowClose() {
-	if (systemConfig.getCurrentPointGracePeriodEndTime() > GetCurrentDateTime()) {
-		return ConvertToTimeSpanDuration(systemConfig.getCurrentPointGracePeriodEndTime() - GetCurrentDateTime());
+	if (systemConfig.GetCurrentPointGracePeriodEndTime() > GetCurrentDateTime()) {
+		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointGracePeriodEndTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;
 	return empty;
 }
 
-bool Temporal::UnlockReached()
+bool Temporal::IsUnlockReached()
 {
-	return(systemConfig.getCurrentPointActionTime() >= rtc->get());
+	return(systemConfig.GetCurrentPointActionTime() >= rtc->get());
 }
 
 
-bool Temporal::GameStartReached()
+bool Temporal::IsGameStartReached()
 {
-	return(systemConfig.getGameStartDateTime() >= rtc->get());
+	return(systemConfig.GetGameStartDateTime() >= rtc->get());
 }
 
-bool Temporal::WindowExpired()
+bool Temporal::IsWindowExpired()
 {
-	return(systemConfig.getCurrentPointGracePeriodEndTime() >= rtc->get());
+	return(systemConfig.GetCurrentPointGracePeriodEndTime() >= rtc->get());
 }
 
 

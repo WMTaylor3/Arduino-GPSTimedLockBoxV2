@@ -44,7 +44,7 @@ void setup() {
     display.Initialize();
     display.WriteAccessDenied();
 
-    switch (input.getStartUpMode())
+    switch (input.GetStartUpMode())
     {
     case(normal):
         RunNormal();
@@ -73,7 +73,7 @@ void RunNormal()
 }
 
 void RunOverride() {
-    if (input.validateCodeForStartupMode(overrideUnlock)) {
+    if (input.ValidateCodeForStartupMode(overrideUnlock)) {
         display.WriteAccessGranted();
         Lock(false);
     }
@@ -86,12 +86,12 @@ void RunOverride() {
 
 void RunExtraTime()
 {
-    input.validateCodeForStartupMode(extraTime);
+    input.ValidateCodeForStartupMode(extraTime);
 }
 
 void RunCalibrateRTC()
 {
-    if (input.validateCodeForStartupMode(calibrateClock)) {
+    if (input.ValidateCodeForStartupMode(calibrateClock)) {
         display.WriteCalibratingRTC();
         Serial.println(F("Calibrating RTC from GPS"));
         time_t currentTime = realTimeClock.GetCurrentDateTime();
@@ -118,7 +118,7 @@ void RunCalibrateRTC()
 
 void RunConfigureUnit()
 {
-    input.validateCodeForStartupMode(configureUnit);
+    input.ValidateCodeForStartupMode(configureUnit);
 }
 
 void Lock(bool lock)

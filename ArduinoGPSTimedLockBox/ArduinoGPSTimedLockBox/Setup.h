@@ -54,12 +54,12 @@ public:
 	Setup();
 	// ~Setup(); // Removed as is now empty due to class being static. Add back if we make class non-static.
 	static void Initialize();
-	static time_t getGameStartDateTime();
-	static latLongLocation getCurrentPointLocation();
-	static time_t getCurrentPointActionTime();
-	static time_t getCurrentPointGracePeriodEndTime();
-	static void progressToNextPoint();
-	static bool isFinalPoint();
+	static time_t GetGameStartDateTime();
+	static latLongLocation GetCurrentPointLocation();
+	static time_t GetCurrentPointActionTime();
+	static time_t GetCurrentPointGracePeriodEndTime();
+	static void ProgressToNextPoint();
+	static bool IsFinalPoint();
 };
 
 #endif

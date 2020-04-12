@@ -25,9 +25,9 @@ public:
 	void SetDateTime(time_t _time);
 	void SetGracePeriodEndTime(time_t _time);
 
-	latLongLocation getLocation();
-	time_t getDateTime();
-	time_t getGracePeriodEndDateTime();
+	latLongLocation GetLocation();
+	time_t GetDateTime();
+	time_t GetGracePeriodEndDateTime();
 };
 
 #endif

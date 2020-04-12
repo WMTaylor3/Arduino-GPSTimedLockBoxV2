@@ -4,9 +4,9 @@
 
 #include "UserInput.h"
 
-startupMode UserInput::getStartUpMode()
+startupMode UserInput::GetStartUpMode()
 {
-	switch (getCurrentButtons())
+	switch (GetCurrentButtons())
 	{
 	case(leftAndCenter):
 		return calibrateClock;
@@ -26,7 +26,7 @@ startupMode UserInput::getStartUpMode()
 	}
 }
 
-buttonState UserInput::getCurrentButtons()
+buttonState UserInput::GetCurrentButtons()
 {
 	if ((digitalRead(buttonOne) == LOW) && (digitalRead(buttonTwo) == LOW) && (digitalRead(buttonThree) == LOW))
 	{
@@ -62,7 +62,7 @@ buttonState UserInput::getCurrentButtons()
 	}
 }
 
-bool UserInput::validateCodeForStartupMode(startupMode modeToAuthenticate)
+bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 {
 	char expectedCode[10];
 	uint8_t codeLength = 0;
@@ -96,7 +96,7 @@ bool UserInput::validateCodeForStartupMode(startupMode modeToAuthenticate)
 	uint8_t i = 0;
 	while (i < codeLength)
 	{
-		int8_t inputValue = (int)getCurrentButtons(); // Method returns enum which can be cast to an int for its value, in this case 1, 2 or 3 (L, C, R) are valid.
+		int8_t inputValue = (int)GetCurrentButtons(); // Method returns enum which can be cast to an int for its value, in this case 1, 2 or 3 (L, C, R) are valid.
 		if (inputValue > 0 && inputValue < 4)
 		{
 			if (inputValue != expectedCode[i])

@@ -24,17 +24,17 @@ void SinglePointConfiguration::SetGracePeriodEndTime(time_t _time)
     dateTime = _time;
 }
 
-latLongLocation SinglePointConfiguration::getLocation()
+latLongLocation SinglePointConfiguration::GetLocation()
 {
     return location;
 }
 
-time_t SinglePointConfiguration::getDateTime()
+time_t SinglePointConfiguration::GetDateTime()
 {
     return dateTime;
 }
 
-time_t SinglePointConfiguration::getGracePeriodEndDateTime()
+time_t SinglePointConfiguration::GetGracePeriodEndDateTime()
 {
     return gracePeriodEndTime;
 }

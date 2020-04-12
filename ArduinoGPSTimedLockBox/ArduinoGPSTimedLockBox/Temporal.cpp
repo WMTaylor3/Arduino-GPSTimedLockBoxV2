@@ -48,6 +48,9 @@ TimeSpanDuration Temporal::GetTimeUntilGameStart()
 	return empty;
 }
 
+TimeSpanDuration Temporal::GetTimeUntilNextPoint() {
+	// TODO Implement.
+}
 
 //DateTime Temporal::GetRemainingTimeToUnlock()
 //{

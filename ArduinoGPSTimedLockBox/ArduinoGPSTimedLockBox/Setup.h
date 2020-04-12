@@ -59,6 +59,7 @@ public:
 	static time_t getCurrentPointTime();
 	static time_t getCurrentPointGracePeriodEndTime();
 	static void progressToNextPoint();
+	static bool isFinalPoint();
 };
 
 #endif

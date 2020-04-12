@@ -675,5 +675,10 @@ time_t Setup::getCurrentPointGracePeriodEndTime()
 
 void Setup::progressToNextPoint()
 {
-    // TODO: Implement.
+    currentPointIndex++;
+}
+
+bool Setup::isFinalPoint()
+{
+    return currentPointIndex == (numberOfPoints - 1);
 }

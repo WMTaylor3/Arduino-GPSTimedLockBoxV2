@@ -46,6 +46,7 @@ public:
 	static time_t GetCurrentDateTime();
 	static bool SetCurrentTime(time_t newTime);
 	static TimeSpanDuration GetTimeUntilGameStart();
+	static TimeSpanDuration GetTimeUntilNextPoint();
 	//static void SetUnlockDateTime(DateTime, DateTime);
 	//static DateTime GetRemainingTimeToUnlock();
 	//static DateTime GetRemainingTimeToPreUnlock();

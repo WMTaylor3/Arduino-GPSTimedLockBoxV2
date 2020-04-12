@@ -653,6 +653,11 @@ void Setup::Initialize()
     }
 }
 
+time_t Setup::getGameStartDateTime()
+{
+    return gameStartDateTime;
+}
+
 latLongLocation Setup::getCurrentPointLocation()
 {
     return singlePointConfigurationCollection[currentPointIndex]->getLocation();

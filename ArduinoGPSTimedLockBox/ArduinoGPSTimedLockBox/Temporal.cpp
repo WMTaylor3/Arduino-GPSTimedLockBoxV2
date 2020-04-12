@@ -5,22 +5,23 @@
 */
 
 #include "Temporal.h"
-#include <TimeLib.h>
-#include <EEPROM.h>
+#include <Time.h>
 #include <math.h>
-
-uint16_t remainingDays;
-uint16_t remainingHours;
-uint16_t remainingMinutes;
-
-uint16_t bufferDays;
-uint16_t bufferHours;
-uint16_t bufferMinutes;
 
 DS1307RTC* Temporal::rtc = new DS1307RTC();
 
 Temporal::Temporal()
 {
+}
+
+TimeSpanDuration Temporal::ConvertToTimeSpanDuration(uint32_t duration)
+{
+	TimeSpanDuration dateTime;
+	dateTime.Days = duration / 86400;
+	dateTime.Hours = (duration % 86400) / 3600;
+	dateTime.Minutes = ((duration % 86400) % 3600) / 60;
+	dateTime.Seconds = (((duration % 86400) % 3600) % 60) / 60;
+	return dateTime;
 }
 
 time_t Temporal::GetCurrentDateTime()
@@ -37,18 +38,17 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 	rtc->set(currentTime);
 	return (rtc->get() == currentTime);
 }
-//
-//void Temporal::SetUnlockDateTime(DateTime _targetTime, DateTime _bufferTime)
-//{
-//	uint32_t timeRemaining = ConvertToSeconds(_targetTime);
-//	unlockDateTime = timeRemaining;
-//
-//	uint32_t bufferTime = ConvertToSeconds(_bufferTime);
-//	preUnlockDateTime = unlockDateTime - bufferTime;
-//
-//	StoreDateTimeToEEPROM();
-//}
-//
+
+TimeSpanDuration Temporal::GetTimeUntilGameStart()
+{
+	if (systemConfig.getGameStartDateTime() > GetCurrentDateTime()) {
+		return ConvertToTimeSpanDuration(systemConfig.getGameStartDateTime() - GetCurrentDateTime());
+	}
+	TimeSpanDuration empty;
+	return empty;
+}
+
+
 //DateTime Temporal::GetRemainingTimeToUnlock()
 //{
 //	if (unlockDateTime <= rtc->get())
@@ -59,7 +59,7 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 //	uint32_t remainingInTimeT = unlockDateTime - rtc->get();
 //	return ConvertToDateTime(remainingInTimeT);
 //}
-//
+
 //DateTime Temporal::GetRemainingTimeToPreUnlock()
 //{
 //	if (preUnlockDateTime <= rtc->get())
@@ -102,17 +102,6 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 //	return((_time.Days * 86400) + (_time.Hours * 3600) + (_time.Minutes * 60));
 //}
 //
-//DateTime Temporal::ConvertToDateTime(uint32_t _time)
-//{
-//	DateTime dateTime;
-//	dateTime.Years = 0;
-//	dateTime.Months = 0;
-//	dateTime.Days = _time / 86400;
-//	dateTime.Hours = (_time % 86400) / 3600;
-//	dateTime.Minutes = ((_time % 86400) % 3600) / 60;
-//	dateTime.Seconds = 0;
-//	return dateTime;
-//}
 //
 //// EEPROM related methods.
 //void Temporal::StoreDateTimeToEEPROM()

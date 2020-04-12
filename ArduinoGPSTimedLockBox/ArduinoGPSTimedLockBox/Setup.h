@@ -54,6 +54,7 @@ public:
 	Setup();
 	// ~Setup(); // Removed as is now empty due to class being static. Add back if we make class non-static.
 	static void Initialize();
+	static time_t getGameStartDateTime();
 	static latLongLocation getCurrentPointLocation();
 	static time_t getCurrentPointTime();
 	static time_t getCurrentPointGracePeriodEndTime();

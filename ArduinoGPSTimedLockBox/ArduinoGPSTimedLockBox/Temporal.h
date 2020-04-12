@@ -16,30 +16,36 @@
 #include <DS1307RTC.h>
 #include <Time.h>
 
-struct DateTime
+// This is similar to the structure found in the Time.h library.
+// However, that library is based around absolute times from linux epoch rather than times as a length of a duration.
+// For example take 1,000,000 seconds.
+// As a linux time_t time (such as in the Time.h library), that would be assumed to represent 1 millions seconds from Jan 1 1970, which is Monday, January 12, 1970 1:46:40 PM GMT.
+// Represented with this structure, all it means is 11 days, 13 hours, 46 minutes, and 40 seconds from some other unknown time.
+// Same concept, but using the below structure suggests we are not using 1970 epoch as our "Time From" value so should avoid confusion.
+struct TimeSpanDuration
 {
-	uint16_t Years = 0;
-	uint16_t Months = 0;
-	uint16_t Days = 0;
-	uint16_t Hours = 0;
-	uint16_t Minutes = 0;
-	uint16_t Seconds = 0;
+	uint8_t Days = 0;
+	uint8_t Hours = 0;
+	uint8_t Minutes = 0;
+	uint8_t Seconds = 0;
 };
 
 class Temporal
 {
 private:
 	static DS1307RTC *rtc;
+	static Setup systemConfig;
+	static TimeSpanDuration ConvertToTimeSpanDuration(uint32_t duration);
 	//static uint32_t unlockDateTime;
 	//static uint32_t preUnlockDateTime;
 	//static uint32_t Temporal::ConvertToSeconds(DateTime);
-	//static DateTime Temporal::ConvertToDateTime(uint32_t);
 	//static void StoreDateTimeToEEPROM();
 	//static void ReadDateTimeFromEEPROM();
 public:
 	Temporal();
 	static time_t GetCurrentDateTime();
 	static bool SetCurrentTime(time_t newTime);
+	static TimeSpanDuration GetTimeUntilGameStart();
 	//static void SetUnlockDateTime(DateTime, DateTime);
 	//static DateTime GetRemainingTimeToUnlock();
 	//static DateTime GetRemainingTimeToPreUnlock();

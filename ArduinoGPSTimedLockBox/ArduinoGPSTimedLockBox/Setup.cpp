@@ -754,12 +754,15 @@ bool Setup::IsFinalPoint()
     return currentPointIndex == (numberOfPoints - 1);
 }
 
-void Setup::ExtendTime(uint32_t duration)
+void Setup::ExtendTime(uint32_t duration, bool isInWindow)
 {
     if (timeExtended) { return; }
     for (uint8_t i = currentPointIndex; i < numberOfPoints - 1; i++)
     {
-        singlePointConfigurationCollection[i]->SetDateTime(singlePointConfigurationCollection[i]->GetDateTime() + duration);
+        if (!isInWindow)
+        {
+            singlePointConfigurationCollection[i]->SetDateTime(singlePointConfigurationCollection[i]->GetDateTime() + duration);
+        }
         singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime() + duration);
     }
     timeExtended = true;

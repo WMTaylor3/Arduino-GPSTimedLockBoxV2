@@ -61,7 +61,7 @@ public:
 	static time_t GetCurrentPointGracePeriodEndTime();
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();
-	static void ExtendTime(uint32_t duration);
+	static void ExtendTime(uint32_t duration, bool isInWindow);
 };
 
 #endif

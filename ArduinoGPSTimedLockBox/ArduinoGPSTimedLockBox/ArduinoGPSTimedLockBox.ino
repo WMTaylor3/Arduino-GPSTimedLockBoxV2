@@ -71,7 +71,7 @@ void setup()
 
 void RunNormal()
 {
-
+    systemConfig.LoadConfigFromEEPROM();
 }
 
 void RunOverride() {

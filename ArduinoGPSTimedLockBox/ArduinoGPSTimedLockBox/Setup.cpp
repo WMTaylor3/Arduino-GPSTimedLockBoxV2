@@ -788,7 +788,7 @@ void Setup::ExtendTime(uint32_t duration, bool isInWindow)
         singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime() + duration);
     }
     timeExtended = true;
-    EEPROM.update(2, true);
+    SaveConfigToEEPROM();
 }
 
 

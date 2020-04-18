@@ -21,7 +21,7 @@ void SinglePointConfiguration::SetDateTime(time_t _time)
 
 void SinglePointConfiguration::SetGracePeriodEndDateTime(time_t _time)
 {
-    dateTime = _time;
+    gracePeriodEndDateTime = _time;
 }
 
 latLongLocation SinglePointConfiguration::GetLocation()
@@ -36,5 +36,5 @@ time_t SinglePointConfiguration::GetDateTime()
 
 time_t SinglePointConfiguration::GetGracePeriodEndDateTime()
 {
-    return gracePeriodEndTime;
+    return gracePeriodEndDateTime;
 }

@@ -17,7 +17,7 @@ class SinglePointConfiguration
 private:
 	latLongLocation location;
 	time_t dateTime;
-	time_t gracePeriodEndTime;
+	time_t gracePeriodEndDateTime;
 public:
 	SinglePointConfiguration();
 

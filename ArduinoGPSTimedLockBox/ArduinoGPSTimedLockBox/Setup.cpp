@@ -259,17 +259,21 @@ int32_t Setup::ParseLatLongStringToInt32(char* locationString, latOrLong latOrLo
         return 0;
     }
 
+    Serial.println(locationString);
     // Remove '.'
     for (uint8_t i = decimalPosition; i < stringLength - 1; i++) // Minus 1 so we don't try override the original '\0' with something from out of the array bounds.
     {
         locationString[i] = locationString[i + 1];
     }
 
+    Serial.println(locationString);
     // Remove +/-
     char absoluteValAsString[13];
     strncpy(absoluteValAsString, locationString + 1, stringLength - 2); // Copy from just after the +/- through to (and including the '\0'. Minus 2 accounts for the missing +/- and the missing '.'.
 
+    Serial.println(absoluteValAsString);
     int32_t absoluteVal = atol(absoluteValAsString);
+    Serial.println(absoluteVal);
     if (locationString[0] == '-') // Return with +/- added back.
     {
         return -absoluteVal;
@@ -676,65 +680,131 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 
 void Setup::Initialize()
 {
-    ClearScreen();
-    PrintSplashScreen();
-    AwaitUserInput();
-    ClearScreen();
+    //ClearScreen();
+    //PrintSplashScreen();
+    //AwaitUserInput();
+    //ClearScreen();
 
-    timeExtended = false;
+    //timeExtended = false;
+    //currentPointIndex = 0;
+    //
+    //// Total number of times/places to be included in the hunt.
+    //uint8_t pointCount = 0;
+    //do {
+    //    pointCount = PromptForNumberOfPoints();
+    //} while (!ValidateNumberOfPoints(pointCount));
+    //numberOfPoints = pointCount;
+
+    //ClearScreen();
+
+    //time_t gameStartDateTime = 0;
+    //do {
+    //    gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
+    //} while (!ValidateGameStartDateTime(gameStartDateTime));
+    //gameStartDateTime = gameStartDateTime;
+
+    //ClearScreen();
+
+    //// For each time/place as quantified above.
+    //for (uint8_t i = 0; i < pointCount; i++)
+    //{
+    //    double unlockLatitude = 0;
+    //    do {
+    //        unlockLatitude = PromptForLatitude(i == pointCount -1); // Parameter will evaluate to true on the final loop.
+    //    } while (!ValidateLatitude(unlockLatitude));
+    //    ClearScreen();
+
+    //    double unlockLongitude = 0;
+    //    do {
+    //        unlockLongitude = PromptForLongitude(i == pointCount - 1); // Parameter will evaluate to true on the final loop.
+    //    } while (!ValidateLongitude(unlockLongitude));
+    //    ClearScreen();
+
+    //    time_t unlockDateTime = 0;
+    //    do {
+    //        unlockDateTime = PromptForNextPointDateTime(i == pointCount - 1); // Parameter will evaluate to true on the final loop.
+    //    } while (!ValidateNextPointDateTime(unlockDateTime));
+    //    ClearScreen();
+
+    //    uint16_t gracePeriodInSeconds = 0;
+    //    do {
+    //        gracePeriodInSeconds = PromptForGracePeriodDuration();
+    //    } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
+    //    time_t gracePeriodEndDateTime = unlockDateTime + gracePeriodInSeconds;
+    //    ClearScreen();
+
+    //    singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
+    //    singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
+    //    singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gracePeriodEndDateTime);
+    //}
+
+    numberOfPoints = 5;
     currentPointIndex = 0;
-    
-    // Total number of times/places to be included in the hunt.
-    uint8_t pointCount = 0;
-    do {
-        pointCount = PromptForNumberOfPoints();
-    } while (!ValidateNumberOfPoints(pointCount));
-    numberOfPoints = pointCount;
+    timeExtended = false;
 
-    ClearScreen();
+    singlePointConfigurationCollection[0]->SetLocation(900000000, 1800000000);
+    singlePointConfigurationCollection[0]->SetDateTime(1587181257);
+    singlePointConfigurationCollection[0]->SetGracePeriodEndDateTime(1587181457);
 
-    time_t gameStartDateTime = 0;
-    do {
-        gameStartDateTime = PromptForGameStartDateTime(); // Parameter will evaluate to true on the final loop.
-    } while (!ValidateGameStartDateTime(gameStartDateTime));
-    gameStartDateTime = gameStartDateTime;
+    singlePointConfigurationCollection[1]->SetLocation(0, 0);
+    singlePointConfigurationCollection[1]->SetDateTime(0);
+    singlePointConfigurationCollection[1]->SetGracePeriodEndDateTime(0);
 
-    ClearScreen();
+    singlePointConfigurationCollection[2]->SetLocation(0, 0);
+    singlePointConfigurationCollection[2]->SetDateTime(0);
+    singlePointConfigurationCollection[2]->SetGracePeriodEndDateTime(0);
 
-    // For each time/place as quantified above.
-    for (uint8_t i = 0; i < pointCount; i++)
-    {
-        double unlockLatitude = 0;
-        do {
-            unlockLatitude = PromptForLatitude(i == pointCount -1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateLatitude(unlockLatitude));
-        ClearScreen();
+    singlePointConfigurationCollection[3]->SetLocation(0, 0);
+    singlePointConfigurationCollection[3]->SetDateTime(0);
+    singlePointConfigurationCollection[3]->SetGracePeriodEndDateTime(0);
 
-        double unlockLongitude = 0;
-        do {
-            unlockLongitude = PromptForLongitude(i == pointCount - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateLongitude(unlockLongitude));
-        ClearScreen();
+    singlePointConfigurationCollection[4]->SetLocation(0, 0);
+    singlePointConfigurationCollection[4]->SetDateTime(0);
+    singlePointConfigurationCollection[4]->SetGracePeriodEndDateTime(0);
 
-        time_t unlockDateTime = 0;
-        do {
-            unlockDateTime = PromptForNextPointDateTime(i == pointCount - 1); // Parameter will evaluate to true on the final loop.
-        } while (!ValidateNextPointDateTime(unlockDateTime));
-        ClearScreen();
+    Serial.print("Number of points: ");
+    Serial.println(numberOfPoints);
+    Serial.print("Current point index: ");
+    Serial.println(currentPointIndex);
+    Serial.print("Time Extended: ");
+    Serial.println(timeExtended);
 
-        uint16_t gracePeriodInSeconds = 0;
-        do {
-            gracePeriodInSeconds = PromptForGracePeriodDuration();
-        } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
-        time_t gracePeriodEndTime = unlockDateTime + gracePeriodInSeconds;
-        ClearScreen();
+    Serial.println();
+    Serial.println("Point 0");
+    Serial.println(singlePointConfigurationCollection[0]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[0]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[0]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[0]->GetGracePeriodEndDateTime());
 
-        singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
-        singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
-        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gracePeriodEndTime);
-    }
+    Serial.println();
+    Serial.println("Point 1");
+    Serial.println(singlePointConfigurationCollection[1]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[1]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[1]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[1]->GetGracePeriodEndDateTime());
 
-    SaveConfigToEEPROM();
+    Serial.println();
+    Serial.println("Point 2");
+    Serial.println(singlePointConfigurationCollection[2]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[2]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[2]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[2]->GetGracePeriodEndDateTime());
+
+    Serial.println();
+    Serial.println("Point 3");
+    Serial.println(singlePointConfigurationCollection[3]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[3]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[3]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[3]->GetGracePeriodEndDateTime());
+
+    Serial.println();
+    Serial.println("Point 4");
+    Serial.println(singlePointConfigurationCollection[4]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[4]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[4]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[4]->GetGracePeriodEndDateTime());
+
+    //SaveConfigToEEPROM();
 }
 
 time_t Setup::GetGameStartDateTime()
@@ -816,6 +886,48 @@ void Setup::LoadConfigFromEEPROM()
 void Setup::SaveConfigToEEPROM()
 {
     Serial.println("Saving configuration to EEPROM.");
+
+    Serial.print("Number of points: ");
+    Serial.println(numberOfPoints);
+    Serial.print("Current point index: ");
+    Serial.println(currentPointIndex);
+    Serial.print("Time Extended: ");
+    Serial.println(timeExtended);
+
+    Serial.println();
+    Serial.println("Point 0");
+    Serial.println(singlePointConfigurationCollection[0]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[0]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[0]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[0]->GetGracePeriodEndDateTime());
+
+    Serial.println();
+    Serial.println("Point 1");
+    Serial.println(singlePointConfigurationCollection[1]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[1]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[1]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[1]->GetGracePeriodEndDateTime());
+    
+    Serial.println();
+    Serial.println("Point 2");
+    Serial.println(singlePointConfigurationCollection[2]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[2]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[2]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[2]->GetGracePeriodEndDateTime());
+
+    Serial.println();
+    Serial.println("Point 3");
+    Serial.println(singlePointConfigurationCollection[3]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[3]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[3]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[3]->GetGracePeriodEndDateTime());
+
+    Serial.println();
+    Serial.println("Point 4");
+    Serial.println(singlePointConfigurationCollection[4]->GetLocation().latitude);
+    Serial.println(singlePointConfigurationCollection[4]->GetLocation().longitude);
+    Serial.println(singlePointConfigurationCollection[4]->GetDateTime());
+    Serial.println(singlePointConfigurationCollection[4]->GetGracePeriodEndDateTime());
 
     EEPROM.update(0, numberOfPoints);
     EEPROM.update(1, currentPointIndex);

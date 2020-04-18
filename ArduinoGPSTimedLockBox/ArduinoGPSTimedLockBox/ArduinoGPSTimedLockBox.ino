@@ -42,14 +42,16 @@ void setup()
 {
     Serial.begin(9600);
 
-    display.Initialize();
+    //display.Initialize();
 
-    systemConfig.LoadConfigFromEEPROM();
-    Serial.println(systemConfig.GetCurrentPointActionTime());
-    Serial.println(systemConfig.GetCurrentPointLocation().latitude);
-    Serial.println(systemConfig.GetCurrentPointLocation().longitude);
-    Serial.println(systemConfig.GetCurrentPointGracePeriodEndTime());
-    systemConfig.ProgressToNextPoint();
+    systemConfig.Initialize();
+
+    //systemConfig.LoadConfigFromEEPROM();
+    //Serial.println(systemConfig.GetCurrentPointActionTime());
+    //Serial.println(systemConfig.GetCurrentPointLocation().latitude);
+    //Serial.println(systemConfig.GetCurrentPointLocation().longitude);
+    //Serial.println(systemConfig.GetCurrentPointGracePeriodEndTime());
+    //systemConfig.ProgressToNextPoint();
 
     //switch (input.GetStartUpMode())
     //{

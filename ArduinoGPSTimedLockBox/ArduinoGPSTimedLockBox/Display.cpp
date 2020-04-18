@@ -133,11 +133,6 @@ void Display::WriteSerialMode()
 	Write("Serial mode");
 }
 
-void Display::WriteEnterValue()
-{
-	Write("Enter value: ");
-}
-
 void Display::WriteCalibratingRTC()
 {
 	Write("Calibrating RTC", "from GPS fix...");
@@ -148,6 +143,25 @@ void Display::WriteRTCOffBy(uint32_t delta)
 	Write("Real Time Clock", "was off by...");
 	delay(3000);
 	Write(String(delta), "Seconds");
+}
+
+void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
+{
+	Write("Enter Value:");
+	lcd->setCursor(0, 1);
+	if (hours < 10) {
+		lcd->print('0');
+		lcd->setCursor(1, 1);
+	}
+	String hoursString = String(hours);
+	lcd->print(hoursString);
+	lcd->setCursor(14, 1);
+	if (hours < 10) {
+		lcd->print('0');
+		lcd->setCursor(15, 1);
+	}
+	String minutesString = String(mins);
+	lcd->print(mins);
 }
 
 void Display::WriteEnterPasscode()

@@ -30,6 +30,7 @@ private:
 public:
 	static startupMode GetStartUpMode();
 	static bool ValidateCodeForStartupMode(startupMode modeToAuthenticate);
+	static uint32_t GetExtraTimeValue();
 };
 
 #endif

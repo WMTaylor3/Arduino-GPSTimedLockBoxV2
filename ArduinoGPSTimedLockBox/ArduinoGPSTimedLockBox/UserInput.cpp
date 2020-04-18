@@ -110,3 +110,9 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 	}
 	return isValid;
 }
+
+uint32_t UserInput::GetExtraTimeValue()
+{
+	display.WriteTimeExtensionValues(0, 0);
+	return 0;
+}

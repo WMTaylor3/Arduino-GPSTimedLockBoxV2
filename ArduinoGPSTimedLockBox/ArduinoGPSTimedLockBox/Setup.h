@@ -54,6 +54,7 @@ private:
 	static void StoreSignedInt32AsBytesInEEPROM(int32_t data, uint8_t startIndex);
 	static uint32_t ReadUnsignedInt32AsBytesFromEEPROM(uint8_t startIndex);
 	static int32_t ReadSignedInt32AsBytesFromEEPROM(uint8_t startIndex);
+	static void ZeroConfigAndEEPROM();
 
 public:
 	Setup();

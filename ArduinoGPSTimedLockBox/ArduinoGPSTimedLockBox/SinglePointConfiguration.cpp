@@ -6,6 +6,10 @@
 
 SinglePointConfiguration::SinglePointConfiguration()
 {
+    location.latitude = 0;
+    location.longitude = 0;
+    dateTime = 0;
+    gracePeriodEndDateTime = 0;
 }
 
 void SinglePointConfiguration::SetLocation(int32_t _lat, int32_t _lon)

@@ -42,67 +42,31 @@ void setup()
 {
     Serial.begin(9600);
 
-    //union convertUnsignedInt32_t {
-    //    int32_t int32;
-    //    byte byteArray[4];
-    //} unsignedInt32Union;
+    display.Initialize();
 
-    //uint8_t a = EEPROM.read(7);
-    //uint8_t b = EEPROM.read(8);
-    //uint8_t c = EEPROM.read(9);
-    //uint8_t d = EEPROM.read(10);
+    systemConfig.Initialize();
 
-    //Serial.println(a);
-    //Serial.println(b);
-    //Serial.println(c);
-    //Serial.println(d);
-
-    //unsignedInt32Union.byteArray[0] = EEPROM.read(11);
-    //unsignedInt32Union.byteArray[1] = EEPROM.read(12);
-    //unsignedInt32Union.byteArray[2] = EEPROM.read(13);
-    //unsignedInt32Union.byteArray[3] = EEPROM.read(14);
-    //Serial.println(unsignedInt32Union.int32);
-
-    //unsignedInt32Union.int32 = -900000000;
-    //Serial.println(unsignedInt32Union.byteArray[0]);
-    //Serial.println(unsignedInt32Union.byteArray[1]);
-    //Serial.println(unsignedInt32Union.byteArray[2]);
-    //Serial.println(unsignedInt32Union.byteArray[3]);
-
-
-    //display.Initialize();
-
-    //systemConfig.Initialize();
-
-    systemConfig.LoadConfigFromEEPROM();
-    //Serial.println();
-    //Serial.println(systemConfig.GetCurrentPointActionTime());
-    //Serial.println(systemConfig.GetCurrentPointLocation().latitude);
-    //Serial.println(systemConfig.GetCurrentPointLocation().longitude);
-    //Serial.println(systemConfig.GetCurrentPointGracePeriodEndTime());
-    //systemConfig.ProgressToNextPoint();
-
-    //switch (input.GetStartUpMode())
-    //{
-    //case(normal):
-    //    RunNormal();
-    //    break;
-    //case(overrideUnlock):
-    //    RunOverride();
-    //    break;
-    //case(extraTime):
-    //    RunExtraTime();
-    //    break;
-    //case(calibrateClock):
-    //    RunCalibrateRTC();
-    //    break;
-    //case(configureUnit):
-    //    RunConfigureUnit();
-    //    break;
-    //default:
-    //    RunNormal();
-    //    break;
-    //}
+    switch (input.GetStartUpMode())
+    {
+    case(normal):
+        RunNormal();
+        break;
+    case(overrideUnlock):
+        RunOverride();
+        break;
+    case(extraTime):
+        RunExtraTime();
+        break;
+    case(calibrateClock):
+        RunCalibrateRTC();
+        break;
+    case(configureUnit):
+        RunConfigureUnit();
+        break;
+    default:
+        RunNormal();
+        break;
+    }
 }
 
 void RunNormal()

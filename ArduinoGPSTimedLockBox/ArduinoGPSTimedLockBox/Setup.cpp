@@ -795,8 +795,6 @@ void Setup::ExtendTime(uint32_t duration, bool isInWindow)
 // EEPROM
 void Setup::LoadConfigFromEEPROM()
 {
-    Serial.println("Pulling configuration from EEPROM.");
-
     numberOfPoints = EEPROM.read(0);
     currentPointIndex = EEPROM.read(1);
     timeExtended = EEPROM.read(2);
@@ -818,101 +816,10 @@ void Setup::LoadConfigFromEEPROM()
         singlePointConfigurationCollection[i]->SetDateTime(dt);
         singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gp);
     }
-
-    Serial.print("Number of points: ");
-    Serial.println(numberOfPoints);
-    Serial.print("Current point index: ");
-    Serial.println(currentPointIndex);
-    Serial.print("Time Extended: ");
-    Serial.println(timeExtended);
-    Serial.print("Game Start Time: ");
-    Serial.println(gameStartDateTime);
-
-    Serial.println();
-    Serial.println("Point 0");
-    Serial.println(singlePointConfigurationCollection[0]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[0]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[0]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[0]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 1");
-    Serial.println(singlePointConfigurationCollection[1]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[1]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[1]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[1]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 2");
-    Serial.println(singlePointConfigurationCollection[2]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[2]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[2]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[2]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 3");
-    Serial.println(singlePointConfigurationCollection[3]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[3]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[3]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[3]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 4");
-    Serial.println(singlePointConfigurationCollection[4]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[4]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[4]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[4]->GetGracePeriodEndDateTime());
-
 }
 
 void Setup::SaveConfigToEEPROM()
 {
-    Serial.println("Saving configuration to EEPROM.");
-
-    Serial.print("Number of points: ");
-    Serial.println(numberOfPoints);
-    Serial.print("Current point index: ");
-    Serial.println(currentPointIndex);
-    Serial.print("Time Extended: ");
-    Serial.println(timeExtended);
-    Serial.print("Game Start Time: ");
-    Serial.println(gameStartDateTime);
-
-    Serial.println();
-    Serial.println("Point 0");
-    Serial.println(singlePointConfigurationCollection[0]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[0]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[0]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[0]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 1");
-    Serial.println(singlePointConfigurationCollection[1]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[1]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[1]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[1]->GetGracePeriodEndDateTime());
-    
-    Serial.println();
-    Serial.println("Point 2");
-    Serial.println(singlePointConfigurationCollection[2]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[2]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[2]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[2]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 3");
-    Serial.println(singlePointConfigurationCollection[3]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[3]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[3]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[3]->GetGracePeriodEndDateTime());
-
-    Serial.println();
-    Serial.println("Point 4");
-    Serial.println(singlePointConfigurationCollection[4]->GetLocation().latitude);
-    Serial.println(singlePointConfigurationCollection[4]->GetLocation().longitude);
-    Serial.println(singlePointConfigurationCollection[4]->GetDateTime());
-    Serial.println(singlePointConfigurationCollection[4]->GetGracePeriodEndDateTime());
-
     EEPROM.update(0, numberOfPoints);
     EEPROM.update(1, currentPointIndex);
     EEPROM.update(2, timeExtended);
@@ -934,12 +841,6 @@ void Setup::SaveConfigToEEPROM()
 
 void Setup::StoreUnsignedInt32AsBytesInEEPROM(uint32_t data, uint8_t startIndex)
 {
-    Serial.println();
-    Serial.print("Storing Unsigned int ");
-    Serial.print(data);
-    Serial.print(". Starting at ");
-    Serial.println(startIndex);
-
     union convertUnsignedInt32_t {
         uint32_t uint32;
         byte byteArray[4];
@@ -947,36 +848,17 @@ void Setup::StoreUnsignedInt32AsBytesInEEPROM(uint32_t data, uint8_t startIndex)
 
     unsignedInt32Union.uint32 = data;
 
-    Serial.println();
-    Serial.println("Union Results:");
-    Serial.println(unsignedInt32Union.byteArray[0]);
-    Serial.println(unsignedInt32Union.byteArray[1]);
-    Serial.println(unsignedInt32Union.byteArray[2]);
-    Serial.println(unsignedInt32Union.byteArray[3]);
-
-    Serial.println();
-    Serial.print("Start Index: ");
-    Serial.println(startIndex);
     EEPROM.update(startIndex, unsignedInt32Union.byteArray[0]);
     startIndex++;
-    Serial.println(startIndex);
     EEPROM.update(startIndex, unsignedInt32Union.byteArray[1]);
     startIndex++;
-    Serial.println(startIndex);
     EEPROM.update(startIndex, unsignedInt32Union.byteArray[2]);
     startIndex++;
-    Serial.println(startIndex);
     EEPROM.update(startIndex, unsignedInt32Union.byteArray[3]);
 }
 
 void Setup::StoreSignedInt32AsBytesInEEPROM(int32_t data, uint8_t startIndex)
 {
-    Serial.println();
-    Serial.print("Storing Signed int ");
-    Serial.print(data);
-    Serial.print(". Starting at ");
-    Serial.println(startIndex);
-
     union convertSignedInt32_t {
         int32_t int32;
         byte byteArray[4];
@@ -984,109 +866,47 @@ void Setup::StoreSignedInt32AsBytesInEEPROM(int32_t data, uint8_t startIndex)
 
     signedInt32Union.int32 = data;
 
-    Serial.println();
-    Serial.println("Union Results:");
-    Serial.println(signedInt32Union.byteArray[0]);
-    Serial.println(signedInt32Union.byteArray[1]);
-    Serial.println(signedInt32Union.byteArray[2]);
-    Serial.println(signedInt32Union.byteArray[3]);
-
-    Serial.println();
-    Serial.print("Start Index: ");
-    Serial.println(startIndex);
     EEPROM.update(startIndex, signedInt32Union.byteArray[0]);
     startIndex++;
-    Serial.println(startIndex);
     EEPROM.update(startIndex, signedInt32Union.byteArray[1]);
     startIndex++;
-    Serial.println(startIndex);
     EEPROM.update(startIndex, signedInt32Union.byteArray[2]);
     startIndex++;
-    Serial.println(startIndex);
     EEPROM.update(startIndex, signedInt32Union.byteArray[3]);
 }
 
 uint32_t Setup::ReadUnsignedInt32AsBytesFromEEPROM(uint8_t startIndex)
 {
-    Serial.println();
-    Serial.print("Reading Unsigned int starting at ");
-    Serial.println(startIndex);
-
     union convertUnsignedInt32_t {
         uint32_t uint32;
         byte byteArray[4];
     } unsignedInt32Union;
 
-    Serial.println();
-    Serial.println("Union State:");
-    Serial.println(unsignedInt32Union.uint32);
-    Serial.println(unsignedInt32Union.byteArray[0]);
-    Serial.println(unsignedInt32Union.byteArray[1]);
-    Serial.println(unsignedInt32Union.byteArray[2]);
-    Serial.println(unsignedInt32Union.byteArray[3]);
-
-    Serial.println();
-    Serial.print("Start Index: ");
-    Serial.println(startIndex);
     unsignedInt32Union.byteArray[0] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
     startIndex++;
-    Serial.println(startIndex);
     unsignedInt32Union.byteArray[1] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
     startIndex++;
-    Serial.println(startIndex);
     unsignedInt32Union.byteArray[2] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
     startIndex++;
-    Serial.println(startIndex);
     unsignedInt32Union.byteArray[3] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
 
-    Serial.print("Result: ");
-    Serial.println(unsignedInt32Union.uint32);
     return unsignedInt32Union.uint32;
 }
 
 int32_t Setup::ReadSignedInt32AsBytesFromEEPROM(uint8_t startIndex)
 {
-    Serial.println();
-    Serial.print("Reading Signed int starting at ");
-    Serial.println(startIndex);
-
     union convertSignedInt32_t {
         int32_t int32;
         byte byteArray[4];
     } signedInt32Union;
 
-    Serial.println();
-    Serial.println("Union State:");
-    Serial.println(signedInt32Union.int32);
-    Serial.println(signedInt32Union.byteArray[0]);
-    Serial.println(signedInt32Union.byteArray[1]);
-    Serial.println(signedInt32Union.byteArray[2]);
-    Serial.println(signedInt32Union.byteArray[3]);
-
-    Serial.println();
-    Serial.print("Start Index: ");
-    Serial.println(startIndex);
     signedInt32Union.byteArray[0] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
     startIndex++;
-    Serial.println(startIndex);
     signedInt32Union.byteArray[1] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
     startIndex++;
-    Serial.println(startIndex);
     signedInt32Union.byteArray[2] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
     startIndex++;
-    Serial.println(startIndex);
     signedInt32Union.byteArray[3] = EEPROM.read(startIndex);
-    Serial.println(EEPROM.read(startIndex));
-
-    Serial.print("Result: ");
-    Serial.println(signedInt32Union.int32);
 
     return signedInt32Union.int32;
 }

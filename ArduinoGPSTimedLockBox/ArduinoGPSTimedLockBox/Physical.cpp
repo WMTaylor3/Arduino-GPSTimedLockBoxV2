@@ -25,23 +25,6 @@ void Physical::UpdateGPS()
 
     while (!fix.valid.location || !fix.valid.date || !fix.valid.time)
     {
-        if (millis() - time_now > period)
-        {
-            time_now = millis();
-            Serial.println(F("GPS INVALID:"));
-            if (!fix.valid.location)
-            {
-                Serial.println(F("    Location"));
-            }
-            if (!fix.valid.date)
-            {
-                Serial.println(F("    Date"));
-            }
-            if (!fix.valid.time)
-            {
-                Serial.println(F("    Time"));
-            }
-        }
         while (gps.available(gpsPort))
         {
             fix = gps.read();

@@ -34,12 +34,11 @@ struct TimeSpanDuration
 class Temporal
 {
 private:
-	static DS1307RTC *rtc;
 	static Setup systemConfig;
 	static TimeSpanDuration ConvertToTimeSpanDuration(uint32_t duration);
 public:
 	Temporal();
-	static time_t GetCurrentDateTime();
+	static DS1307RTC* rtc;
 	static bool SetCurrentTime(time_t newTime);
 	static TimeSpanDuration GetTimeUntilGameStart();
 	static TimeSpanDuration GetTimeUntilWindowOpens();

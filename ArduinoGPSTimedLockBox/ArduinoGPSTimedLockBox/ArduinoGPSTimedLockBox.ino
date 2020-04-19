@@ -178,14 +178,14 @@ void RunCalibrateRTC()
     if (input.ValidateCodeForStartupMode(calibrateClock))
     {
         display.WriteCalibratingRTC();
-        time_t currentTime = realTimeClock.GetCurrentDateTime();
+        time_t currentTime = realTimeClock.rtc->get();
         time_t newTime = globalPositioningModule.GetDateTimeInUtc();
         Serial.println(newTime);
         realTimeClock.SetCurrentTime(newTime);
         delay(2000);
         uint32_t delta = abs(newTime - currentTime);
         Serial.println(delta);
-        Serial.println(realTimeClock.GetCurrentDateTime());
+        Serial.println(realTimeClock.rtc->get());
         display.WriteRTCOffBy(delta);
     }
     else

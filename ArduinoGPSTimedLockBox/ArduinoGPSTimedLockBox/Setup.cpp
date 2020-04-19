@@ -691,6 +691,7 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 
 void Setup::Initialize()
 {
+    Serial.println("Init");
     ZeroConfigAndEEPROM();
 
     ClearScreen();

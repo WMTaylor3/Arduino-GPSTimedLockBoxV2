@@ -3,7 +3,7 @@
 
 enum latOrLong { latitude, longitude };
 
-enum buttonState { none, left, right, center, leftAndCenter, leftAndRight, centerAndRight, all };
+enum buttonState { none, left, center, right, leftAndCenter, leftAndRight, centerAndRight, all };
 
 enum startupMode { normal, overrideUnlock, extraTime, calibrateClock, configureUnit };
 

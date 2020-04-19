@@ -88,15 +88,24 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 	}
 
 	display.WriteEnterPasscode();
-	delay(1000);
+	uint32_t start = millis();
+	while (millis() - start < 1000) // Ensures a period of 1 second where no buttons are pressed.
+	{
+		if (GetCurrentButtons() != none) {
+			start = millis();
+		}
+	}
 	uint8_t i = 0;
 	while (i < codeLength)
 	{
 		int8_t inputValue = (int)GetCurrentButtons(); // Method returns enum which can be cast to an int for its value, in this case 1, 2 or 3 (L, C, R) are valid.
 		if (inputValue > 0 && inputValue < 4)
 		{
-			if (inputValue != expectedCode[i])
+			Serial.write(inputValue+48);
+			Serial.write(expectedCode[i]);
+			if ((inputValue + 48) != expectedCode[i])
 			{
+				Serial.println("error");
 				isValid = false;
 			}
 			display.CharTyped(i);

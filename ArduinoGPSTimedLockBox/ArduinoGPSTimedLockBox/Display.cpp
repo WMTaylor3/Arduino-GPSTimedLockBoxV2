@@ -157,7 +157,6 @@ void Display::WriteTimeExtended()
 void Display::WriteEnterPasscode()
 {
 	Write("Passcode:");
-	DelayClear();
 }
 
 void Display::CharTyped(uint8_t dotCount)

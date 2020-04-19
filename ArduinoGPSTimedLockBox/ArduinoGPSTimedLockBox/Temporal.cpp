@@ -1,9 +1,3 @@
-/*
- Name:		Arduino_MomentMaker.ino
- Created:	6/8/2019 2:17:32 PM
- Author:	William Taylor
-*/
-
 #include "Temporal.h"
 #include <Time.h>
 #include <math.h>

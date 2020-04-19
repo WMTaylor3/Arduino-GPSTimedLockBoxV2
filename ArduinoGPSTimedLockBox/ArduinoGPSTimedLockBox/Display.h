@@ -1,9 +1,3 @@
-/*
- Name:		Arduino_MomentMaker.ino
- Created:	6/8/2019 2:17:32 PM
- Author:	William Taylor
-*/
-
 #ifndef _DISPLAY_h
 #define _DISPLAY_h
 

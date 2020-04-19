@@ -1,7 +1,3 @@
-// 
-// 
-// 
-
 #include "UserInput.h"
 
 startupMode UserInput::GetStartUpMode()

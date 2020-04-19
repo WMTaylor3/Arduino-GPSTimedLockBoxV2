@@ -1,5 +1,3 @@
-// Configuration.h
-
 #ifndef _CONFIGURATION_h
 #define _CONFIGURATION_h
 

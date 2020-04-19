@@ -1,5 +1,3 @@
-// SinglePointConfiguration.h
-
 #ifndef _SINGLEPOINTCONFIGURATION_h
 #define _SINGLEPOINTCONFIGURATION_h
 

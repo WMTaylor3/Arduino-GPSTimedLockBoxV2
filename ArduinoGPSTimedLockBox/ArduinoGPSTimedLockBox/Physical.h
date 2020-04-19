@@ -1,5 +1,3 @@
-// NeoPhysical.h
-
 #ifndef _PHYSICAL_h
 #define _PHYSICAL_h
 

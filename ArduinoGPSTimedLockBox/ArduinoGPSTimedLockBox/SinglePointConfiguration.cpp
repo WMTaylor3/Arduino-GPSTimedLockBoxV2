@@ -1,7 +1,3 @@
-// 
-// 
-// 
-
 #include "SinglePointConfiguration.h"
 
 SinglePointConfiguration::SinglePointConfiguration()

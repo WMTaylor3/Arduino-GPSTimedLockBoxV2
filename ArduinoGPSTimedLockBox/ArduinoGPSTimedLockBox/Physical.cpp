@@ -1,7 +1,3 @@
-// 
-// 
-// 
-
 #include "Physical.h"
 
 NeoSWSerial Physical::gpsPort(RX_PIN, TX_PIN);

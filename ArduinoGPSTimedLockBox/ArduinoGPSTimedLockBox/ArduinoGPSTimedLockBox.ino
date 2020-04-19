@@ -95,6 +95,9 @@ void RunExtraTime()
     if (input.ValidateCodeForStartupMode(extraTime))
     {
         uint32_t duration = input.GetExtraTimeValue();
+        systemConfig.ExtendTime(duration, realTimeClock.IsWindowOpen());
+        display.WriteTimeExtended();
+        delay(2000);
     }
 }
 

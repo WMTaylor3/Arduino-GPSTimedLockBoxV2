@@ -5,3 +5,4 @@
 * Implement actual game logic.
 * Implement user interface for adding time.
 * Validate add time method.
+* Consider renaming "ActionTime" to "WindowOpen" and changing "GracePeriodEnd" to "WindowClose".

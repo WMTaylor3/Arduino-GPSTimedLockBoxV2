@@ -37,10 +37,10 @@ public:
 	static void WriteCalibratingRTC();
 	static void WriteRTCOffBy(uint32_t delta);
 	static void WriteTimeExtensionValues(uint8_t hours, uint8_t mins);
+	static void WriteTimeExtended();
 	static void WriteEnterPasscode();
 	static void CharTyped(uint8_t);
 	static void WriteInsertBothKeys();
-	static void WriteTimeIncreasedBy(uint32_t days, uint32_t hours, uint32_t minutes);
 	static void WriteAccessGranted();
 	static void WriteAccessDenied();
 	static void WriteTooLate();

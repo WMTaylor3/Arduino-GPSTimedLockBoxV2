@@ -62,7 +62,7 @@ public:
 	static void Initialize();
 	static time_t GetGameStartDateTime();
 	static latLongLocation GetCurrentPointLocation();
-	static time_t GetCurrentPointActionTime();
+	static time_t GetCurrentPointWindowOpenTime();
 	static time_t GetCurrentPointGracePeriodEndTime();
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();

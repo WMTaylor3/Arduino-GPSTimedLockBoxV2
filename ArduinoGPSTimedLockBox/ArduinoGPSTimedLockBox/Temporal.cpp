@@ -50,11 +50,11 @@ TimeSpanDuration Temporal::GetTimeUntilGameStart()
 	return empty;
 }
 
-TimeSpanDuration Temporal::GetTimeUntilNextPoint()
+TimeSpanDuration Temporal::GetTimeUntilWindowOpens()
 {
-	if (systemConfig.GetCurrentPointActionTime() > GetCurrentDateTime())
+	if (systemConfig.GetCurrentPointWindowOpenTime() > GetCurrentDateTime())
 	{
-		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointActionTime() - GetCurrentDateTime());
+		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointWindowOpenTime() - GetCurrentDateTime());
 	}
 	TimeSpanDuration empty;
 	return empty;
@@ -70,15 +70,14 @@ TimeSpanDuration Temporal::GetTimeUntilWindowClose()
 	return empty;
 }
 
-bool Temporal::IsUnlockReached()
-{
-	return(systemConfig.GetCurrentPointActionTime() >= rtc->get());
-}
-
-
 bool Temporal::IsGameStartReached()
 {
 	return(systemConfig.GetGameStartDateTime() >= rtc->get());
+}
+
+bool Temporal::IsWindowOpen()
+{
+	return(systemConfig.GetCurrentPointWindowOpenTime() >= rtc->get() && !IsWindowExpired());
 }
 
 bool Temporal::IsWindowExpired()

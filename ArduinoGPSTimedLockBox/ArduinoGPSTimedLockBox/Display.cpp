@@ -164,6 +164,11 @@ void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
 	lcd->print(mins);
 }
 
+void Display::WriteTimeExtended()
+{
+	Write("Time Extended", "Goodbye!");
+}
+
 void Display::WriteEnterPasscode()
 {
 	Write("Passcode:");
@@ -179,22 +184,6 @@ void Display::WriteInsertBothKeys()
 {
 	Write("Insert second", "key to unlock");
 	delay(3000);
-}
-
-void Display::WriteTimeIncreasedBy(uint32_t days, uint32_t hours, uint32_t minutes)
-{
-	Write("Remaining time", "increased by...");
-	delay(3000);
-	if (days + hours + minutes <= 0)
-	{
-		Write("Less than", "a minute");
-	}
-	String dayString = String(days);
-	String hourString = String(hours);
-	String minuteString = String(minutes);
-	Write(dayString + " Days " + hourString + " Hours", minuteString + " Minutes");
-	delay(3000);
-	Clear();
 }
 
 void Display::WriteAccessGranted()

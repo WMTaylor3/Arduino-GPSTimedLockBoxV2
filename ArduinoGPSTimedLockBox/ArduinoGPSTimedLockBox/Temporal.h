@@ -42,9 +42,9 @@ public:
 	static time_t GetCurrentDateTime();
 	static bool SetCurrentTime(time_t newTime);
 	static TimeSpanDuration GetTimeUntilGameStart();
-	static TimeSpanDuration GetTimeUntilNextPoint();
+	static TimeSpanDuration GetTimeUntilWindowOpens();
 	static TimeSpanDuration GetTimeUntilWindowClose();
-	static bool IsUnlockReached();
+	static bool IsWindowOpen();
 	static bool IsGameStartReached();
 	static bool IsWindowExpired();
 };

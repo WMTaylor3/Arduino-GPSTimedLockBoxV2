@@ -753,7 +753,7 @@ latLongLocation Setup::GetCurrentPointLocation()
     return singlePointConfigurationCollection[currentPointIndex]->GetLocation();
 }
 
-time_t Setup::GetCurrentPointActionTime()
+time_t Setup::GetCurrentPointWindowOpenTime()
 {
     return singlePointConfigurationCollection[currentPointIndex]->GetDateTime();
 }

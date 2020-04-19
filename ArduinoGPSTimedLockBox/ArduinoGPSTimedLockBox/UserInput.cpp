@@ -113,6 +113,49 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 
 uint32_t UserInput::GetExtraTimeValue()
 {
-	display.WriteTimeExtensionValues(0, 0);
+	uint8_t hours = 0;
+	uint8_t minutes = 0;;
+	while (true) {
+		display.WriteTimeExtensionValues(hours, minutes);
+		buttonState input = GetCurrentButtons();
+		if (input == center) {
+			return (hours * 3600) + (minutes * 60);
+		}
+		if (input == left) {
+			uint32_t timeAtStart = millis();
+			while (GetCurrentButtons() == left) {
+				if (millis() - timeAtStart > 200)
+				{
+					if (hours == 60)
+					{
+						hours = 0;
+					}
+					else
+					{
+						hours += 1;
+					}
+					break;
+				}
+			};
+		}
+		if (input == right) {
+			uint32_t timeAtStart = millis();
+			while (GetCurrentButtons() == right) {
+				if (millis() - timeAtStart > 200)
+				{
+					if (minutes == 60)
+					{
+						minutes = 0;
+					}
+					else 
+					{
+						minutes += 1;
+					}
+					break;
+				}
+			};
+		}
+	}
+
 	return 0;
 }

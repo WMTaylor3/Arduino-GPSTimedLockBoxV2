@@ -156,7 +156,7 @@ void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
 	String hoursString = String(hours);
 	lcd->print(hoursString);
 	lcd->setCursor(14, 1);
-	if (hours < 10) {
+	if (mins < 10) {
 		lcd->print('0');
 		lcd->setCursor(15, 1);
 	}

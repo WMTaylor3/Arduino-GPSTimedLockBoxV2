@@ -27,7 +27,8 @@ public:
 	static void LcdOn();
 	static void LcdOff();
 	static void WriteSearchBeginsIn(uint32_t, uint32_t, uint32_t);
-	static void WriteNextStageBeginsIn(uint32_t, uint32_t, uint32_t);
+	static void WriteNextStageBeginsNow();
+	static void WriteStageXOfYComplete(uint8_t currentPoint, uint8_t totalPoints);
 	static void WriteObtainingGPSLocationFix();
 	static void WriteDistanceRemaining(uint32_t);
 	static void WriteTimeToUnlock(uint32_t, uint32_t, uint32_t);

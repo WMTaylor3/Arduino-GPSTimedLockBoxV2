@@ -73,11 +73,12 @@ float Physical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
             NeoGPS::Location_t target(targetLocation.latitude, targetLocation.longitude);
             return fix.location.DistanceKm(target) * 1000; // Convert from kilometers to meters.
         }
+        delay(100);
     }
 }
 
 
 bool Physical::IsWithinRadius(latLongLocation targetLocation)
 {
-    return (GetAbsoluteDistanceFromPoint(targetLocation) <= 30);
+    return (GetAbsoluteDistanceFromPoint(targetLocation) <= 10);
 }

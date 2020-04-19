@@ -763,6 +763,16 @@ time_t Setup::GetCurrentPointGracePeriodEndTime()
     return singlePointConfigurationCollection[currentPointIndex]->GetGracePeriodEndDateTime();
 }
 
+uint8_t Setup::GetCurrentPointNumber()
+{
+    return currentPointIndex + 1;
+}
+
+uint8_t Setup::GetTotalPointCount()
+{
+    return numberOfPoints;
+}
+
 void Setup::ProgressToNextPoint()
 {
     if (currentPointIndex < numberOfPoints - 1) {

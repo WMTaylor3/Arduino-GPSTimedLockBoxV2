@@ -64,6 +64,8 @@ public:
 	static latLongLocation GetCurrentPointLocation();
 	static time_t GetCurrentPointWindowOpenTime();
 	static time_t GetCurrentPointGracePeriodEndTime();
+	static uint8_t GetCurrentPointNumber();
+	static uint8_t GetTotalPointCount();
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();
 	static void ExtendTime(uint32_t duration, bool isInWindow);

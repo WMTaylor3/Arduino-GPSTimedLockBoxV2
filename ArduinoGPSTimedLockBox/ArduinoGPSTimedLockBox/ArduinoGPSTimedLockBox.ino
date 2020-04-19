@@ -44,36 +44,114 @@ void setup()
 
     display.Initialize();
 
-    input.GetExtraTimeValue();
+    systemConfig.Initialize();
 
-    //systemConfig.Initialize();
-
-    //switch (input.GetStartUpMode())
-    //{
-    //case(normal):
-    //    RunNormal();
-    //    break;
-    //case(overrideUnlock):
-    //    RunOverride();
-    //    break;
-    //case(extraTime):
-    //    RunExtraTime();
-    //    break;
-    //case(calibrateClock):
-    //    RunCalibrateRTC();
-    //    break;
-    //case(configureUnit):
-    //    RunConfigureUnit();
-    //    break;
-    //default:
-    //    RunNormal();
-    //    break;
-    //}
+    switch (input.GetStartUpMode())
+    {
+    case(normal):
+        RunNormal();
+        break;
+    case(overrideUnlock):
+        RunOverride();
+        break;
+    case(extraTime):
+        RunExtraTime();
+        break;
+    case(calibrateClock):
+        RunCalibrateRTC();
+        break;
+    case(configureUnit):
+        RunConfigureUnit();
+        break;
+    default:
+        RunNormal();
+        break;
+    }
 }
 
 void RunNormal()
 {
     systemConfig.LoadConfigFromEEPROM();
+    if (!realTimeClock.IsGameStartReached()) // Game hadn't started yet.
+    {
+        TimeSpanDuration timeUntilGameStart = realTimeClock.GetTimeUntilGameStart();
+        display.WriteSearchBeginsIn(timeUntilGameStart.Days, timeUntilGameStart.Hours, timeUntilGameStart.Minutes);
+        delay(2000);
+        Die();
+    }
+    else // Game has started. Begin checking things like GPS and RTC.
+    {
+        if (!realTimeClock.HasWindowOpened()) // Before unlock window
+        {
+            display.WriteObtainingGPSLocationFix();
+            if (globalPositioningModule.IsWithinRadius(systemConfig.GetCurrentPointLocation()))
+            {
+                display.WriteLocationReached();
+            }
+            else
+            {
+                display.WriteDistanceRemaining(globalPositioningModule.GetAbsoluteDistanceFromPoint(systemConfig.GetCurrentPointLocation()));
+            }
+            TimeSpanDuration timeUntilWindow = realTimeClock.GetTimeUntilWindowOpens();
+            display.WriteTimeToUnlock(timeUntilWindow.Days, timeUntilWindow.Hours, timeUntilWindow.Minutes);
+
+        }
+        else if (realTimeClock.HasWindowOpened() && !realTimeClock.HasWindowExpired()) // Currently in unlock window
+        {
+            display.WriteObtainingGPSLocationFix();
+            if (globalPositioningModule.IsWithinRadius(systemConfig.GetCurrentPointLocation()))
+            {
+                display.WriteLocationReached();
+                if (systemConfig.IsFinalPoint())
+                {
+                    FinalPointReached();
+                }
+                else
+                {
+                    NextStageReached();
+                }
+            }
+        }
+        else if (realTimeClock.HasWindowExpired()) // After unlock window.
+        {
+            TooLate();
+        }
+    }
+    Die();
+}
+
+void FinalPointReached()
+{
+    while (!realTimeClock.HasWindowExpired())
+    {
+        TimeSpanDuration remainingWindow = realTimeClock.GetTimeUntilWindowClose();
+        display.WriteUnlockTimeRemaining(remainingWindow.Days, remainingWindow.Hours, remainingWindow.Minutes);
+        if (input.IsKeyStateUnlocked())
+        {
+            display.WriteInsertBothKeys();
+        }
+        uint32_t startTime = millis();
+        while (millis() - startTime >= 3000)
+        {
+            if (input.IsKeyStateUnlocked())
+            {
+                Lock(false);
+            }
+        }
+    }
+}
+
+void NextStageReached()
+{
+    while (!realTimeClock.HasWindowExpired())
+    {
+        TimeSpanDuration remainingWindow = realTimeClock.GetTimeUntilWindowClose();
+        uint8_t currentPoint = systemConfig.GetCurrentPointNumber();
+        uint8_t totalPoints = systemConfig.GetTotalPointCount();
+        display.WriteStageXOfYComplete(currentPoint, totalPoints);
+        display.WriteNextStageBeginsNow();
+        systemConfig.ProgressToNextPoint();
+    }
 }
 
 void RunOverride() {
@@ -86,7 +164,6 @@ void RunOverride() {
     {
         display.WriteAccessDenied();
     }
-    delay(2000);
     Die();
 }
 
@@ -95,10 +172,10 @@ void RunExtraTime()
     if (input.ValidateCodeForStartupMode(extraTime))
     {
         uint32_t duration = input.GetExtraTimeValue();
-        systemConfig.ExtendTime(duration, realTimeClock.IsWindowOpen());
+        systemConfig.ExtendTime(duration, (realTimeClock.HasWindowOpened() && !realTimeClock.HasWindowExpired()));
         display.WriteTimeExtended();
-        delay(2000);
     }
+    Die();
 }
 
 void RunCalibrateRTC()
@@ -126,13 +203,19 @@ void RunCalibrateRTC()
     {
         display.WriteAccessDenied();
     }
-    delay(2000);
     Die();
 }
 
 void RunConfigureUnit()
 {
-    input.ValidateCodeForStartupMode(configureUnit);
+    if (input.ValidateCodeForStartupMode(configureUnit))
+    {
+        systemConfig.Initialize();
+        Lock(false);
+        input.AwaitKeyLock();
+        Lock(true);
+    }
+    Die();
 }
 
 void Lock(bool lock)
@@ -161,7 +244,7 @@ void Lock(bool lock)
 void TooLate()
 {
     display.WriteTooLate();
-    while (true) {}
+    Die();
 }
 
 void Die()

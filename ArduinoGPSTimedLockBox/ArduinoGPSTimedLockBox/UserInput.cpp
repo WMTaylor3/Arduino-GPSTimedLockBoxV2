@@ -159,3 +159,14 @@ uint32_t UserInput::GetExtraTimeValue()
 
 	return 0;
 }
+
+void UserInput::AwaitKeyLock()
+{
+	while (IsKeyStateUnlocked) {}
+	return;
+}
+
+bool UserInput::IsKeyStateUnlocked()
+{
+	return (digitalRead(key) == HIGH);
+}

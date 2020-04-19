@@ -6,6 +6,10 @@ time_t Setup::gameStartDateTime;
 SinglePointConfiguration* Setup::singlePointConfigurationCollection[5];
 bool Setup::timeExtended;
 
+const char errorInvalidInputLength[33] = "INVALID: Incorrect input length.";
+const char errorRequiredCharacterOmmitted[93] = "INVALID: Required character (possibly delimiter) ommitted or incorrectly placed. Character: ";
+const char errorInvalidCharacterFoundInField[51] = "INVALID: Invalid character found in field. Field: ";
+
 Setup::Setup()
 {
     for (uint8_t i = 0; i < 5; i++)
@@ -71,13 +75,13 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] == '\0')
         {
-            Serial.println(F("INVALID: Incorrect input length."));
+            Serial.println(errorInvalidInputLength);
             return false;
         }
     }
     if (rx_string[19] != '\0')
     {
-        Serial.println(F("INVALID: Incorrect input length."));
+        Serial.println(errorInvalidInputLength);
         return false;
     }
 
@@ -86,7 +90,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.println(F("INVALID: Invalid character found in year field."));
+            Serial.print(errorInvalidCharacterFoundInField);
+            Serial.println("Year");
             return false;
         }
     }
@@ -107,7 +112,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate first hypen delimiter.
     if (rx_string[4] != '-')
     {
-        Serial.println(F("INVALID: First hyphen ommitted or incorrectly placed. Check date format."));
+        Serial.print(errorRequiredCharacterOmmitted);
+        Serial.println("First hyphen");
         return false;
     }
 
@@ -116,7 +122,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.println(F("INVALID: Invalid character found in month field."));
+            Serial.print(errorInvalidCharacterFoundInField);
+            Serial.println("Month");
             return false;
         }
     }
@@ -124,7 +131,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate second hypen delimiter.
     if (rx_string[7] != '-')
     {
-        Serial.println(F("INVALID: Second hyphen ommitted or incorrectly placed. Check date format."));
+        Serial.print(errorRequiredCharacterOmmitted);
+        Serial.println("Second hyphen");
         return false;
     }
 
@@ -133,7 +141,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.println(F("INVALID: Invalid character found in day field."));
+            Serial.print(errorInvalidCharacterFoundInField);
+            Serial.println("Day");
             return false;
         }
     }
@@ -141,7 +150,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate 'T' delimiter.
     if (rx_string[10] != 'T')
     {
-        Serial.println(F("INVALID: 'T' delimiter ommitted or incorrectly placed."));
+        Serial.print(errorRequiredCharacterOmmitted);
+        Serial.println("'T' delimiter");
         return false;
     }
 
@@ -150,7 +160,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.println(F("INVALID: Invalid character found in hour field. Check time format."));
+            Serial.print(errorInvalidCharacterFoundInField);
+            Serial.println("Hours");
             return false;
         }
     }
@@ -158,7 +169,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate first colon delimiter.
     if (rx_string[13] != ':')
     {
-        Serial.println(F("INVALID: First colon ommitted or incorrectly placed. Check time format."));
+        Serial.print(errorRequiredCharacterOmmitted);
+        Serial.println("First colon");
         return false;
     }
 
@@ -167,7 +179,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.println(F("INVALID: Invalid character found in minute field. Check time format."));
+            Serial.print(errorInvalidCharacterFoundInField);
+            Serial.println("Minutes");
             return false;
         }
     }
@@ -175,7 +188,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate second colon delimiter.
     if (rx_string[16] != ':')
     {
-        Serial.println(F("INVALID: Second colon ommitted or incorrectly placed. Check time format."));
+        Serial.print(errorRequiredCharacterOmmitted);
+        Serial.println("Second colon");
         return false;
     }
 
@@ -184,7 +198,8 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.println(F("INVALID: Invalid character found in seconds field. Check time format."));
+            Serial.print(errorInvalidCharacterFoundInField);
+            Serial.println("Seconds");
             return false;
         }
     }
@@ -412,13 +427,13 @@ bool Setup::ValidateUserInputLatitude(char* rx_string)
     for (uint8_t i = 0; i < 11; i++)
     {
         if (rx_string[i] == '\0') {
-            Serial.println(F("INVALID: Incorrect input length."));
+            Serial.println(errorInvalidInputLength);
             return false;
         }
     }
     if (rx_string[11] != '\0')
     {
-        Serial.println(F("INVALID: Incorrect input length."));
+        Serial.println(errorInvalidInputLength);
         return false;
     }
 
@@ -510,13 +525,13 @@ bool Setup::ValidateUserInputLongitude(char* rx_string)
     for (uint8_t i = 0; i < 12; i++)
     {
         if (rx_string[i] == '\0') {
-            Serial.println(F("INVALID: Incorrect input length."));
+            Serial.println(errorInvalidInputLength);
             return false;
         }
     }
     if (rx_string[12] != '\0')
     {
-        Serial.println(F("INVALID: Incorrect input length."));
+        Serial.println(errorInvalidInputLength);
         return false;
     }
 
@@ -639,13 +654,13 @@ bool Setup::ValidateUserInputGracePeriod(char* rx_string)
     {
         if (rx_string[i] == '\0')
         {
-            Serial.println(F("INVALID: Incorrect input length."));
+            Serial.println(errorInvalidInputLength);
             return false;
         }
     }
     if (rx_string[2] != '\0')
     {
-        Serial.println(F("INVALID: Incorrect input length."));
+        Serial.println(errorInvalidInputLength);
         return false;
     }
 

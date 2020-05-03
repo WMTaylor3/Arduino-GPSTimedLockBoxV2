@@ -4,8 +4,8 @@ SinglePointConfiguration::SinglePointConfiguration()
 {
     location.latitude = 0;
     location.longitude = 0;
-    dateTime = 0;
-    gracePeriodEndDateTime = 0;
+    windowOpenDateTime = 0;
+    windowCloseDateTime = 0;
 }
 
 void SinglePointConfiguration::SetLocation(int32_t _lat, int32_t _lon)
@@ -14,14 +14,14 @@ void SinglePointConfiguration::SetLocation(int32_t _lat, int32_t _lon)
     location.longitude = _lon;
 }
 
-void SinglePointConfiguration::SetDateTime(time_t _time)
+void SinglePointConfiguration::SetWindowOpenDateTime(time_t _time)
 {
-    dateTime = _time;
+    windowOpenDateTime = _time;
 }
 
-void SinglePointConfiguration::SetGracePeriodEndDateTime(time_t _time)
+void SinglePointConfiguration::SetWindowCloseDateTime(time_t _time)
 {
-    gracePeriodEndDateTime = _time;
+    windowCloseDateTime = _time;
 }
 
 latLongLocation SinglePointConfiguration::GetLocation()
@@ -29,12 +29,12 @@ latLongLocation SinglePointConfiguration::GetLocation()
     return location;
 }
 
-time_t SinglePointConfiguration::GetDateTime()
+time_t SinglePointConfiguration::GetWindowOpenDateTime()
 {
-    return dateTime;
+    return windowOpenDateTime;
 }
 
-time_t SinglePointConfiguration::GetGracePeriodEndDateTime()
+time_t SinglePointConfiguration::GetWindowCloseDateTime()
 {
-    return gracePeriodEndDateTime;
+    return windowCloseDateTime;
 }

@@ -10,12 +10,12 @@ Temporal::Temporal()
 
 TimeSpanDuration Temporal::ConvertToTimeSpanDuration(uint32_t duration)
 {
-	TimeSpanDuration dateTime;
-	dateTime.Days = duration / 86400;
-	dateTime.Hours = (duration % 86400) / 3600;
-	dateTime.Minutes = ((duration % 86400) % 3600) / 60;
-	dateTime.Seconds = (((duration % 86400) % 3600) % 60) / 60;
-	return dateTime;
+	TimeSpanDuration windowOpenDateTime;
+	windowOpenDateTime.Days = duration / 86400;
+	windowOpenDateTime.Hours = (duration % 86400) / 3600;
+	windowOpenDateTime.Minutes = ((duration % 86400) % 3600) / 60;
+	windowOpenDateTime.Seconds = (((duration % 86400) % 3600) % 60) / 60;
+	return windowOpenDateTime;
 }
 
 bool Temporal::SetCurrentTime(time_t currentTime)
@@ -46,9 +46,9 @@ TimeSpanDuration Temporal::GetTimeUntilWindowOpens()
 
 TimeSpanDuration Temporal::GetTimeUntilWindowClose()
 {
-	if (systemConfig.GetCurrentPointGracePeriodEndTime() > rtc->get())
+	if (systemConfig.GetCurrentPointWindowCloseTime() > rtc->get())
 	{
-		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointGracePeriodEndTime() - rtc->get());
+		return ConvertToTimeSpanDuration(systemConfig.GetCurrentPointWindowCloseTime() - rtc->get());
 	}
 	TimeSpanDuration empty;
 	return empty;
@@ -66,5 +66,5 @@ bool Temporal::HasWindowOpened()
 
 bool Temporal::HasWindowExpired()
 {
-	return(rtc->get() >= systemConfig.GetCurrentPointGracePeriodEndTime());
+	return(rtc->get() >= systemConfig.GetCurrentPointWindowCloseTime());
 }

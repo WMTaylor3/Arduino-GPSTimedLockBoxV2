@@ -105,6 +105,10 @@ void RunNormal()
                     NextStageReached();
                 }
             }
+            else
+            {
+                display.WriteDistanceRemaining(globalPositioningModule.GetAbsoluteDistanceFromPoint(systemConfig.GetCurrentPointLocation()));
+            }
         }
         else if (realTimeClock.HasWindowExpired()) // After unlock window.
         {

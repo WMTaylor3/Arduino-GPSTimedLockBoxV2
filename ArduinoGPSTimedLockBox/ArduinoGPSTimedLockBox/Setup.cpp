@@ -633,7 +633,7 @@ bool Setup::ValidateNextPointDateTime(time_t nextPointDateTime)
 }
 
 // Returns as absolute number of seconds.
-uint16_t Setup::PromptForGracePeriodDuration()
+uint16_t Setup::PromptForWindowDuration()
 {
     //ISO 8601 format without the timezone offset
     char* rx_string = new char[3];
@@ -651,14 +651,14 @@ uint16_t Setup::PromptForGracePeriodDuration()
     do {
         Serial.print(F(": "));
         GetUserInput(rx_string, 2);
-    } while (!ValidateUserInputGracePeriod(rx_string));
+    } while (!ValidateUserInputWindowDuration(rx_string));
 
     uint16_t graceWindowDuration = ParseMinutesStringToSeconds(rx_string);
     delete(rx_string);
     return graceWindowDuration;
 }
 
-bool Setup::ValidateUserInputGracePeriod(char* rx_string)
+bool Setup::ValidateUserInputWindowDuration(char* rx_string)
 {
     // Must be correct length.
     for (uint8_t i = 0; i < 2; i++)
@@ -689,7 +689,7 @@ bool Setup::ValidateUserInputGracePeriod(char* rx_string)
     return true;
 }
 
-bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
+bool Setup::ValidateWindowDuration(uint16_t durationInSeconds)
 {
     if (durationInSeconds > 3600 || durationInSeconds < 60)
     {
@@ -748,16 +748,16 @@ void Setup::Initialize()
         } while (!ValidateNextPointDateTime(unlockDateTime));
         ClearScreen();
 
-        uint16_t gracePeriodInSeconds = 0;
+        uint16_t windowDurationInSeconds = 0;
         do {
-            gracePeriodInSeconds = PromptForGracePeriodDuration();
-        } while (!ValidateGracePeriodDuration(gracePeriodInSeconds));
-        time_t gracePeriodEndDateTime = unlockDateTime + gracePeriodInSeconds;
+            windowDurationInSeconds = PromptForWindowDuration();
+        } while (!ValidateWindowDuration(windowDurationInSeconds));
+        time_t windowClose = unlockDateTime + windowDurationInSeconds;
         ClearScreen();
 
         singlePointConfigurationCollection[i]->SetLocation(unlockLatitude, unlockLongitude);
-        singlePointConfigurationCollection[i]->SetDateTime(unlockDateTime);
-        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gracePeriodEndDateTime);
+        singlePointConfigurationCollection[i]->SetWindowOpenDateTime(unlockDateTime);
+        singlePointConfigurationCollection[i]->SetWindowCloseDateTime(windowClose);
     }
 
     SaveConfigToEEPROM();
@@ -775,12 +775,12 @@ latLongLocation Setup::GetCurrentPointLocation()
 
 time_t Setup::GetCurrentPointWindowOpenTime()
 {
-    return singlePointConfigurationCollection[currentPointIndex]->GetDateTime();
+    return singlePointConfigurationCollection[currentPointIndex]->GetWindowOpenDateTime();
 }
 
-time_t Setup::GetCurrentPointGracePeriodEndTime()
+time_t Setup::GetCurrentPointWindowCloseTime()
 {
-    return singlePointConfigurationCollection[currentPointIndex]->GetGracePeriodEndDateTime();
+    return singlePointConfigurationCollection[currentPointIndex]->GetWindowCloseDateTime();
 }
 
 uint8_t Setup::GetCurrentPointNumber()
@@ -813,9 +813,9 @@ void Setup::ExtendTime(uint32_t duration, bool isInWindow)
     {
         if (!isInWindow)
         {
-            singlePointConfigurationCollection[i]->SetDateTime(singlePointConfigurationCollection[i]->GetDateTime() + duration);
+            singlePointConfigurationCollection[i]->SetWindowOpenDateTime(singlePointConfigurationCollection[i]->GetWindowOpenDateTime() + duration);
         }
-        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime() + duration);
+        singlePointConfigurationCollection[i]->SetWindowCloseDateTime(singlePointConfigurationCollection[i]->GetWindowCloseDateTime() + duration);
     }
     timeExtended = true;
     SaveConfigToEEPROM();
@@ -843,8 +843,8 @@ void Setup::LoadConfigFromEEPROM()
         storageAddress += 4;
 
         singlePointConfigurationCollection[i]->SetLocation(lat, lng);
-        singlePointConfigurationCollection[i]->SetDateTime(dt);
-        singlePointConfigurationCollection[i]->SetGracePeriodEndDateTime(gp);
+        singlePointConfigurationCollection[i]->SetWindowOpenDateTime(dt);
+        singlePointConfigurationCollection[i]->SetWindowCloseDateTime(gp);
     }
 }
 
@@ -862,9 +862,9 @@ void Setup::SaveConfigToEEPROM()
         storageAddress += 4;
         StoreSignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetLocation().longitude, storageAddress);
         storageAddress += 4;
-        StoreUnsignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetDateTime(), storageAddress);
+        StoreUnsignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetWindowOpenDateTime(), storageAddress);
         storageAddress += 4;
-        StoreUnsignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetGracePeriodEndDateTime(), storageAddress);
+        StoreUnsignedInt32AsBytesInEEPROM(singlePointConfigurationCollection[i]->GetWindowCloseDateTime(), storageAddress);
         storageAddress += 4;
     }
 }
@@ -949,24 +949,24 @@ void Setup::ZeroConfigAndEEPROM() {
     gameStartDateTime = 0;
 
     singlePointConfigurationCollection[0]->SetLocation(0, 0);
-    singlePointConfigurationCollection[0]->SetDateTime(0);
-    singlePointConfigurationCollection[0]->SetGracePeriodEndDateTime(0);
+    singlePointConfigurationCollection[0]->SetWindowOpenDateTime(0);
+    singlePointConfigurationCollection[0]->SetWindowCloseDateTime(0);
 
     singlePointConfigurationCollection[1]->SetLocation(0, 0);
-    singlePointConfigurationCollection[1]->SetDateTime(0);
-    singlePointConfigurationCollection[1]->SetGracePeriodEndDateTime(0);
+    singlePointConfigurationCollection[1]->SetWindowOpenDateTime(0);
+    singlePointConfigurationCollection[1]->SetWindowCloseDateTime(0);
 
     singlePointConfigurationCollection[2]->SetLocation(0, 0);
-    singlePointConfigurationCollection[2]->SetDateTime(0);
-    singlePointConfigurationCollection[2]->SetGracePeriodEndDateTime(0);
+    singlePointConfigurationCollection[2]->SetWindowOpenDateTime(0);
+    singlePointConfigurationCollection[2]->SetWindowCloseDateTime(0);
 
     singlePointConfigurationCollection[3]->SetLocation(0, 0);
-    singlePointConfigurationCollection[3]->SetDateTime(0);
-    singlePointConfigurationCollection[3]->SetGracePeriodEndDateTime(0);
+    singlePointConfigurationCollection[3]->SetWindowOpenDateTime(0);
+    singlePointConfigurationCollection[3]->SetWindowCloseDateTime(0);
 
     singlePointConfigurationCollection[4]->SetLocation(0, 0);
-    singlePointConfigurationCollection[4]->SetDateTime(0);
-    singlePointConfigurationCollection[4]->SetGracePeriodEndDateTime(0);
+    singlePointConfigurationCollection[4]->SetWindowOpenDateTime(0);
+    singlePointConfigurationCollection[4]->SetWindowCloseDateTime(0);
 
     SaveConfigToEEPROM();
 }

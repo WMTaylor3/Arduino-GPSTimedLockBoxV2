@@ -43,9 +43,9 @@ private:
 	static bool ValidateLongitude(int32_t longitude);
 	static time_t PromptForNextPointDateTime(bool final);
 	static bool ValidateNextPointDateTime(time_t nextPointDateTime);
-	static uint16_t PromptForGracePeriodDuration();
-	static bool ValidateUserInputGracePeriod(char* rx_string);
-	static bool ValidateGracePeriodDuration(uint16_t durationInSeconds);
+	static uint16_t PromptForWindowDuration();
+	static bool ValidateUserInputWindowDuration(char* rx_string);
+	static bool ValidateWindowDuration(uint16_t durationInSeconds);
 
 	static void StoreUnsignedInt32AsBytesInEEPROM(uint32_t data, uint8_t startIndex);
 	static void StoreSignedInt32AsBytesInEEPROM(int32_t data, uint8_t startIndex);
@@ -68,7 +68,7 @@ public:
 	static time_t GetGameStartDateTime();
 	static latLongLocation GetCurrentPointLocation();
 	static time_t GetCurrentPointWindowOpenTime();
-	static time_t GetCurrentPointGracePeriodEndTime();
+	static time_t GetCurrentPointWindowCloseTime();
 	static uint8_t GetCurrentPointNumber();
 	static uint8_t GetTotalPointCount();
 	

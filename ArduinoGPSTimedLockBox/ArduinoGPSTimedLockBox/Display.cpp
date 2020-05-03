@@ -79,11 +79,11 @@ void Display::WriteStageXOfYComplete(uint8_t currentPoint, uint8_t totalPoints)
 void Display::WriteObtainingGPSLocationFix()
 {
 	Write("Obtaining GPS", "location fix...");
-	DelayClear();
 }
 
 void Display::WriteDistanceRemaining(uint32_t distance)
 {
+	Clear();
 	Write("Distance to", "location...");
 	delay(3000);
 	Write(String(distance) + " Meters");
@@ -92,6 +92,7 @@ void Display::WriteDistanceRemaining(uint32_t distance)
 
 void Display::WriteLocationReached()
 {
+	Clear();
 	Write("Location has", "been found");
 	DelayClear();
 }
@@ -185,6 +186,7 @@ void Display::WriteAccessDenied()
 
 void Display::WriteTooLate()
 {
+	Clear();
 	Write("Too Late", "Window Missed");
 	DelayClear();
 }

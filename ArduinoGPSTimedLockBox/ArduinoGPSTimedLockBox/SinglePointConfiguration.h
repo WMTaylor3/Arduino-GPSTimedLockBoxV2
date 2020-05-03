@@ -14,18 +14,18 @@ class SinglePointConfiguration
 {
 private:
 	latLongLocation location;
-	time_t dateTime;
-	time_t gracePeriodEndDateTime;
+	time_t windowOpenDateTime;
+	time_t windowCloseDateTime;
 public:
 	SinglePointConfiguration();
 
 	void SetLocation(int32_t _lat, int32_t _lon);
-	void SetDateTime(time_t _time);
-	void SetGracePeriodEndDateTime(time_t _time);
+	void SetWindowOpenDateTime(time_t _time);
+	void SetWindowCloseDateTime(time_t _time);
 
 	latLongLocation GetLocation();
-	time_t GetDateTime();
-	time_t GetGracePeriodEndDateTime();
+	time_t GetWindowOpenDateTime();
+	time_t GetWindowCloseDateTime();
 };
 
 #endif

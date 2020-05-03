@@ -41,28 +41,27 @@ void setup()
 
     display.Initialize();
 
-    Lock(false);
-    //switch (input.GetStartUpMode())
-    //{
-    //case(normal):
-    //    RunNormal();
-    //    break;
-    //case(overrideUnlock):
-    //    RunOverride();
-    //    break;
-    //case(extraTime):
-    //    RunExtraTime();
-    //    break;
-    //case(calibrateClock):
-    //    RunCalibrateRTC();
-    //    break;
-    //case(configureUnit):
-    //    RunConfigureUnit();
-    //    break;
-    //default:
-    //    RunNormal();
-    //    break;
-    //}
+    switch (input.GetStartUpMode())
+    {
+    case(normal):
+        RunNormal();
+        break;
+    case(overrideUnlock):
+        RunOverride();
+        break;
+    case(extraTime):
+        RunExtraTime();
+        break;
+    case(calibrateClock):
+        RunCalibrateRTC();
+        break;
+    case(configureUnit):
+        RunConfigureUnit();
+        break;
+    default:
+        RunNormal();
+        break;
+    }
 }
 
 void RunNormal()

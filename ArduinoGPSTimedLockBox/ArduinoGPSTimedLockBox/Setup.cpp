@@ -6,27 +6,6 @@ time_t Setup::gameStartDateTime;
 SinglePointConfiguration* Setup::singlePointConfigurationCollection[5];
 bool Setup::timeExtended;
 
-void printErrorInvalidInputLength()
-{
-    Serial.println(F("INVALID: Incorrect input length."));
-}
-
-void printErrorRequiredCharacterOmmitted()
-{
-    Serial.print(F("INVALID: Required character (possibly delimiter) ommitted or incorrectly placed. Character :"));
-}
-
-void printErrorInvalidCharacterFoundInField()
-{
-    Serial.print(F("INVALID: Invalid character found in field. Field: "));
-}
-
-void printErrorValueIsLogicallyInvalid()
-{
-    Serial.println(F("INVALID: Value entered is logically invalid."));
-    Serial.print(F("Value must be within the following range: "));
-}
-
 Setup::Setup()
 {
     for (uint8_t i = 0; i < 5; i++)
@@ -38,6 +17,27 @@ Setup::Setup()
 //Setup::~Setup() {
 //    delete [] singlePointConfigurationCollection; //Removed as we are now static, add this back if we make this class non-static.
 //}
+
+void Setup::printErrorInvalidInputLength()
+{
+    Serial.println(F("INVALID: Incorrect input length."));
+}
+
+void Setup::printErrorRequiredCharacterOmmitted()
+{
+    Serial.print(F("INVALID: Required character (possibly delimiter) ommitted or incorrectly placed. Character :"));
+}
+
+void Setup::printErrorInvalidCharacterFoundInField()
+{
+    Serial.print(F("INVALID: Invalid character found in field. Field: "));
+}
+
+void Setup::printErrorValueIsLogicallyInvalid()
+{
+    Serial.println(F("INVALID: Value entered is logically invalid."));
+    Serial.print(F("Value must be within the following range: "));
+}
 
 void Setup::AwaitUserInput()
 {

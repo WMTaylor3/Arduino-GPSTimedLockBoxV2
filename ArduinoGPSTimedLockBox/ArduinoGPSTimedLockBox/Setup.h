@@ -56,6 +56,12 @@ private:
 public:
 	Setup();
 	// ~Setup(); // Removed as is now empty due to class being static. Add back if we make class non-static.
+
+	void printErrorInvalidInputLength();
+	void printErrorRequiredCharacterOmmitted();
+	void printErrorInvalidCharacterFoundInField();
+	void printErrorValueIsLogicallyInvalid();
+
 	static void Initialize();
 	static time_t GetGameStartDateTime();
 	static latLongLocation GetCurrentPointLocation();
@@ -63,9 +69,11 @@ public:
 	static time_t GetCurrentPointGracePeriodEndTime();
 	static uint8_t GetCurrentPointNumber();
 	static uint8_t GetTotalPointCount();
+	
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();
 	static void ExtendTime(uint32_t duration, bool isInWindow);
+
 	static void LoadConfigFromEEPROM();
 	static void SaveConfigToEEPROM();
 };

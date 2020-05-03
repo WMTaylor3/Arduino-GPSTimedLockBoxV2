@@ -57,10 +57,10 @@ public:
 	Setup();
 	// ~Setup(); // Removed as is now empty due to class being static. Add back if we make class non-static.
 
-	void printErrorInvalidInputLength();
-	void printErrorRequiredCharacterOmmitted();
-	void printErrorInvalidCharacterFoundInField();
-	void printErrorValueIsLogicallyInvalid();
+	static void printErrorInvalidInputLength();
+	static void printErrorRequiredCharacterOmmitted();
+	static void printErrorInvalidCharacterFoundInField();
+	static void printErrorValueIsLogicallyInvalid();
 
 	static void Initialize();
 	static time_t GetGameStartDateTime();

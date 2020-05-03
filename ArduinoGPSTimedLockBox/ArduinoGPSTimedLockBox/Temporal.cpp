@@ -61,10 +61,10 @@ bool Temporal::IsGameStartReached()
 
 bool Temporal::HasWindowOpened()
 {
-	return(systemConfig.GetCurrentPointWindowOpenTime() >= rtc->get());
+	return(rtc->get() >= systemConfig.GetCurrentPointWindowOpenTime());
 }
 
 bool Temporal::HasWindowExpired()
 {
-	return(systemConfig.GetCurrentPointGracePeriodEndTime() >= rtc->get());
+	return(rtc->get() >= systemConfig.GetCurrentPointGracePeriodEndTime());
 }

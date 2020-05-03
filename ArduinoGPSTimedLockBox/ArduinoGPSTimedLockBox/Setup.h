@@ -62,6 +62,7 @@ public:
 	static void printErrorInvalidCharacterFoundInField();
 	static void printErrorValueIsLogicallyInvalid();
 	static void printInfoTimeInputFormatting();
+	static void printInfoLocationInputFormatting(bool isLongitude);
 
 	static void Initialize();
 	static time_t GetGameStartDateTime();

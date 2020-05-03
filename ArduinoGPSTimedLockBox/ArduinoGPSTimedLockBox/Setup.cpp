@@ -52,6 +52,26 @@ void Setup::printInfoTimeInputFormatting()
     Serial.println(F("    2021-12-25T02:00:00 <- 25th Decemeber 2021 at 2:00AM UTC."));
 }
 
+void Setup::printInfoLocationInputFormatting(bool isLongitude)
+{
+    Serial.println(F("Formatting:"));
+    Serial.println(F("    Must have a + or - prepended to it."));
+    Serial.print(F("    Must be formatted with "));
+    if (isLongitude) { Serial.print(F("three")); } else { Serial.print(F("two")); }
+    Serial.println(F(" digits prior to the decimal point."));
+    Serial.println(F("    Must be formatted with seven digits following the decimal point."));
+    Serial.println(F("    Leading and trailing zeros are permitted, however, it is strongly encouraged to have as high a degree of precision as possible."));
+    Serial.println(F("Examples:"));
+    if (isLongitude) { Serial.print(F("    +102.1234567")); } else { Serial.print(F("    +12.1234567")); }
+    Serial.println(F(" <- Acceptable form and precision of positive."));
+    if (isLongitude) { Serial.print(F("    -010.9876543")); } else { Serial.print(F("    -01.9876543")); }
+    Serial.println(F(" <- Acceptable form and precision of negative."));
+    if (isLongitude) { Serial.print(F("    +002.1234500")); } else { Serial.print(F("    +02.1234500")); }
+    Serial.println(F(" <- Acceptable form of positive but unideal precision."));
+    if (isLongitude) { Serial.print(F("    -110.1234500")); } else { Serial.print(F("    -11.1234500")); }
+    Serial.println(F(" <- Acceptable form of negative but unideal precision."));
+}
+
 void Setup::AwaitUserInput()
 {
     while (!Serial.available()) {}
@@ -400,24 +420,16 @@ bool Setup::ValidateGameStartDateTime(time_t startDateTime)
 int32_t Setup::PromptForLatitude(bool final = false)
 {
     char* rx_string = new char[12];
+    Serial.println(F("Enter the latitude value of the "));
     if (final)
     {
-        Serial.println(F("Enter the latitude value of the final unlock location"));
+         Serial.println(F("final unlock location"));
     }
     else
     {
-        Serial.println(F("Enter the latitude value of the next hint reveal location"));
+        Serial.println(F("next hint reveal location"));
     }
-    Serial.println(F("Formatting:"));
-    Serial.println(F("    Must have a + or - prepended to it."));
-    Serial.println(F("    Must be formatted with two digits prior to the decimal point."));
-    Serial.println(F("    Must be formatted with seven digits following the decimal point."));
-    Serial.println(F("    Leading and trailing zeros are permitted, however, it is strongly encouraged to have as high a degree of precision as possible."));
-    Serial.println(F("Examples:"));
-    Serial.println(F("    +12.1234567 <- Acceptable form and precision of positive."));
-    Serial.println(F("    -01.9876543 <- Acceptable form and precision of negative."));
-    Serial.println(F("    +02.1234500 <- Acceptable form of positive but unideal precision."));
-    Serial.println(F("    -11.1234500 <- Acceptable form of negative but unideal precision."));
+    printInfoLocationInputFormatting(false);
     bool validUserInput = false;
     do {
         Serial.print(F(": "));
@@ -500,24 +512,16 @@ bool Setup::ValidateLatitude(int32_t latitude)
 int32_t Setup::PromptForLongitude(bool final = false)
 {
     char* rx_string = new char[13];
+    Serial.println(F("Enter the longitude value of the "));
     if (final)
     {
-        Serial.println(F("Enter the longitude value of the final unlock location"));
+        Serial.println(F("final unlock location"));
     }
     else
     {
-        Serial.println(F("Enter the longitude value of the next hint reveal location"));
+        Serial.println(F("next hint reveal location"));
     }
-    Serial.println(F("Formatting:"));
-    Serial.println(F("    Must have a + or - prepended to it."));
-    Serial.println(F("    Must be formatted with three digits prior to the decimal point."));
-    Serial.println(F("    Must be formatted with seven digits following the decimal point."));
-    Serial.println(F("    Leading and trailing zeros are permitted, however, it is strongly encouraged to have as high a degree of precision as possible."));
-    Serial.println(F("Examples:"));
-    Serial.println(F("    +102.1234567 <- Acceptable form and precision of positive."));
-    Serial.println(F("    -010.9876543 <- Acceptable form and precision of negative."));
-    Serial.println(F("    +002.1234500 <- Acceptable form of positive but unideal precision."));
-    Serial.println(F("    -110.1234500 <- Acceptable form of negative but unideal precision."));
+    printInfoLocationInputFormatting(true);
     bool validUserInput = false;
     do {
         Serial.print(F(": "));

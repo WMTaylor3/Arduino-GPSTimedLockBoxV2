@@ -131,6 +131,7 @@ void FinalPointReached()
             if (input.IsKeyStateUnlocked())
             {
                 Lock(false);
+                Die();
             }
         }
     }
@@ -170,6 +171,10 @@ void RunExtraTime()
         systemConfig.ExtendTime(duration, (realTimeClock.HasWindowOpened() && !realTimeClock.HasWindowExpired()));
         display.WriteTimeExtended();
     }
+    else
+    {
+        display.WriteAccessDenied();
+    }
     Die();
 }
 
@@ -201,6 +206,10 @@ void RunConfigureUnit()
         input.AwaitKeyLock();
         Lock(true);
     }
+    else
+    {
+        display.WriteAccessDenied();
+    }
     Die();
 }
 
@@ -223,8 +232,6 @@ void Lock(bool lock)
     }
     delay(1000);
     servo.detach();
-
-    Die();
 }
 
 void TooLate()

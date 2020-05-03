@@ -61,6 +61,7 @@ public:
 	static void printErrorRequiredCharacterOmmitted();
 	static void printErrorInvalidCharacterFoundInField();
 	static void printErrorValueIsLogicallyInvalid();
+	static void printInfoTimeInputFormatting();
 
 	static void Initialize();
 	static time_t GetGameStartDateTime();

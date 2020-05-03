@@ -71,7 +71,6 @@ void RunNormal()
     {
         TimeSpanDuration timeUntilGameStart = realTimeClock.GetTimeUntilGameStart();
         display.WriteSearchBeginsIn(timeUntilGameStart.Days, timeUntilGameStart.Hours, timeUntilGameStart.Minutes);
-        delay(2000);
         Die();
     }
     else // Game has started. Begin checking things like GPS and RTC.
@@ -183,8 +182,8 @@ void RunCalibrateRTC()
     if (input.ValidateCodeForStartupMode(calibrateClock))
     {
         display.WriteCalibratingRTC();
-        time_t currentTime = realTimeClock.rtc->get();
         time_t newTime = globalPositioningModule.GetDateTimeInUtc();
+        time_t currentTime = realTimeClock.rtc->get();
         realTimeClock.SetCurrentTime(newTime);
         delay(2000);
         uint32_t delta = abs(newTime - currentTime);

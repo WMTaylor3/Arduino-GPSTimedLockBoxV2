@@ -56,7 +56,7 @@ TimeSpanDuration Temporal::GetTimeUntilWindowClose()
 
 bool Temporal::IsGameStartReached()
 {
-	return(systemConfig.GetGameStartDateTime() >= rtc->get());
+	return(rtc->get() >= systemConfig.GetGameStartDateTime());
 }
 
 bool Temporal::HasWindowOpened()

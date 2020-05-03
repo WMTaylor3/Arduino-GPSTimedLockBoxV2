@@ -270,21 +270,18 @@ int32_t Setup::ParseLatLongStringToInt32(char* locationString, latOrLong latOrLo
         return 0;
     }
 
-    Serial.println(locationString);
     // Remove '.'
     for (uint8_t i = decimalPosition; i < stringLength - 1; i++) // Minus 1 so we don't try override the original '\0' with something from out of the array bounds.
     {
         locationString[i] = locationString[i + 1];
     }
 
-    Serial.println(locationString);
     // Remove +/-
     char absoluteValAsString[13];
     strncpy(absoluteValAsString, locationString + 1, stringLength - 2); // Copy from just after the +/- through to (and including the '\0'. Minus 2 accounts for the missing +/- and the missing '.'.
 
-    Serial.println(absoluteValAsString);
+    // Convert to long.
     int32_t absoluteVal = atol(absoluteValAsString);
-    Serial.println(absoluteVal);
     if (locationString[0] == '-') // Return with +/- added back.
     {
         return -absoluteVal;

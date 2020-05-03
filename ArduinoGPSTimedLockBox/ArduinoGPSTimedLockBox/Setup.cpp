@@ -6,11 +6,26 @@ time_t Setup::gameStartDateTime;
 SinglePointConfiguration* Setup::singlePointConfigurationCollection[5];
 bool Setup::timeExtended;
 
-const char errorInvalidInputLength[33] = "INVALID: Incorrect input length.";
-const char errorRequiredCharacterOmmitted[93] = "INVALID: Required character (possibly delimiter) ommitted or incorrectly placed. Character: ";
-const char errorInvalidCharacterFoundInField[51] = "INVALID: Invalid character found in field. Field: ";
-const char errorValueIsLogicallyInvalid[57] = "INVALID: Value entered is logically invalid. Try again.";
-const char errorValueMustBeWithinRange[43] = "Value must be within the following range: ";
+void printErrorInvalidInputLength()
+{
+    Serial.println(F("INVALID: Incorrect input length."));
+}
+
+void printErrorRequiredCharacterOmmitted()
+{
+    Serial.print(F("INVALID: Required character (possibly delimiter) ommitted or incorrectly placed. Character :"));
+}
+
+void printErrorInvalidCharacterFoundInField()
+{
+    Serial.print(F("INVALID: Invalid character found in field. Field: "));
+}
+
+void printErrorValueIsLogicallyInvalid()
+{
+    Serial.println(F("INVALID: Value entered is logically invalid."));
+    Serial.print(F("Value must be within the following range: "));
+}
 
 Setup::Setup()
 {
@@ -77,13 +92,13 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] == '\0')
         {
-            Serial.println(errorInvalidInputLength);
+            printErrorInvalidInputLength();
             return false;
         }
     }
     if (rx_string[19] != '\0')
     {
-        Serial.println(errorInvalidInputLength);
+        printErrorInvalidInputLength();
         return false;
     }
 
@@ -92,7 +107,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.print(errorInvalidCharacterFoundInField);
+            printErrorInvalidCharacterFoundInField();
             Serial.println("Year");
             return false;
         }
@@ -114,7 +129,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate first hypen delimiter.
     if (rx_string[4] != '-')
     {
-        Serial.print(errorRequiredCharacterOmmitted);
+        printErrorRequiredCharacterOmmitted();
         Serial.println("First hyphen");
         return false;
     }
@@ -124,7 +139,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.print(errorInvalidCharacterFoundInField);
+            printErrorInvalidCharacterFoundInField();
             Serial.println("Month");
             return false;
         }
@@ -133,7 +148,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate second hypen delimiter.
     if (rx_string[7] != '-')
     {
-        Serial.print(errorRequiredCharacterOmmitted);
+        printErrorRequiredCharacterOmmitted();
         Serial.println("Second hyphen");
         return false;
     }
@@ -143,7 +158,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.print(errorInvalidCharacterFoundInField);
+            printErrorInvalidCharacterFoundInField();
             Serial.println("Day");
             return false;
         }
@@ -152,7 +167,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate 'T' delimiter.
     if (rx_string[10] != 'T')
     {
-        Serial.print(errorRequiredCharacterOmmitted);
+        printErrorRequiredCharacterOmmitted();
         Serial.println("'T' delimiter");
         return false;
     }
@@ -162,7 +177,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.print(errorInvalidCharacterFoundInField);
+            printErrorInvalidCharacterFoundInField();
             Serial.println("Hours");
             return false;
         }
@@ -171,7 +186,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate first colon delimiter.
     if (rx_string[13] != ':')
     {
-        Serial.print(errorRequiredCharacterOmmitted);
+        printErrorRequiredCharacterOmmitted();
         Serial.println("First colon");
         return false;
     }
@@ -181,7 +196,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.print(errorInvalidCharacterFoundInField);
+            printErrorInvalidCharacterFoundInField();
             Serial.println("Minutes");
             return false;
         }
@@ -190,7 +205,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     // Validate second colon delimiter.
     if (rx_string[16] != ':')
     {
-        Serial.print(errorRequiredCharacterOmmitted);
+        printErrorRequiredCharacterOmmitted();
         Serial.println("Second colon");
         return false;
     }
@@ -200,7 +215,7 @@ bool Setup::ValidateUserInputDateTime(char* rx_string)
     {
         if (rx_string[i] < '0' || rx_string[i] > '9')
         {
-            Serial.print(errorInvalidCharacterFoundInField);
+            printErrorInvalidCharacterFoundInField();
             Serial.println("Seconds");
             return false;
         }
@@ -329,9 +344,8 @@ bool Setup::ValidateUserInputNumberOfPoints(char* rx_string)
 {
     if (rx_string[0] < '1' || rx_string[0] > '5')
     {
-        Serial.println(errorValueIsLogicallyInvalid);
-        Serial.print(errorValueMustBeWithinRange);
-        Serial.println("1 and 5 (inclusive).");
+        printErrorValueIsLogicallyInvalid();
+        Serial.println(F("1 and 5 (inclusive)."));
         return false;
     }
     return true;
@@ -416,13 +430,13 @@ bool Setup::ValidateUserInputLatitude(char* rx_string)
     for (uint8_t i = 0; i < 11; i++)
     {
         if (rx_string[i] == '\0') {
-            Serial.println(errorInvalidInputLength);
+            printErrorInvalidInputLength();
             return false;
         }
     }
     if (rx_string[11] != '\0')
     {
-        Serial.println(errorInvalidInputLength);
+        printErrorInvalidInputLength();
         return false;
     }
 
@@ -467,8 +481,7 @@ bool Setup::ValidateLatitude(int32_t latitude)
 {
     if (latitude > 900000000 || latitude < -900000000)
     {
-        Serial.println(errorValueIsLogicallyInvalid);
-        Serial.println(errorValueMustBeWithinRange);
+        printErrorValueIsLogicallyInvalid();
         Serial.println("-90 and +90.");
         Serial.println();
         return false;
@@ -515,13 +528,13 @@ bool Setup::ValidateUserInputLongitude(char* rx_string)
     for (uint8_t i = 0; i < 12; i++)
     {
         if (rx_string[i] == '\0') {
-            Serial.println(errorInvalidInputLength);
+            printErrorInvalidInputLength();
             return false;
         }
     }
     if (rx_string[12] != '\0')
     {
-        Serial.println(errorInvalidInputLength);
+        printErrorInvalidInputLength();
         return false;
     }
 
@@ -566,8 +579,7 @@ bool Setup::ValidateLongitude(int32_t longitude)
 {
     if (longitude > 1800000000 || longitude < -1800000000)
     {
-        Serial.println(errorValueIsLogicallyInvalid);
-        Serial.println(errorValueMustBeWithinRange);
+        printErrorValueIsLogicallyInvalid();
         Serial.println("-180 and +180.");
         Serial.println();
         return false;
@@ -645,13 +657,13 @@ bool Setup::ValidateUserInputGracePeriod(char* rx_string)
     {
         if (rx_string[i] == '\0')
         {
-            Serial.println(errorInvalidInputLength);
+            printErrorInvalidInputLength();
             return false;
         }
     }
     if (rx_string[2] != '\0')
     {
-        Serial.println(errorInvalidInputLength);
+        printErrorInvalidInputLength();
         return false;
     }
 
@@ -672,8 +684,7 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 {
     if (durationInSeconds > 3600 || durationInSeconds < 60)
     {
-        Serial.println(errorValueIsLogicallyInvalid);
-        Serial.println(errorValueMustBeWithinRange);
+        printErrorValueIsLogicallyInvalid();
         Serial.println("1 and 60 (inclusive).");
         Serial.println();
         return false;
@@ -695,8 +706,8 @@ void Setup::Initialize()
     currentPointIndex = 0;
     
     // Total number of times/places to be included in the hunt.
-    uint8_t pointCount = 0;
     numberOfPoints = PromptForNumberOfPoints();
+    uint8_t pointCount = numberOfPoints;
 
     ClearScreen();
 

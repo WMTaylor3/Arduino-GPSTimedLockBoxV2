@@ -60,26 +60,26 @@ buttonState UserInput::GetCurrentButtons()
 
 bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 {
-	char expectedCode[10];
+	char expectedCode[11];
 	uint8_t codeLength = 0;
 	bool isValid = true;
 
 	switch (modeToAuthenticate)
 	{
 	case(calibrateClock):
-		strlcpy(expectedCode, codeCalibrate, 10);
+		strlcpy(expectedCode, codeCalibrate, 11);
 		codeLength = 7;
 		break;
 	case(extraTime):
-		strlcpy(expectedCode, codeExtraTime, 10);
+		strlcpy(expectedCode, codeExtraTime, 11);
 		codeLength = 7;
 		break;
 	case(configureUnit):
-		strlcpy(expectedCode, codeConfigure, 10);
+		strlcpy(expectedCode, codeConfigure, 11);
 		codeLength = 7;
 		break;
 	case(overrideUnlock):
-		strlcpy(expectedCode, codeOverride, 10);
+		strlcpy(expectedCode, codeOverride, 11);
 		codeLength = 10;
 		break;
 	default:
@@ -101,11 +101,8 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 		int8_t inputValue = (int)GetCurrentButtons(); // Method returns enum which can be cast to an int for its value, in this case 1, 2 or 3 (L, C, R) are valid.
 		if (inputValue > 0 && inputValue < 4)
 		{
-			Serial.write(inputValue+48);
-			Serial.write(expectedCode[i]);
 			if ((inputValue + 48) != expectedCode[i])
 			{
-				Serial.println("error");
 				isValid = false;
 			}
 			display.CharTyped(i);

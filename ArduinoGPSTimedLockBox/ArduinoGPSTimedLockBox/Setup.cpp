@@ -9,6 +9,8 @@ bool Setup::timeExtended;
 const char errorInvalidInputLength[33] = "INVALID: Incorrect input length.";
 const char errorRequiredCharacterOmmitted[93] = "INVALID: Required character (possibly delimiter) ommitted or incorrectly placed. Character: ";
 const char errorInvalidCharacterFoundInField[51] = "INVALID: Invalid character found in field. Field: ";
+const char errorValueIsLogicallyInvalid[57] = "INVALID: Value entered is logically invalid. Try again.";
+const char errorValueMustBeWithinRange[43] = "Value must be within the following range: ";
 
 Setup::Setup()
 {
@@ -327,19 +329,9 @@ bool Setup::ValidateUserInputNumberOfPoints(char* rx_string)
 {
     if (rx_string[0] < '1' || rx_string[0] > '5')
     {
-        Serial.println(F("INVALID: Number must be between 1 and 5 (inclusive)."));
-        return false;
-    }
-    return true;
-}
-
-bool Setup::ValidateNumberOfPoints(uint8_t numberOfPoints)
-{
-    if (numberOfPoints < 1 || numberOfPoints > 5)
-    {
-        Serial.println("Value entered is logically invalid. Try again.");
-        Serial.println("Value must be between 1 and 5.");
-        Serial.println();
+        Serial.println(errorValueIsLogicallyInvalid);
+        Serial.print(errorValueMustBeWithinRange);
+        Serial.println("1 and 5 (inclusive).");
         return false;
     }
     return true;
@@ -378,7 +370,7 @@ bool Setup::ValidateGameStartDateTime(time_t startDateTime)
     delete(clock);
     if (startDateTime < currentTime)
     {
-        Serial.println("Value entered is logically invalid. Try again.");
+        Serial.println();
         Serial.println("Value must be later than the current date/time.");
         Serial.println();
         return false;
@@ -475,8 +467,9 @@ bool Setup::ValidateLatitude(int32_t latitude)
 {
     if (latitude > 900000000 || latitude < -900000000)
     {
-        Serial.println("Value entered is logically invalid. Try again.");
-        Serial.println("Value must be between -90 and +90.");
+        Serial.println(errorValueIsLogicallyInvalid);
+        Serial.println(errorValueMustBeWithinRange);
+        Serial.println("-90 and +90.");
         Serial.println();
         return false;
     }
@@ -573,8 +566,9 @@ bool Setup::ValidateLongitude(int32_t longitude)
 {
     if (longitude > 1800000000 || longitude < -1800000000)
     {
-        Serial.println("Value entered is logically invalid. Try again.");
-        Serial.println("Value must be between -180 and +180.");
+        Serial.println(errorValueIsLogicallyInvalid);
+        Serial.println(errorValueMustBeWithinRange);
+        Serial.println("-180 and +180.");
         Serial.println();
         return false;
     }
@@ -678,8 +672,9 @@ bool Setup::ValidateGracePeriodDuration(uint16_t durationInSeconds)
 {
     if (durationInSeconds > 3600 || durationInSeconds < 60)
     {
-        Serial.println("Value entered is logically invalid. Try again.");
-        Serial.println("Value must be between 1 and 60 minutes.");
+        Serial.println(errorValueIsLogicallyInvalid);
+        Serial.println(errorValueMustBeWithinRange);
+        Serial.println("1 and 60 (inclusive).");
         Serial.println();
         return false;
     }
@@ -701,10 +696,7 @@ void Setup::Initialize()
     
     // Total number of times/places to be included in the hunt.
     uint8_t pointCount = 0;
-    do {
-        pointCount = PromptForNumberOfPoints();
-    } while (!ValidateNumberOfPoints(pointCount));
-    numberOfPoints = pointCount;
+    numberOfPoints = PromptForNumberOfPoints();
 
     ClearScreen();
 

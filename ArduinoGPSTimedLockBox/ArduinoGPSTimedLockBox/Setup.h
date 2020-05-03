@@ -33,7 +33,6 @@ private:
 	static void PrintSplashScreen();
 	static uint8_t PromptForNumberOfPoints();
 	static bool ValidateUserInputNumberOfPoints(char* rx_string);
-	static bool ValidateNumberOfPoints(uint8_t numberOfPoints);
 	static time_t PromptForGameStartDateTime();
 	static bool ValidateGameStartDateTime(time_t startDateTime);
 	static int32_t PromptForLatitude(bool final);

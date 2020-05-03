@@ -20,13 +20,13 @@
 #include <string.h>
 #include <Servo.h>
 
-// Slider
-#define servoDegreesLock 10
-#define servoDegreesUnlock 70
-
 // Hook
-//#define servoDegreesLock 80
-//#define servoDegreesUnlock 165
+//#define servoDegreesLock 10
+//#define servoDegreesUnlock 70
+
+// Slider
+#define servoDegreesLock 70
+#define servoDegreesUnlock 165
 
 Setup systemConfig;
 Physical globalPositioningModule;
@@ -41,27 +41,28 @@ void setup()
 
     display.Initialize();
 
-    switch (input.GetStartUpMode())
-    {
-    case(normal):
-        RunNormal();
-        break;
-    case(overrideUnlock):
-        RunOverride();
-        break;
-    case(extraTime):
-        RunExtraTime();
-        break;
-    case(calibrateClock):
-        RunCalibrateRTC();
-        break;
-    case(configureUnit):
-        RunConfigureUnit();
-        break;
-    default:
-        RunNormal();
-        break;
-    }
+    Lock(false);
+    //switch (input.GetStartUpMode())
+    //{
+    //case(normal):
+    //    RunNormal();
+    //    break;
+    //case(overrideUnlock):
+    //    RunOverride();
+    //    break;
+    //case(extraTime):
+    //    RunExtraTime();
+    //    break;
+    //case(calibrateClock):
+    //    RunCalibrateRTC();
+    //    break;
+    //case(configureUnit):
+    //    RunConfigureUnit();
+    //    break;
+    //default:
+    //    RunNormal();
+    //    break;
+    //}
 }
 
 void RunNormal()

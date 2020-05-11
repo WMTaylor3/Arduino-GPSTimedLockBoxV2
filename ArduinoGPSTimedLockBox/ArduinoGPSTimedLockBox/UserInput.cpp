@@ -116,9 +116,9 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 uint32_t UserInput::GetExtraTimeValue()
 {
 	uint8_t hours = 0;
-	uint8_t minutes = 0;;
+	uint8_t minutes = 0;
+	display.WriteTimeExtensionValues(hours, minutes);
 	while (true) {
-		display.WriteTimeExtensionValues(hours, minutes);
 		buttonState input = GetCurrentButtons();
 		if (input == center) {
 			return (hours * 3600) + (minutes * 60);
@@ -136,6 +136,7 @@ uint32_t UserInput::GetExtraTimeValue()
 					{
 						hours += 1;
 					}
+					display.WriteTimeExtensionValues(hours, minutes);
 					break;
 				}
 			};
@@ -153,6 +154,7 @@ uint32_t UserInput::GetExtraTimeValue()
 					{
 						minutes += 1;
 					}
+					display.WriteTimeExtensionValues(hours, minutes);
 					break;
 				}
 			};

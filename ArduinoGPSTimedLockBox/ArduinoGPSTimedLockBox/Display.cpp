@@ -72,7 +72,7 @@ void Display::WriteNextStageBeginsNow()
 
 void Display::WriteStageXOfYComplete(uint8_t currentPoint, uint8_t totalPoints)
 {
-	Write("Stage #" + String(currentPoint) + " of " + String(totalPoints), "complete");
+	Write("Stage " + String(currentPoint) + " of " + String(totalPoints), "complete");
 	DelayClear();
 }
 
@@ -146,7 +146,6 @@ void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
 		lcd->setCursor(15, 1);
 	}
 	lcd->print(mins);
-	DelayClear();
 }
 
 void Display::WriteTimeExtended()

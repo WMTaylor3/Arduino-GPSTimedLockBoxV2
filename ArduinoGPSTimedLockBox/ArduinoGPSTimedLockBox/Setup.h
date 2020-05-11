@@ -22,6 +22,15 @@ private:
 	static SinglePointConfiguration* singlePointConfigurationCollection[];
 	static bool timeExtended;
 
+	static void ClearScreen();
+	static void PrintSplashScreen();
+	static void PrintErrorInvalidInputLength();
+	static void PrintErrorRequiredCharacterOmmitted();
+	static void PrintErrorInvalidCharacterFoundInField();
+	static void PrintErrorValueIsLogicallyInvalid();
+	static void PrintInfoTimeInputFormatting();
+	static void PrintInfoLocationInputFormatting(bool isLongitude);
+
 	static void AwaitUserInput();
 	static void GetUserInput(char* rx_string, uint8_t maxStringLength);
 	static bool ValidateUserInputDateTime(char* rx_string);
@@ -29,8 +38,6 @@ private:
 	static uint16_t ParseMinutesStringToSeconds(char* durationString);
 	static int32_t ParseLatLongStringToInt32(char* locationString, latOrLong latOrLong);
 
-	static void ClearScreen();
-	static void PrintSplashScreen();
 	static uint8_t PromptForNumberOfPoints();
 	static bool ValidateUserInputNumberOfPoints(char* rx_string);
 	static time_t PromptForGameStartDateTime();
@@ -56,14 +63,6 @@ private:
 public:
 	Setup();
 	// ~Setup(); // Removed as is now empty due to class being static. Add back if we make class non-static.
-
-	static void printErrorInvalidInputLength();
-	static void printErrorRequiredCharacterOmmitted();
-	static void printErrorInvalidCharacterFoundInField();
-	static void printErrorValueIsLogicallyInvalid();
-	static void printInfoTimeInputFormatting();
-	static void printInfoLocationInputFormatting(bool isLongitude);
-
 	static void Initialize();
 	static time_t GetGameStartDateTime();
 	static latLongLocation GetCurrentPointLocation();

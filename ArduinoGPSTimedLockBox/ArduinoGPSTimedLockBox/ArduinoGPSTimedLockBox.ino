@@ -202,7 +202,7 @@ void RunCalibrateRTC()
 
 void RunConfigureUnit()
 {
-    //if (input.ValidateCodeForStartupMode(configureUnit))
+    if (input.ValidateCodeForStartupMode(configureUnit))
     {
         Lock(false);
         display.WriteSerialMode();
@@ -210,22 +210,21 @@ void RunConfigureUnit()
         input.AwaitKeyLock();
         Lock(true);
     }
-    //else
-    //{
-    //    display.WriteAccessDenied();
-    //}
-    //Die();
+    else
+    {
+        display.WriteAccessDenied();
+    }
+    Die();
 }
 
 void Lock(bool lock)
 {
     Serial.end();
     globalPositioningModule.SerialEnd();
-
     Servo servo;
-
     servo.attach(8);
     delay(200);
+
     if (lock)
     {
         servo.write(servoDegreesLock);
@@ -234,8 +233,11 @@ void Lock(bool lock)
     {
         servo.write(servoDegreesUnlock);
     }
+
     delay(1000);
     servo.detach();
+    globalPositioningModule.SerialBegin();
+    Serial.begin(9600);
 }
 
 void TooLate()

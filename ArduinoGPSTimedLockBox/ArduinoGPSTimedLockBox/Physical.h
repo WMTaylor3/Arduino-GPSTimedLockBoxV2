@@ -24,6 +24,7 @@ private:
 	static void UpdateGPS();
 public:
 	Physical();
+	static void SerialBegin();
 	static void SerialEnd();
 	static time_t GetDateTimeInUtc();
 	static float GetAbsoluteDistanceFromPoint(latLongLocation targetLocation);

@@ -6,6 +6,11 @@ gps_fix Physical::fix;
 
 Physical::Physical()
 {
+    SerialBegin();
+}
+
+void Physical::SerialBegin()
+{
     gpsPort.begin(9600);
 }
 

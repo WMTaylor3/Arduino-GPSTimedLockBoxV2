@@ -61,26 +61,21 @@ buttonState UserInput::GetCurrentButtons()
 bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 {
 	char expectedCode[11];
-	uint8_t codeLength = 0;
 	bool isValid = true;
 
 	switch (modeToAuthenticate)
 	{
 	case(calibrateClock):
 		strlcpy(expectedCode, codeCalibrate, 11);
-		codeLength = 7;
 		break;
 	case(extraTime):
 		strlcpy(expectedCode, codeExtraTime, 11);
-		codeLength = 7;
 		break;
 	case(configureUnit):
 		strlcpy(expectedCode, codeConfigure, 11);
-		codeLength = 7;
 		break;
 	case(overrideUnlock):
 		strlcpy(expectedCode, codeOverride, 11);
-		codeLength = 10;
 		break;
 	default:
 		return false;
@@ -96,7 +91,7 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 		}
 	}
 	uint8_t i = 0;
-	while (i < codeLength)
+	while (i < 10)
 	{
 		int8_t inputValue = (int)GetCurrentButtons(); // Method returns enum which can be cast to an int for its value, in this case 1, 2 or 3 (L, C, R) are valid.
 		if (inputValue > 0 && inputValue < 4)
@@ -166,7 +161,10 @@ uint32_t UserInput::GetExtraTimeValue()
 
 void UserInput::AwaitKeyLock()
 {
-	while (IsKeyStateUnlocked) {}
+	while (!IsKeyStateUnlocked()) {}
+	delay(300);
+	while (IsKeyStateUnlocked()) {}
+	delay(300);
 	return;
 }
 

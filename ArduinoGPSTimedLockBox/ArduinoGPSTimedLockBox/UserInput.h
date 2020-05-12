@@ -16,9 +16,9 @@
 #define buttonThree 11
 
 #define codeOverride "1323122133"
-#define codeExtraTime "1233213"
-#define codeCalibrate "1121321"
-#define codeConfigure "1221213"
+#define codeExtraTime "1233213111"
+#define codeCalibrate "1121321212"
+#define codeConfigure "1221213331"
 
 class UserInput
 {

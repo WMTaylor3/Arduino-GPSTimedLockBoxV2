@@ -204,7 +204,7 @@ void RunCalibrateRTC()
 
 void RunConfigureUnit()
 {
-    //if (input.ValidateCodeForStartupMode(configureUnit))
+    /if (input.ValidateCodeForStartupMode(configureUnit))
     {
         Lock(false);
         display.WriteSerialMode();
@@ -212,9 +212,9 @@ void RunConfigureUnit()
         input.AwaitKeyLock();
         Lock(true);
     }
-    //else
+    else
     {
-        //display.WriteAccessDenied();
+        display.WriteAccessDenied();
     }
     Die();
 }

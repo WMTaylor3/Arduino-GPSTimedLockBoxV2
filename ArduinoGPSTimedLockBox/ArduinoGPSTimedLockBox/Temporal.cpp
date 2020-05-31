@@ -26,6 +26,7 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 
 TimeSpanDuration Temporal::GetTimeUntilGameStart()
 {
+	Serial.println(rtc->get());
 	if (systemConfig.GetGameStartDateTime() > rtc->get())
 	{
 		return ConvertToTimeSpanDuration(systemConfig.GetGameStartDateTime() - rtc->get());

@@ -123,7 +123,7 @@ uint32_t UserInput::GetExtraTimeValue()
 			while (GetCurrentButtons() == left) {
 				if (millis() - timeAtStart > 200)
 				{
-					if (hours == 60)
+					if (hours == 59)
 					{
 						hours = 0;
 					}
@@ -141,7 +141,7 @@ uint32_t UserInput::GetExtraTimeValue()
 			while (GetCurrentButtons() == right) {
 				if (millis() - timeAtStart > 200)
 				{
-					if (minutes == 60)
+					if (minutes == 59)
 					{
 						minutes = 0;
 					}

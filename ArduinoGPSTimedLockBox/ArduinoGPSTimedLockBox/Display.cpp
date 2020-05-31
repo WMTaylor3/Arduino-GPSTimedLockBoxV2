@@ -150,7 +150,7 @@ void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
 
 void Display::WriteTimeExtended()
 {
-	Write("Time Extended", "Goodbye!");
+	Write("Time Extended");
 	DelayClear();
 }
 

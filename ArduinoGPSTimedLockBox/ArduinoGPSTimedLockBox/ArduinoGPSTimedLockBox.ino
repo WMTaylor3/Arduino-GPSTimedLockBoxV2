@@ -67,6 +67,10 @@ void setup()
 void RunNormal()
 {
     systemConfig.LoadConfigFromEEPROM();
+    Serial.println("StartDateTime");
+    Serial.println(systemConfig.GetGameStartDateTime());
+    Serial.println("CurrentDateTime");
+    realTimeClock.GetTimeUntilGameStart();
     if (!realTimeClock.IsGameStartReached()) // Game hadn't started yet.
     {
         TimeSpanDuration timeUntilGameStart = realTimeClock.GetTimeUntilGameStart();
@@ -109,6 +113,9 @@ void RunNormal()
             {
                 display.WriteDistanceRemaining(globalPositioningModule.GetAbsoluteDistanceFromPoint(systemConfig.GetCurrentPointLocation()));
             }
+
+            TimeSpanDuration remainingWindow = realTimeClock.GetTimeUntilWindowClose();
+            display.WriteUnlockTimeRemaining(remainingWindow.Days, remainingWindow.Hours, remainingWindow.Minutes);
         }
         else if (realTimeClock.HasWindowExpired()) // After unlock window.
         {
@@ -122,14 +129,12 @@ void FinalPointReached()
 {
     while (!realTimeClock.HasWindowExpired())
     {
-        TimeSpanDuration remainingWindow = realTimeClock.GetTimeUntilWindowClose();
-        display.WriteUnlockTimeRemaining(remainingWindow.Days, remainingWindow.Hours, remainingWindow.Minutes);
-        if (input.IsKeyStateUnlocked())
+        if (!input.IsKeyStateUnlocked())
         {
             display.WriteInsertBothKeys();
         }
         uint32_t startTime = millis();
-        while (millis() - startTime >= 3000)
+        while (millis() - startTime >= 100)
         {
             if (input.IsKeyStateUnlocked())
             {
@@ -202,7 +207,7 @@ void RunCalibrateRTC()
 
 void RunConfigureUnit()
 {
-    if (input.ValidateCodeForStartupMode(configureUnit))
+    //if (input.ValidateCodeForStartupMode(configureUnit))
     {
         Lock(false);
         display.WriteSerialMode();
@@ -210,9 +215,9 @@ void RunConfigureUnit()
         input.AwaitKeyLock();
         Lock(true);
     }
-    else
+    //else
     {
-        display.WriteAccessDenied();
+        //display.WriteAccessDenied();
     }
     Die();
 }

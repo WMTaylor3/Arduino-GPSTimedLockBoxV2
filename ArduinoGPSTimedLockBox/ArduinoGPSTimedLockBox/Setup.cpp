@@ -420,7 +420,7 @@ bool Setup::ValidateGameStartDateTime(time_t startDateTime)
 int32_t Setup::PromptForLatitude(bool final = false)
 {
     char* rx_string = new char[12];
-    Serial.println(F("Enter the latitude value of the "));
+    Serial.print(F("Enter the latitude value of the "));
     if (final)
     {
          Serial.println(F("final unlock location"));
@@ -512,7 +512,7 @@ bool Setup::ValidateLatitude(int32_t latitude)
 int32_t Setup::PromptForLongitude(bool final = false)
 {
     char* rx_string = new char[13];
-    Serial.println(F("Enter the longitude value of the "));
+    Serial.print(F("Enter the longitude value of the "));
     if (final)
     {
         Serial.println(F("final unlock location"));
@@ -606,7 +606,7 @@ time_t Setup::PromptForNextPointDateTime(bool final = false)
 {
     //ISO 8601 format without the timezone offset
     char* rx_string = new char[20];
-    Serial.println(F("Enter the UTC date/time value "));
+    Serial.print(F("Enter the UTC date/time value "));
     if (final)
     {
         Serial.println(F("for when you wish the unit to unlock."));
@@ -762,6 +762,8 @@ void Setup::Initialize()
     }
 
     SaveConfigToEEPROM();
+
+    Serial.println(F("Cycle unlock key (to locked state) to lock unit."));
 }
 
 time_t Setup::GetGameStartDateTime()

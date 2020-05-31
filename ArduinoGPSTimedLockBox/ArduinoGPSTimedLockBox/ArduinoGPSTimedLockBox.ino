@@ -129,18 +129,15 @@ void FinalPointReached()
 {
     while (!realTimeClock.HasWindowExpired())
     {
-        if (!input.IsKeyStateUnlocked())
+        if (input.IsKeyStateUnlocked())
+        {
+            Lock(false);
+            Die();
+        }
+        else
         {
             display.WriteInsertBothKeys();
-        }
-        uint32_t startTime = millis();
-        while (millis() - startTime >= 100)
-        {
-            if (input.IsKeyStateUnlocked())
-            {
-                Lock(false);
-                Die();
-            }
+            delay(1500);
         }
     }
 }

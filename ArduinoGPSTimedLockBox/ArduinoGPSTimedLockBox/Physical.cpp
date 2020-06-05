@@ -59,5 +59,5 @@ float Physical::GetAbsoluteDistanceFromPoint(latLongLocation targetLocation)
 
 bool Physical::IsWithinRadius(latLongLocation targetLocation)
 {
-    return (GetAbsoluteDistanceFromPoint(targetLocation) <= 15);
+    return (GetAbsoluteDistanceFromPoint(targetLocation) <= 30);
 }

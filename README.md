@@ -20,8 +20,19 @@
 
 ##### Still need to test
 * Multi-point game.
-* Locations other than my desk.
-* Waiting until window has passed and trying to unlock.
 * Adding time via extend time method.
+* Adding time to multi-point game and verifying that all times are boosted.
 
 ##### Noted as not functioning correctly
+* Adding time via extend time method. Doesn't seem to extend window. Gives me "Too late, window missed"
+
+
+2020-06-05T11:00:00
+
+-35.3880590
+
++174.3436400
+
+2020-06-05T11:10:00
+
+Added 30

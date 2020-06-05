@@ -102,7 +102,7 @@ bool UserInput::ValidateCodeForStartupMode(startupMode modeToAuthenticate)
 			}
 			display.CharTyped(i);
 			i++;
-			delay(300);
+			delay(250);
 		}
 	}
 	return isValid;
@@ -116,6 +116,7 @@ uint32_t UserInput::GetExtraTimeValue()
 	while (true) {
 		buttonState input = GetCurrentButtons();
 		if (input == center) {
+			Serial.println((hours * 3600) + (minutes * 60));
 			return (hours * 3600) + (minutes * 60);
 		}
 		if (input == left) {

@@ -26,7 +26,6 @@ bool Temporal::SetCurrentTime(time_t currentTime)
 
 TimeSpanDuration Temporal::GetTimeUntilGameStart()
 {
-	Serial.println(rtc->get());
 	if (systemConfig.GetGameStartDateTime() > rtc->get())
 	{
 		return ConvertToTimeSpanDuration(systemConfig.GetGameStartDateTime() - rtc->get());
@@ -55,6 +54,11 @@ TimeSpanDuration Temporal::GetTimeUntilWindowClose()
 	return empty;
 }
 
+time_t Temporal::GetDateTimeInUtc()
+{
+	return rtc->get();
+}
+
 bool Temporal::IsGameStartReached()
 {
 	return(rtc->get() >= systemConfig.GetGameStartDateTime());
@@ -62,10 +66,18 @@ bool Temporal::IsGameStartReached()
 
 bool Temporal::HasWindowOpened()
 {
+	Serial.println("RTC GET");
+	Serial.println(rtc->get());
+	Serial.println("WINDOW OPEN TIME");
+	Serial.println(systemConfig.GetCurrentPointWindowOpenTime());
 	return(rtc->get() >= systemConfig.GetCurrentPointWindowOpenTime());
 }
 
 bool Temporal::HasWindowExpired()
 {
+	Serial.println("RTC GET");
+	Serial.println(rtc->get());
+	Serial.println("WINDOW CLOSE TIME");
+	Serial.println(systemConfig.GetCurrentPointWindowCloseTime());
 	return(rtc->get() >= systemConfig.GetCurrentPointWindowCloseTime());
 }

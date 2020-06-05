@@ -30,13 +30,14 @@ class Temporal
 private:
 	static Setup systemConfig;
 	static TimeSpanDuration ConvertToTimeSpanDuration(uint32_t duration);
+	static DS1307RTC* rtc;
 public:
 	Temporal();
-	static DS1307RTC* rtc;
 	static bool SetCurrentTime(time_t newTime);
 	static TimeSpanDuration GetTimeUntilGameStart();
 	static TimeSpanDuration GetTimeUntilWindowOpens();
 	static TimeSpanDuration GetTimeUntilWindowClose();
+	static time_t GetDateTimeInUtc();
 	static bool HasWindowOpened();
 	static bool IsGameStartReached();
 	static bool HasWindowExpired();

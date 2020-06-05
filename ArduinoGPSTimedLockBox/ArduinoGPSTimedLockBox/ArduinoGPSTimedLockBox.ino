@@ -69,8 +69,10 @@ void RunNormal()
     systemConfig.LoadConfigFromEEPROM();
     Serial.println("StartDateTime");
     Serial.println(systemConfig.GetGameStartDateTime());
-    Serial.println("CurrentDateTime");
-    realTimeClock.GetTimeUntilGameStart();
+    Serial.println("Window Start Time");
+    Serial.println(systemConfig.GetCurrentPointWindowOpenTime());
+    Serial.println("Window End Time");
+    Serial.println(systemConfig.GetCurrentPointWindowCloseTime());
     if (!realTimeClock.IsGameStartReached()) // Game hadn't started yet.
     {
         TimeSpanDuration timeUntilGameStart = realTimeClock.GetTimeUntilGameStart();
@@ -170,16 +172,29 @@ void RunOverride() {
 
 void RunExtraTime()
 {
-    if (input.ValidateCodeForStartupMode(extraTime))
+    systemConfig.LoadConfigFromEEPROM();
+    //if (input.ValidateCodeForStartupMode(extraTime))
     {
         uint32_t duration = input.GetExtraTimeValue();
+        Serial.println("StartDateTime");
+        Serial.println(systemConfig.GetGameStartDateTime());
+
+        Serial.println("Window Start Time");
+        Serial.println(systemConfig.GetCurrentPointWindowOpenTime());
+
+        Serial.println("Window End Time");
+        Serial.println(systemConfig.GetCurrentPointWindowCloseTime());
+
+        Serial.println(duration);
+        Serial.println(realTimeClock.HasWindowOpened());
+        Serial.println(realTimeClock.HasWindowExpired());
         systemConfig.ExtendTime(duration, (realTimeClock.HasWindowOpened() && !realTimeClock.HasWindowExpired()));
         display.WriteTimeExtended();
     }
-    else
-    {
-        display.WriteAccessDenied();
-    }
+    //else
+    //{
+    //    display.WriteAccessDenied();
+    //}
     Die();
 }
 
@@ -189,7 +204,7 @@ void RunCalibrateRTC()
     {
         display.WriteCalibratingRTC();
         time_t newTime = globalPositioningModule.GetDateTimeInUtc();
-        time_t currentTime = realTimeClock.rtc->get();
+        time_t currentTime = realTimeClock.GetDateTimeInUtc();
         realTimeClock.SetCurrentTime(newTime);
         delay(2000);
         uint32_t delta = abs(newTime - currentTime);
@@ -204,7 +219,7 @@ void RunCalibrateRTC()
 
 void RunConfigureUnit()
 {
-    if (input.ValidateCodeForStartupMode(configureUnit))
+    //if (input.ValidateCodeForStartupMode(configureUnit))
     {
         Lock(false);
         display.WriteSerialMode();
@@ -212,10 +227,10 @@ void RunConfigureUnit()
         input.AwaitKeyLock();
         Lock(true);
     }
-    else
-    {
-        display.WriteAccessDenied();
-    }
+    //else
+    //{
+    //    display.WriteAccessDenied();
+    //}
     Die();
 }
 

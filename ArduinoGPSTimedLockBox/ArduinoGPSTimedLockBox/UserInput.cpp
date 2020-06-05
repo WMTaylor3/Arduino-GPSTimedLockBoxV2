@@ -116,7 +116,6 @@ uint32_t UserInput::GetExtraTimeValue()
 	while (true) {
 		buttonState input = GetCurrentButtons();
 		if (input == center) {
-			Serial.println((hours * 3600) + (minutes * 60));
 			return (hours * 3600) + (minutes * 60);
 		}
 		if (input == left) {

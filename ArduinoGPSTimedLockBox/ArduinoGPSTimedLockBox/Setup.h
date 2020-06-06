@@ -73,7 +73,8 @@ public:
 	
 	static void ProgressToNextPoint();
 	static bool IsFinalPoint();
-	static void ExtendTime(uint32_t duration, bool isInWindow);
+	static void ExtendTime(uint32_t duration, bool isGameStartReached, bool isBeforeWindowOpen);
+	static bool IsTimeExtended();
 
 	static void LoadConfigFromEEPROM();
 	static void SaveConfigToEEPROM();

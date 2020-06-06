@@ -67,12 +67,6 @@ void setup()
 void RunNormal()
 {
     systemConfig.LoadConfigFromEEPROM();
-    Serial.println("StartDateTime");
-    Serial.println(systemConfig.GetGameStartDateTime());
-    Serial.println("Window Start Time");
-    Serial.println(systemConfig.GetCurrentPointWindowOpenTime());
-    Serial.println("Window End Time");
-    Serial.println(systemConfig.GetCurrentPointWindowCloseTime());
     if (!realTimeClock.IsGameStartReached()) // Game hadn't started yet.
     {
         TimeSpanDuration timeUntilGameStart = realTimeClock.GetTimeUntilGameStart();
@@ -173,22 +167,10 @@ void RunOverride() {
 void RunExtraTime()
 {
     systemConfig.LoadConfigFromEEPROM();
-    //if (input.ValidateCodeForStartupMode(extraTime))
+    //if (!systemConfig.IsTimeExtended() && input.ValidateCodeForStartupMode(extraTime))
     {
         uint32_t duration = input.GetExtraTimeValue();
-        Serial.println("StartDateTime");
-        Serial.println(systemConfig.GetGameStartDateTime());
-
-        Serial.println("Window Start Time");
-        Serial.println(systemConfig.GetCurrentPointWindowOpenTime());
-
-        Serial.println("Window End Time");
-        Serial.println(systemConfig.GetCurrentPointWindowCloseTime());
-
-        Serial.println(duration);
-        Serial.println(realTimeClock.HasWindowOpened());
-        Serial.println(realTimeClock.HasWindowExpired());
-        systemConfig.ExtendTime(duration, (realTimeClock.HasWindowOpened() && !realTimeClock.HasWindowExpired()));
+        systemConfig.ExtendTime(duration, realTimeClock.IsGameStartReached(), (!realTimeClock.HasWindowOpened() && !realTimeClock.HasWindowExpired()));
         display.WriteTimeExtended();
     }
     //else

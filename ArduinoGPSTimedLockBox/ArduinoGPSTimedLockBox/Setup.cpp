@@ -703,7 +703,6 @@ bool Setup::ValidateWindowDuration(uint16_t durationInSeconds)
 
 void Setup::Initialize()
 {
-    Serial.println("Init");
     ZeroConfigAndEEPROM();
 
     ClearScreen();
@@ -809,12 +808,16 @@ bool Setup::IsFinalPoint()
     return currentPointIndex == (numberOfPoints - 1);
 }
 
-void Setup::ExtendTime(uint32_t duration, bool isInWindow)
+void Setup::ExtendTime(uint32_t duration, bool isGameStartReached, bool isBeforeWindowOpen)
 {
     if (timeExtended) { return; }
-    for (uint8_t i = currentPointIndex; i < numberOfPoints - 1; i++)
+    if (!isGameStartReached)
     {
-        if (!isInWindow)
+        gameStartDateTime += duration;
+    }
+    for (uint8_t i = currentPointIndex; i < numberOfPoints; i++)
+    {
+        if (isBeforeWindowOpen)
         {
             singlePointConfigurationCollection[i]->SetWindowOpenDateTime(singlePointConfigurationCollection[i]->GetWindowOpenDateTime() + duration);
         }
@@ -822,6 +825,11 @@ void Setup::ExtendTime(uint32_t duration, bool isInWindow)
     }
     timeExtended = true;
     SaveConfigToEEPROM();
+}
+
+bool Setup::IsTimeExtended()
+{
+    return timeExtended;
 }
 
 

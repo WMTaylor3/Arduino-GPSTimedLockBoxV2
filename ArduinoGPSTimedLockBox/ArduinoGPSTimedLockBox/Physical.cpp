@@ -21,11 +21,16 @@ void Physical::SerialEnd()
 
 void Physical::UpdateGPS()
 {
-    while (!fix.valid.location || !fix.valid.date || !fix.valid.time)
+    while (true)
     {
-        while (gps.available(gpsPort))
+        // If we have a full sentance, read it to the fix structure.
+        if (gps.available(gpsPort))
         {
             fix = gps.read();
+            if (fix.valid.location && fix.valid.date && fix.valid.time)
+            {
+                return;
+            }
         }
     }
 }

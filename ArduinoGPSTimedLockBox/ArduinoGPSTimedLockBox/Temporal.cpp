@@ -66,18 +66,10 @@ bool Temporal::IsGameStartReached()
 
 bool Temporal::HasWindowOpened()
 {
-	Serial.println("RTC GET");
-	Serial.println(rtc->get());
-	Serial.println("WINDOW OPEN TIME");
-	Serial.println(systemConfig.GetCurrentPointWindowOpenTime());
 	return(rtc->get() >= systemConfig.GetCurrentPointWindowOpenTime());
 }
 
 bool Temporal::HasWindowExpired()
 {
-	Serial.println("RTC GET");
-	Serial.println(rtc->get());
-	Serial.println("WINDOW CLOSE TIME");
-	Serial.println(systemConfig.GetCurrentPointWindowCloseTime());
 	return(rtc->get() >= systemConfig.GetCurrentPointWindowCloseTime());
 }

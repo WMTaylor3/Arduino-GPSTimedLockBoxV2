@@ -29,10 +29,10 @@
 * Adding time via extend time method. Doesn't seem to extend window.
 
 
-2020-06-06T00:25:00
+2020-06-06T00:35:00
 
 -35.3880590
 
 +174.3436400
 
-2020-06-06T00:35:00
+2020-06-06T00:45:00

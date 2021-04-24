@@ -17,12 +17,14 @@
 * Unlocking at final destination.
 * Unit locks after cycling key at end of setup routine.
 * Calibration of RTC from GPS.
-* Adding time via extend time method while in window.
 
 ##### Still need to test
 * Multi-point game.
+* Adding time via extend time method while in intermediary window.
+* Adding time via extend time method while in final unlock window.
 * Adding time via extend time method before game start.
 * Adding time via extend time method after window has expired (should bring you back into the window).
+* Starting a game in a different week and month than currently in.
 * Adding time to multi-point game and verifying that all times are boosted.
 
 ##### Noted as not functioning correctly

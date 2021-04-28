@@ -8,13 +8,12 @@
 #endif
 
 #include <LiquidCrystal_I2C.h>
-#include <string.h>
 
 class Display
 {
 private:
 	static LiquidCrystal_I2C* lcd;
-	static void Write(String, String = "");
+	static void Write(char* lineOne, char* lineTwo);
 	static void DaysHoursMinutes(uint8_t days, uint8_t hours, uint8_t minutes);
 	static void DelayClear();
 public:

@@ -17,7 +17,6 @@
 #include <DS1307RTC.h>
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
-#include <string.h>
 #include <Servo.h>
 
 // Hook
@@ -39,7 +38,7 @@ void setup()
     Serial.begin(9600);
 
     display.Initialize();
-    display.WriteSearchBeginsIn(1, 1, 1);
+    display.WriteSearchBeginsIn(123, 12, 12);
 
     //switch (input.GetStartUpMode())
     //{

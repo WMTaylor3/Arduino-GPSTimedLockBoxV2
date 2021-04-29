@@ -42,11 +42,28 @@ void Display::DaysHoursMinutes(uint8_t days, uint8_t hours, uint8_t minutes)
 {
 	if (days + hours + minutes <= 0)
 	{
-		//Write("Less than", "a minute");
+		Write("Less than", "a minute");
 	}
 	else
 	{
-		//Write(String(days) + " Days " + String(hours) + " Hours", String(minutes) + " Minutes");
+		char daysString[4];
+		char hoursString[3];
+		char minutesString[3];
+		itoa(days, daysString, 10);
+		itoa(hours, hoursString, 10);
+		itoa(minutes, minutesString, 10);
+		char lineOne[17] = "";
+		char lineTwo[16] = "";
+		
+		strcat(lineOne, daysString);
+		strcat(lineOne, " Days ");
+		strcat(lineOne, hoursString);
+		strcat(lineOne, " Hours");
+
+		strcat(lineTwo, minutesString);
+		strcat(lineTwo, " Minutes");
+
+		Write(lineOne, lineTwo);
 	}
 }
 
@@ -60,7 +77,7 @@ void Display::WriteSearchBeginsIn(uint8_t days, uint8_t hours, uint8_t minutes)
 {
 	Write("Search will", "begin in...");
 	delay(3000);
-	//DaysHoursMinutes(days, hours, minutes);
+	DaysHoursMinutes(days, hours, minutes);
 	DelayClear();
 }
 

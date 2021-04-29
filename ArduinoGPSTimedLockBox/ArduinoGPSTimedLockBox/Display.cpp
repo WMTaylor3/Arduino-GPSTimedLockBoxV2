@@ -52,8 +52,8 @@ void Display::DaysHoursMinutes(uint8_t days, uint8_t hours, uint8_t minutes)
 		itoa(days, daysString, 10);
 		itoa(hours, hoursString, 10);
 		itoa(minutes, minutesString, 10);
-		char lineOne[17] = "";
-		char lineTwo[16] = "";
+		char lineOne[18] = "";
+		char lineTwo[17] = "";
 		
 		strcat(lineOne, daysString);
 		strcat(lineOne, " Days ");
@@ -83,13 +83,24 @@ void Display::WriteSearchBeginsIn(uint8_t days, uint8_t hours, uint8_t minutes)
 
 void Display::WriteNextStageBeginsNow()
 {
-	//Write("Next stage", "commencing");
+	Write("Next stage", "commencing");
 	DelayClear();
 }
 
 void Display::WriteStageXOfYComplete(uint8_t currentPoint, uint8_t totalPoints)
 {
-	//Write("Stage " + String(currentPoint) + " of " + String(totalPoints), "complete");
+	char currentPointString[2];
+	char totalPointsString[2];
+	itoa(currentPoint, currentPointString, 10);
+	itoa(totalPoints, totalPointsString, 10);
+	char lineOne[17] = "";
+
+	strcat(lineOne, "Stage ");
+	strcat(lineOne, currentPointString);
+	strcat(lineOne, " of ");
+	strcat(lineOne, totalPointsString);
+
+	Write(lineOne, "complete");
 	DelayClear();
 }
 

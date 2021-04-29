@@ -38,7 +38,7 @@ void setup()
     Serial.begin(9600);
 
     display.Initialize();
-    display.WriteStageXOfYComplete(1, 3);
+    display.WriteDistanceRemaining(1);
 
     //switch (input.GetStartUpMode())
     //{

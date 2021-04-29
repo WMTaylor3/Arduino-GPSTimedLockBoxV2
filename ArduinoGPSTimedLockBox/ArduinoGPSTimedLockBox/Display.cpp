@@ -106,15 +106,17 @@ void Display::WriteStageXOfYComplete(uint8_t currentPoint, uint8_t totalPoints)
 
 void Display::WriteObtainingGPSLocationFix()
 {
-	//Write("Obtaining GPS", "location fix...");
+	Write("Obtaining GPS", "location fix...");
 }
 
 void Display::WriteDistanceRemaining(uint32_t distance)
 {
 	Clear();
-	//Write("Distance to", "location...");
+	Write("Distance to", "location...");
 	delay(3000);
-	//Write(String(distance) + " Meters");
+	char distanceString[12];
+	itoa(distance, distanceString, 10);
+	Write(distanceString, "Meter(s)");
 	DelayClear();
 }
 

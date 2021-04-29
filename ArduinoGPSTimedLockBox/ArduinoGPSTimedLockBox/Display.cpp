@@ -26,7 +26,7 @@ void Display::LcdOff()
 	lcd->off();
 }
 
-void Display::Write(String lineOne, String lineTwo = "")
+void Display::Write(const char* lineOne, const char* lineTwo)
 {
 	Clear();
 	lcd->setCursor(0, 0);
@@ -42,11 +42,11 @@ void Display::DaysHoursMinutes(uint8_t days, uint8_t hours, uint8_t minutes)
 {
 	if (days + hours + minutes <= 0)
 	{
-		Write("Less than", "a minute");
+		//Write("Less than", "a minute");
 	}
 	else
 	{
-		Write(String(days) + " Days " + String(hours) + " Hours", String(minutes) + " Minutes");
+		//Write(String(days) + " Days " + String(hours) + " Hours", String(minutes) + " Minutes");
 	}
 }
 
@@ -60,46 +60,46 @@ void Display::WriteSearchBeginsIn(uint8_t days, uint8_t hours, uint8_t minutes)
 {
 	Write("Search will", "begin in...");
 	delay(3000);
-	DaysHoursMinutes(days, hours, minutes);
+	//DaysHoursMinutes(days, hours, minutes);
 	DelayClear();
 }
 
 void Display::WriteNextStageBeginsNow()
 {
-	Write("Next stage", "commencing");
+	//Write("Next stage", "commencing");
 	DelayClear();
 }
 
 void Display::WriteStageXOfYComplete(uint8_t currentPoint, uint8_t totalPoints)
 {
-	Write("Stage " + String(currentPoint) + " of " + String(totalPoints), "complete");
+	//Write("Stage " + String(currentPoint) + " of " + String(totalPoints), "complete");
 	DelayClear();
 }
 
 void Display::WriteObtainingGPSLocationFix()
 {
-	Write("Obtaining GPS", "location fix...");
+	//Write("Obtaining GPS", "location fix...");
 }
 
 void Display::WriteDistanceRemaining(uint32_t distance)
 {
 	Clear();
-	Write("Distance to", "location...");
+	//Write("Distance to", "location...");
 	delay(3000);
-	Write(String(distance) + " Meters");
+	//Write(String(distance) + " Meters");
 	DelayClear();
 }
 
 void Display::WriteLocationReached()
 {
 	Clear();
-	Write("Location has", "been found");
+	//Write("Location has", "been found");
 	DelayClear();
 }
 
 void Display::WriteTimeToUnlock(uint8_t days, uint8_t hours, uint8_t minutes)
 {
-	Write("Unlock window", "will start in...");
+	//Write("Unlock window", "will start in...");
 	delay(3000);
 	DaysHoursMinutes(days, hours, minutes);
 	DelayClear();
@@ -107,7 +107,7 @@ void Display::WriteTimeToUnlock(uint8_t days, uint8_t hours, uint8_t minutes)
 
 void Display::WriteUnlockTimeRemaining(uint8_t days, uint8_t hours, uint8_t minutes)
 {
-	Write("Unlock window", "will last for...");
+	//Write("Unlock window", "will last for...");
 	delay(3000);
 	DaysHoursMinutes(days, hours, minutes);
 	DelayClear();
@@ -115,25 +115,25 @@ void Display::WriteUnlockTimeRemaining(uint8_t days, uint8_t hours, uint8_t minu
 
 void Display::WriteSerialMode()
 {
-	Write("Serial mode");
+	//Write("Serial mode");
 }
 
 void Display::WriteCalibratingRTC()
 {
-	Write("Calibrating RTC", "from GPS fix...");
+	//Write("Calibrating RTC", "from GPS fix...");
 }
 
 void Display::WriteRTCOffBy(uint32_t delta)
 {
-	Write("Real Time Clock", "was off by...");
+	//Write("Real Time Clock", "was off by...");
 	delay(3000);
-	Write(String(delta), "Seconds");
+	//Write(String(delta), "Seconds");
 	DelayClear();
 }
 
 void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
 {
-	Write("Enter Value:");
+	//Write("Enter Value:");
 	lcd->setCursor(0, 1);
 	if (hours < 10) {
 		lcd->print('0');
@@ -150,13 +150,13 @@ void Display::WriteTimeExtensionValues(uint8_t hours, uint8_t mins)
 
 void Display::WriteTimeExtended()
 {
-	Write("Time Extended");
+	//Write("Time Extended");
 	DelayClear();
 }
 
 void Display::WriteEnterPasscode()
 {
-	Write("Passcode:");
+	//Write("Passcode:");
 }
 
 void Display::CharTyped(uint8_t dotCount)
@@ -167,32 +167,32 @@ void Display::CharTyped(uint8_t dotCount)
 
 void Display::WriteInsertBothKeys()
 {
-	Write("Insert second", "key to unlock");
+	//Write("Insert second", "key to unlock");
 	DelayClear();
 }
 
 void Display::WriteAccessGranted()
 {
-	Write("Access Granted", "Welcome");
+	//Write("Access Granted", "Welcome");
 	DelayClear();
 }
 
 void Display::WriteAccessDenied()
 {
-	Write("Access Denied");
+	//Write("Access Denied");
 	DelayClear();
 }
 
 void Display::WriteTooLate()
 {
 	Clear();
-	Write("Too Late", "Window Missed");
+	//Write("Too Late", "Window Missed");
 	DelayClear();
 }
 
 void Display::WriteGoodbye()
 {
-	Write("Goodbye");
+	//Write("Goodbye");
 	DelayClear();
 }
 

@@ -14,7 +14,7 @@ class Display
 {
 private:
 	static LiquidCrystal_I2C* lcd;
-	static void Write(String, String = "");
+	static void Write(const char*, const char*);
 	static void DaysHoursMinutes(uint8_t days, uint8_t hours, uint8_t minutes);
 	static void DelayClear();
 public:
